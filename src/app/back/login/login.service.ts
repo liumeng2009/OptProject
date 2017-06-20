@@ -7,11 +7,11 @@ import 'rxjs/add/operator/map';
 
 import {User} from '../../bean/user';
 
-import {config} from '../../config/config'
+import {OptConfig} from '../../config/config'
 
 @Injectable()
 export class LoginService{
-  private loginurl=config.serverPath+'/api/user/login'
+  private loginurl=new OptConfig().serverPath+'/api/user/login'
 
   constructor(private http:Http){}
 
@@ -19,7 +19,8 @@ export class LoginService{
 
     let headers=new Headers({'Content-Type':'application/json'});
     let options=new RequestOptions({headers:headers});
-    this.http.post(this.loginurl,{username:username,password:password},options)
+    console.log('请求的url是：'+this.loginurl);
+    return this.http.post(this.loginurl,{username:username,password:password},options)
       .map(this.extractData)
       .catch(this.handleError)
   }

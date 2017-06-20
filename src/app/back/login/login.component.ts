@@ -2,6 +2,8 @@ import {Component,OnInit} from '@angular/core';
 
 import {User} from '../../bean/user'
 
+import {LoginService} from './login.service'
+
 @Component({
   selector:'login-area',
   templateUrl:'./login.component.html',
@@ -9,9 +11,18 @@ import {User} from '../../bean/user'
 })
 
 export class LoginComponent{
-  constructor(){};
+
+  errorMessage:''
+
+  constructor(
+    private loginService:LoginService
+  ){};
   user=new User('','');
   onButtonClick():void{
-
+    this.loginService.login(this.user.username,this.user.password)
+      .subscribe(
+        user=>alert(user),
+        error=>this.errorMessage=<any>error
+      );
   }
 }
