@@ -4,23 +4,22 @@ import {Http,Response,Headers,RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import {CookieService} from 'angular2-cookie/core';
 
-import {User} from '../../bean/user';
+import {ResponseData} from '../../bean/responseData';
 
 import {OptConfig} from '../../config/config'
 
 @Injectable()
-export class LoginService{
-  private loginurl=new OptConfig().serverPath+'/api/user/login'
+export class MainService{
+  private loginurl=new OptConfig().serverPath+'/api/user/'
 
-  constructor(private http:Http){}
+  constructor(private http:Http,private cookieService:CookieService){}
 
-  login(username:string,password:string):Observable<User>{
-
-    let headers=new Headers({'Content-Type':'application/json'});
-    let options=new RequestOptions(headers);
-    console.log('请求的url是：'+this.loginurl);
-    return this.http.post(this.loginurl,{username:username,password:password},options)
+  getUserInfo():Observable<ResponseData>{
+    let token=this.cookieService.get('optUser');
+    console.log('请求的url是：'+this.loginurl+'?token='+token);
+    return this.http.get(this.loginurl+'?token='+token)
       .map(this.extractData)
       .catch(this.handleError)
   }
@@ -28,9 +27,10 @@ export class LoginService{
   private extractData(res:Response){
     let body=res.json();
     console.log(JSON.stringify(body));
-    return body.data||{};
+    return body||{};
   }
   private handleError(error:Response|any){
+    console.log('9999999999999999');
     let errMsg:string;
     if(error instanceof Response){
       const body=error.json()||'';

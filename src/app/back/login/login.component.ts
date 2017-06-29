@@ -21,7 +21,7 @@ export class LoginComponent{
   onButtonClick():void{
     this.loginService.login(this.user.username,this.user.password)
       .subscribe(
-        user=>alert(user),
+        user=>alert(JSON.stringify(user)),
         error=>this.errorMessage=<any>error
       );
   }

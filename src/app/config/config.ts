@@ -1,3 +1,3 @@
 export class OptConfig{
-  serverPath='http://g151082j77.iok.la'
+  serverPath='http://127.0.0.1:3000'
 }

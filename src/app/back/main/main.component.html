@@ -1,0 +1,48 @@
+<div class="container-fluid">
+  <div class="row">
+    <danger></danger>
+    <div class="col-xs-12 col-sm-3 col-lg-3 col-md-3">
+      <div class="panelbar-wrapper" style="margin-top: 20px;">
+        <kendo-panelbar>
+          <kendo-panelbar-item [title]="'我想轻松一些'" expanded="true">
+            <ng-template kendoPanelBarContent>
+              <div>
+                <div class="teamMate">
+                  <img [src]="imageUrl('andrew')" alt="Andrew Fuller">
+                            <span class="mate-info">
+                              <h2>liumeng</h2>
+                              <p>系统管理员</p>
+                            </span>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-panelbar-item>
+          <kendo-panelbar-item [title]="'数据设置'" expanded="true" >
+            <kendo-panelbar-item [title]="'办公人员设置'"></kendo-panelbar-item>
+            <kendo-panelbar-item [title]="'地点设置'">
+            </kendo-panelbar-item>
+            <kendo-panelbar-item [title]="'工作内容设置'"></kendo-panelbar-item>
+          </kendo-panelbar-item>
+          <kendo-panelbar-item [title]="'用户管理'">
+            <kendo-panelbar-item [title]="'功能设置'"></kendo-panelbar-item>
+            <kendo-panelbar-item [title]="'功能操作设置'"></kendo-panelbar-item>
+            <kendo-panelbar-item [title]="'角色设置'"></kendo-panelbar-item>
+            <kendo-panelbar-item [title]="'用户设置'"></kendo-panelbar-item>
+          </kendo-panelbar-item>
+          <kendo-panelbar-item [title]="'工单管理'">
+            <kendo-panelbar-item [title]="'工单'"></kendo-panelbar-item>
+          </kendo-panelbar-item>
+        </kendo-panelbar>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-8 col-lg-8 col-md-8 right">
+      <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Library</a></li>
+        <li class="active">Data</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+
