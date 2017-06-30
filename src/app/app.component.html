@@ -1,3 +1,24 @@
 <!--The whole content below can be removed with the new code.-->
-<router-outlet></router-outlet>
+<div class="layout">
+  <div class="navigation-pane">
+    <kendo-panelbar (stateChange)="stateChange($event)" [selectable]="false">
+      <kendo-panelbar-item
+        *ngFor="let route of router.config"
+        [id]="route.path"
+        [title]="route.path ? route.path : 'home'"
+        [selected]="route.path == selectedId">
+        <kendo-panelbar-item
+          *ngFor="let child of route.children"
+          [title]="child?.path || 'about'"
+          [id]="route.path + '/' + child?.path"
+          [selected]="route.path + '/' + child?.path == selectedId"
+        >
+        </kendo-panelbar-item>
+      </kendo-panelbar-item>
+    </kendo-panelbar>
+  </div>
+  <div class="content-pane">
+    <router-outlet></router-outlet>
+  </div>
+</div>
 

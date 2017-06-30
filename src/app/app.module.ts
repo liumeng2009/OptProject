@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
@@ -13,9 +12,13 @@ import { LayoutModule } from '@progress/kendo-angular-layout';
 
 import {LoginComponent} from './back/login/login.component';
 import {MainComponent} from './back/main/main.component';
-import {DangerComponent} from './back/components/danger/danger.component';
+import {WorkerComponent} from './back/worker/worker.component';
 
-import {AppRoutingModule} from './back/app-routing.module';
+
+import {DangerComponent} from './back/components/danger/danger.component';
+import {SuccessComponent} from './back/components/success/success.component';
+
+import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 
 import {LoginService} from './back/login/login.service'
 import {MainService} from './back/main/main.service'
@@ -26,26 +29,29 @@ import {MainService} from './back/main/main.service'
 
     LoginComponent,
     MainComponent,
+    WorkerComponent,
 
-    DangerComponent
+    DangerComponent,
+    SuccessComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
     HttpModule,
 
     BrowserAnimationsModule,
     ButtonsModule,
     LayoutModule,
 
-    AppRoutingModule
+    panelbarRouting
   ],
   providers: [
     CookieService,
 
     LoginService,
-    MainService
+    MainService,
+
+    appRoutingProvider
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

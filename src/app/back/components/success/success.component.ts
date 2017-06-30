@@ -2,8 +2,8 @@ import { Component, OnChanges, Input, trigger, state, style, animate, transition
 
 import {AlertData} from '../../../bean/alertData'
 @Component({
-  selector: 'danger',
-  templateUrl:'./danger.component.html',
+  selector: 'success',
+  templateUrl:'./success.component.html',
   animations: [ // 动画的内容
     trigger('visibility', [
       // state 控制不同的状态下对应的不同的样式
@@ -16,14 +16,13 @@ import {AlertData} from '../../../bean/alertData'
   ]
 })
 
-export class DangerComponent implements OnChanges{
+export class SuccessComponent implements OnChanges{
   visibility = 'hidden'; // 避免ngOnChanges()并降低代码复杂度
 
   ngOnChanges() {
-    //this.visibility = this.isVisible ? 'shown' : 'hidden';
     let type=this.alertData.type;
     console.log(type);
-    if(type=='danger'){
+    if(type=='success'){
       this.visibility='shown'
     }
     else{

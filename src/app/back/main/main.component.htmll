@@ -42,6 +42,7 @@
         <li><a href="#">数据设置</a></li>
         <li class="active">办公人员设置</li>
       </ol>
+      <worker></worker>
     </div>
   </div>
 </div>
