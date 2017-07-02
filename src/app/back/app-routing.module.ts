@@ -6,9 +6,9 @@ import {LoginComponent} from './login/login.component';
 import {MainComponent} from './main/main.component';
 
 export const PanelbarRoutes:Routes=[
-  {path:'',redirectTo:'/main',pathMatch:'full'},
-  {path:'login',component:LoginComponent},
-  {path:'admin',component:MainComponent}
+  {path:'',redirectTo:'/admin',pathMatch:'full',data:{name:'opp'}},
+  {path:'login',component:LoginComponent,data:{name:'dsdsd'}},
+  {path:'admin',component:MainComponent,data:{name:'rrrrrrrrr'}}
 ];
 
 export const appRoutingProvider:any[]=[];

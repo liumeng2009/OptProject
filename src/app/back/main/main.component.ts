@@ -6,6 +6,8 @@ import {AlertData} from '../../bean/alertData'
 
 import {MainService} from './main.service'
 
+import {LoginComponent} from '../login/login.component'
+
 @Component({
   selector:'main-area',
   templateUrl:'./main.component.html',
@@ -39,9 +41,6 @@ export class MainComponent implements OnInit{
               type:'danger',
               info:data.message
             }
-            setTimeout(()=>{
-              this.router.navigate(['login']);
-            },1000);
 
           }
         },
@@ -50,9 +49,6 @@ export class MainComponent implements OnInit{
             type:'danger',
             info:<any>error
           }
-          setTimeout(()=>{
-            this.router.navigate(['login']);
-          },1000);
         }
       );
   }

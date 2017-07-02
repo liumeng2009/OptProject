@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { FormsModule }   from '@angular/forms';
 
 import { AppComponent } from './app.component';
 
@@ -14,9 +15,9 @@ import {LoginComponent} from './back/login/login.component';
 import {MainComponent} from './back/main/main.component';
 import {WorkerComponent} from './back/worker/worker.component';
 
-
 import {DangerComponent} from './back/components/danger/danger.component';
 import {SuccessComponent} from './back/components/success/success.component';
+import {InfoComponent} from './back/components/info/info.component';
 
 import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 
@@ -32,11 +33,13 @@ import {MainService} from './back/main/main.service'
     WorkerComponent,
 
     DangerComponent,
-    SuccessComponent
+    SuccessComponent,
+    InfoComponent
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    FormsModule,
 
     BrowserAnimationsModule,
     ButtonsModule,

@@ -17,9 +17,9 @@ export class MainService{
   constructor(private http:Http,private cookieService:CookieService){}
 
   getUserInfo():Observable<ResponseData>{
-    let token=this.cookieService.get('optUser');
-    console.log('请求的url是：'+this.loginurl+'?token='+token);
-    return this.http.get(this.loginurl+'?token='+token)
+    let token=this.cookieService.get('optToken');
+    console.log('请求的url是：'+this.loginurl+token);
+    return this.http.get(this.loginurl+token)
       .map(this.extractData)
       .catch(this.handleError)
   }

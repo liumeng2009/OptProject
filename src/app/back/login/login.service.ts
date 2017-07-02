@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 import {User} from '../../bean/user';
 
 import {OptConfig} from '../../config/config'
+import {ResponseData} from "../../bean/responseData";
 
 @Injectable()
 export class LoginService{
@@ -15,7 +16,7 @@ export class LoginService{
 
   constructor(private http:Http){}
 
-  login(username:string,password:string):Observable<User>{
+  login(username:string,password:string):Observable<ResponseData>{
 
     let headers=new Headers({'Content-Type':'application/json'});
     let options=new RequestOptions(headers);
@@ -28,7 +29,7 @@ export class LoginService{
   private extractData(res:Response){
     let body=res.json();
     console.log(JSON.stringify(body));
-    return body.data||{};
+    return body||{};
   }
   private handleError(error:Response|any){
     let errMsg:string;
