@@ -2,26 +2,30 @@
 <danger [alertData]="alertData"></danger>
 <success [alertData]="alertData"></success>
 <info [alertData]="alertData"></info>
-<div class="layout"  *ngIf="user">
-  <div class="navigation-pane">
-    <kendo-panelbar (stateChange)="stateChange($event)" [selectable]="false">
-      <kendo-panelbar-item
-        *ngFor="let route of router.config"
-        [id]="route.path"
-        [title]="route.data.name ? route.data.name : 'home'"
-        [selected]="route.path == selectedId">
+
+<div class="container-fluid" *ngIf="user">
+  <div class="row">
+    <div class="col-xs-12 col-sm-3 col-lg-3 col-md-3">
+      <kendo-panelbar (stateChange)="stateChange($event)" [selectable]="false">
         <kendo-panelbar-item
-          *ngFor="let child of route.children"
-          [title]="child?.path || 'about'"
-          [id]="route.path + '/' + child?.path"
-          [selected]="route.path + '/' + child?.path == selectedId"
+          *ngFor="let route of (router.config | urlshow)"
+          [id]="route.path"
+          [title]="route.data.name ? route.data.name : 'home'"
+          [selected]="route.path == selectedId"
         >
+          <kendo-panelbar-item
+            *ngFor="let child of route.children"
+            [title]="child?.data.name"
+            [id]="route.path + '/' + child?.path"
+            [selected]="route.path + '/' + child?.path == selectedId"
+          >
+          </kendo-panelbar-item>
         </kendo-panelbar-item>
-      </kendo-panelbar-item>
-    </kendo-panelbar>
-  </div>
-  <div class="content-pane">
-    <router-outlet></router-outlet>
+      </kendo-panelbar>
+    </div>
+    <div class="col-xs-12 col-sm-8 col-lg-8 col-md-8">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
 <login-area *ngIf="!user" (updateUser)="userChange($event)" ></login-area>

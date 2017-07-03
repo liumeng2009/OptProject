@@ -1,6 +1,6 @@
 import {Component,OnInit} from '@angular/core';
 
-import {User} from '../../bean/user'
+import {User} from '../../../bean/user'
 
 @Component({
   selector:'worker',

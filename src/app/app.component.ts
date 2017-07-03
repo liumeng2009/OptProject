@@ -1,10 +1,12 @@
 import { Component,OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import {Location} from '@angular/common';
+
 import {PanelBarItemModel} from "@progress/kendo-angular-layout";
 
 import {User} from './bean/user';
 
-import {MainService} from "./back/main/main.service";
+import {AppService} from "./app.service";
 import {AlertData} from "./bean/alertData";
 import {Title} from "@angular/platform-browser";
 
@@ -25,25 +27,27 @@ export class AppComponent implements OnInit{
     info:''
   }
 
-  constructor(router:Router,private mainService:MainService,private title:Title){
+  constructor(router:Router,private appService:AppService,private title:Title,private location:Location){
+    /*
+    for(let i=0;i<router.config.length;i++){
+      if(!router.config[i].data.show){
+        router.config.splice(i,1);
+        i--;
+      }
+    }
+    */
     this.router=router;
   }
 
   ngOnInit(){
-    this.mainService.getUserInfo()
+    this.appService.getUserInfo()
       .subscribe(
         data=>{
           if(data.status==0){
-            console.log(JSON.stringify(data));
-            //this.user=data.data;
+            this.user=data.data;
+            this.title.setTitle('首页');
           }
           else{
-            /*
-            this.alertData={
-              type:'info',
-              info:'请先登录'
-            }
-            */
             this.title.setTitle('登录');
           }
         },
@@ -54,6 +58,8 @@ export class AppComponent implements OnInit{
           }
         }
       );
+    let url=this.location.path();
+    this.selectedId=url;
   }
 
   public stateChange(data:Array<PanelBarItemModel>):boolean{
@@ -67,7 +73,6 @@ export class AppComponent implements OnInit{
   }
 
   userChange(user:User){
-    alert('接到子组件消息了');
     this.user=user;
   }
 
