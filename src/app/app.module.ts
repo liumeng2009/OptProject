@@ -28,10 +28,10 @@ import {InfoComponent} from './back/components/info/info.component';
 import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 
 import {LoginService} from './back/login/login.service'
-import {AppService} from './app.service'
+import {MainService} from './back/main/main.service'
 import {MainComponent} from "./back/main/main.component";
 
-import {UrlShowPipe} from './url-show.pipe';
+import {MainPipe} from './back/main/main.pipe';
 
 @NgModule({
   declarations: [
@@ -49,7 +49,7 @@ import {UrlShowPipe} from './url-show.pipe';
     SuccessComponent,
     InfoComponent,
 
-    UrlShowPipe
+    MainPipe
   ],
   imports: [
     BrowserModule,
@@ -66,7 +66,7 @@ import {UrlShowPipe} from './url-show.pipe';
     CookieService,
 
     LoginService,
-    AppService,
+    MainService,
 
     appRoutingProvider
   ],

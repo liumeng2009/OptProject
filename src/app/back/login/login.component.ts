@@ -1,4 +1,5 @@
-import {Output, EventEmitter, Component, Inject} from '@angular/core';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
 
 import {CookieService} from 'angular2-cookie/core';
 
@@ -15,11 +16,10 @@ import {AlertData} from "../../bean/alertData";
 
 export class LoginComponent{
 
-  @Output() updateUser:EventEmitter<User>=new EventEmitter();
-
   constructor(
     private loginService:LoginService,
-    private cookieService:CookieService
+    private cookieService:CookieService,
+    private router:Router
   ){};
   user=new User('','');
 
@@ -33,12 +33,11 @@ export class LoginComponent{
       .subscribe(
         data=>{
           if(data.status==0){
-            this.user=data.data;
-
+            //this.user=data.data;
+            this.router.navigate(['/admin']);
             let date=new Date();
             date.setDate(date.getDate()+999);
             this.cookieService.put('optToken',data.data.token,{expires:date});
-            this.updateUser.emit(this.user);
           }
           else{
             this.alertData={

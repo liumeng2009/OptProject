@@ -1,3 +1,30 @@
-<h1>欢迎，可以放置一些数据统计表</h1>
+<danger [alertData]="alertData"></danger>
+<success [alertData]="alertData"></success>
+<info [alertData]="alertData"></info>
 
-
+<div class="container-fluid" *ngIf="user">
+  <div class="row">
+    <div class="col-xs-12 col-sm-4 col-lg-4 col-md-4">
+      <kendo-panelbar (stateChange)="stateChange($event)" [selectable]="false">
+        <kendo-panelbar-item
+          *ngFor="let route of (router.config | urlshow)"
+          [id]="'admin/'+route.path"
+          [title]="route.data.name ? route.data.name : 'home'"
+          [selected]="'admin/'+route.path == selectedId"
+          [expanded]="route.data.expanded?route.data.expanded:false"
+        >
+          <kendo-panelbar-item
+            *ngFor="let child of route.children"
+            [title]="child?.data.name"
+            [id]="'admin/'+route.path + '/' + child?.path"
+            [selected]="'admin/'+route.path + '/' + child?.path == selectedId"
+          >
+          </kendo-panelbar-item>
+        </kendo-panelbar-item>
+      </kendo-panelbar>
+    </div>
+    <div class="col-xs-12 col-sm-8 col-lg-8 col-md-8">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

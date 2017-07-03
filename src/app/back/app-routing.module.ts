@@ -11,12 +11,17 @@ import {AddressComponent} from './basicSettings/address/address.component';
 import {WorkerComponent} from './basicSettings/worker/worker.component';
 
 export const PanelbarRoutes:Routes=[
-  {path:'',redirectTo:'/admin',pathMatch:'full',data:{name:'首页',show:false}},
-  {path:'admin',component:MainComponent,data:{name:'首页',show:true}},
-  {path:'admin/basicSettings',component:BasicSettingsComponent,data:{name:'基本设置',show:true},children:[
-    { path: 'address', component: AddressComponent,data:{name:'地址设置',show:true} },
-    { path: 'worker', component: WorkerComponent,data:{name:'人员设置',show:true} }
-  ]}
+  {path:'',redirectTo:'/admin',pathMatch:'full',data:{name:'首页1',show:false}},
+  {path:'login',component:LoginComponent,data:{name:'首页2',show:false}},
+  {path:'admin',component:MainComponent,data:{name:'首页3',show:false},children:[
+    {path:'basic',component:BasicSettingsComponent,data:{name:'基本设置',show:true},children:[
+      { path: 'address', component: AddressComponent,data:{name:'地址设置',show:true} },
+      { path: 'worker', component: WorkerComponent,data:{name:'人员设置',show:true} }
+    ]}
+  ]},
+
+
+
 ];
 
 export const appRoutingProvider:any[]=[];
