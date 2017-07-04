@@ -26,14 +26,6 @@ export class MainComponent implements OnInit{
   }
 
   constructor(router:Router,private mainService:MainService,private location:Location){
-    /*
-     for(let i=0;i<router.config.length;i++){
-     if(!router.config[i].data.show){
-     router.config.splice(i,1);
-     i--;
-     }
-     }
-     */
     this.router=router;
   }
 
@@ -66,10 +58,22 @@ export class MainComponent implements OnInit{
   public stateChange(data:Array<PanelBarItemModel>):boolean{
     let focusedEvent: PanelBarItemModel = data.filter(item => item.focused === true)[0];
 
-    if (focusedEvent.id !== "info") {
+    if (focusedEvent.id !== "default-0") {
       this.selectedId = focusedEvent.id;
       this.router.navigate(["/" + focusedEvent.id]);
     }
     return false;
   }
+
+  private baseImageUrl: string = "./assets/image/";
+
+  private imageUrl(imageName: string) :string {
+    return this.baseImageUrl + imageName + ".jpg";
+  }
+
+  private logout(){
+    alert(123);
+  }
+
+
 }

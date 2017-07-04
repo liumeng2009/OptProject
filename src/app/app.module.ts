@@ -20,6 +20,10 @@ import {AddressComponent} from './back/basicSettings/address/address.component';
 
 //权限设置组件
 
+//工单组件
+import {OperationsComponent} from './back/operations/operations.component';
+import {OperationListComponent} from './back/operations/list/operation_list.component';
+
 
 import {DangerComponent} from './back/components/danger/danger.component';
 import {SuccessComponent} from './back/components/success/success.component';
@@ -44,6 +48,9 @@ import {MainPipe} from './back/main/main.pipe';
     BasicSettingsComponent,
     WorkerComponent,
     AddressComponent,
+
+    OperationsComponent,
+    OperationListComponent,
 
     DangerComponent,
     SuccessComponent,
