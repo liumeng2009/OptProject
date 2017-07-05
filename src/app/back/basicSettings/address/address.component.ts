@@ -1,6 +1,7 @@
 import {Component,OnInit} from '@angular/core';
+import {Location} from '@angular/common';
+import {Router} from '@angular/router';
 
-import {User} from '../../../bean/user'
 
 @Component({
   selector:'address',
@@ -8,9 +9,18 @@ import {User} from '../../../bean/user'
   styleUrls:['./address.component.scss']
 })
 
-export class AddressComponent{
+export class AddressComponent implements OnInit{
 
   constructor(
-
+    private location:Location,
+    private router:Router
   ){};
+
+  ngOnInit(){
+    let url=this.location.path();
+    url=url.substring(1,url.length);
+    if(url=='admin/basic/address'){
+      this.router.navigate(['admin/basic/address/list']);
+    }
+  }
 }

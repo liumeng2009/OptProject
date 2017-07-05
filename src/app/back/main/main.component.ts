@@ -1,8 +1,7 @@
 import {Component,OnInit} from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router'
 import {Location} from '@angular/common';
-
-import {Observable} from 'rxjs/observable';
+import {CookieService} from 'angular2-cookie/core';
 
 import {PanelBarItemModel} from "@progress/kendo-angular-layout";
 
@@ -29,7 +28,7 @@ export class MainComponent implements OnInit{
   }
   private breadcrumb:Bread[]=[]
 
-  constructor(router:Router,private mainService:MainService,private location:Location,private route:ActivatedRoute){
+  constructor(router:Router,private mainService:MainService,private location:Location,private route:ActivatedRoute,private cookieService:CookieService){
     this.router=router;
   }
 
@@ -60,6 +59,15 @@ export class MainComponent implements OnInit{
 
     this.createBreadCrumb();
 
+    let t=this;
+    //   /admin默认跳转到/admin/total
+    if(url=='admin'){
+      this.router.navigate(['/admin/total']).then(function(){
+        t.selectedId='admin/total';
+        t.createBreadCrumb();
+      });
+    }
+
   }
 
   private createBreadCrumb(){
@@ -70,21 +78,40 @@ export class MainComponent implements OnInit{
       name:'首页',
       path:'/admin'
     };
-
-    let secondBread:Bread={
-      name:'',
-      path:''
-    };
     this.breadcrumb.push(firstBread);
-    this.breadcrumb.push(secondBread);
+    if(this.route.firstChild){
+      let secondBread:Bread={
+        name:'',
+        path:''
+      };
 
-    this.route.firstChild.data.subscribe((data => {
-      this.breadcrumb[1].name=data.name
-    }));
+      this.breadcrumb.push(secondBread);
 
-    this.route.firstChild.url.subscribe((url => {
-      this.breadcrumb[1].path=this.breadcrumb[0].path+'/'+url[0].path;
-    }));
+      this.route.firstChild.data.subscribe((data => {
+        this.breadcrumb[1].name=data.name
+      }));
+
+      this.route.firstChild.url.subscribe((url => {
+        this.breadcrumb[1].path=this.breadcrumb[0].path+'/'+url[0].path;
+      }));
+    }
+    if(this.route.firstChild&&this.route.firstChild.firstChild){
+      let thirdBread:Bread={
+        name:'',
+        path:''
+      };
+
+      this.breadcrumb.push(thirdBread);
+
+      this.route.firstChild.firstChild.data.subscribe((data => {
+        this.breadcrumb[2].name=data.name
+      }));
+
+      this.route.firstChild.firstChild.url.subscribe((url => {
+        this.breadcrumb[2].path=this.breadcrumb[1].path+'/'+url[0].path;
+      }));
+    }
+
   }
 
   public stateChange(data:Array<PanelBarItemModel>):boolean{
@@ -93,7 +120,10 @@ export class MainComponent implements OnInit{
     this.createBreadCrumb();
 
     this.selectedId = focusedEvent.id;
-    this.router.navigate(["/" + focusedEvent.id]);
+    let t=this;
+    this.router.navigate(["/" + focusedEvent.id]).then(function(){
+      t.createBreadCrumb();
+    });
 
     //路由的data属性中，有selected属性，这个属性是为了载入时，正确显示菜单选中状态的。当路由发生改变，需要把这个属性删除。只有笨办法，遍历路由树。
     this.searchAndDeleteNodePropertySelected(this.router.config);
@@ -119,7 +149,13 @@ export class MainComponent implements OnInit{
   }
 
   private logout(){
-    alert(123);
+    this.cookieService.remove('optToken');
+    this.alertData.type='info';
+    this.alertData.info='正在退出...';
+    setTimeout(()=>{
+      this.router.navigate(['/login']);
+    },2000);
+
   }
 
 
