@@ -16,13 +16,19 @@ import {LoginComponent} from './back/login/login.component';
 //基本设置组件
 import {BasicSettingsComponent} from './back/basicSettings/baseSettings.component';
 import {WorkerComponent} from './back/basicSettings/worker/worker.component';
+
 import {AddressComponent} from './back/basicSettings/address/address.component';
+import {AddressListComponent} from './back/basicSettings/address/list/address-list.component';
+import {AddressAddComponent} from './back/basicSettings/address/add/address-add.component';
+import {AddressEditComponent} from './back/basicSettings/address/edit/address-edit.component';
 
 //权限设置组件
 
 //工单组件
 import {OperationsComponent} from './back/operations/operations.component';
 import {OperationListComponent} from './back/operations/list/operation_list.component';
+//信息综述
+import {TotalComponent} from './back/total/total.component';
 
 
 import {DangerComponent} from './back/components/danger/danger.component';
@@ -48,9 +54,14 @@ import {MainPipe} from './back/main/main.pipe';
     BasicSettingsComponent,
     WorkerComponent,
     AddressComponent,
+    AddressListComponent,
+    AddressAddComponent,
+    AddressEditComponent,
 
     OperationsComponent,
     OperationListComponent,
+
+    TotalComponent,
 
     DangerComponent,
     SuccessComponent,

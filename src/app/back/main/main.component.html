@@ -12,7 +12,8 @@
       </li>
       <li>
         <a class="" (click)="logout()"  href="#" title="退出">
-          <span class="glyphicon glyphicon-off top-func-bottom"></span>
+<!--          <span class="glyphicon glyphicon-off top-func-bottom"></span>-->
+          退出
         </a>
       </li>
     </ul>
@@ -35,19 +36,24 @@
           [id]="'admin/'+route.path"
           [title]="route.data.name ? route.data.name : 'home'"
           [selected]="'admin/'+route.path == selectedId"
-          [expanded]="true"
+          [expanded]="route.data.expanded"
         >
           <kendo-panelbar-item
             *ngFor="let child of route.children"
             [title]="child?.data.name"
             [id]="'admin/'+route.path + '/' + child?.path"
-            [selected]="'admin/'+route.path + '/' + child?.path == selectedId"
+            [selected]="(selectedId=='admin/'+route.path + '/' + child?.path)||child.data.selected==true"
           >
           </kendo-panelbar-item>
         </kendo-panelbar-item>
       </kendo-panelbar>
     </div>
     <div class="col-xs-12 col-sm-9 col-lg-9 col-md-9">
+      <ol class="breadcrumb">
+        <li *ngFor="let bread of breadcrumb">
+          <a href="{{bread.path}}">{{bread.name}}</a>
+        </li>
+      </ol>
       <router-outlet></router-outlet>
     </div>
   </div>
