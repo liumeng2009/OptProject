@@ -10,6 +10,7 @@ import {CookieService} from 'angular2-cookie/services/cookies.service'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ButtonsModule} from '@progress/kendo-angular-buttons';
 import { LayoutModule } from '@progress/kendo-angular-layout';
+import { GridModule } from '@progress/kendo-angular-grid';
 
 //登录组件
 import {LoginComponent} from './back/login/login.component';
@@ -77,6 +78,7 @@ import {MainPipe} from './back/main/main.pipe';
     BrowserAnimationsModule,
     ButtonsModule,
     LayoutModule,
+    GridModule,
 
     panelbarRouting,
   ],

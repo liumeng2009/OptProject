@@ -11,8 +11,9 @@
         <a class="" href="#">消息</a>
       </li>
       <li>
-        <a class="top-func-bottom" (click)="logout()"  href="javascript:void(0);" title="退出">
-          <span class="glyphicon glyphicon-off "></span>
+        <a (click)="logout()"  href="javascript:void(0);" title="退出">
+<!--          <span class="glyphicon glyphicon-off "></span>-->
+          切换用户
         </a>
       </li>
     </ul>
@@ -23,7 +24,7 @@
     <div class="col-xs-4 col-sm-4 col-lg-2 col-md-3">
       <div>
         <div class="teamMate">
-          <img [src]="imageUrl('avata_128')" alt="Andrew Fuller">
+          <img [src]="imageUrl('avata_128')" alt="{{user.name}}">
                             <span class="mate-info">
                               <h2>{{user.name}}</h2>
                             </span>
