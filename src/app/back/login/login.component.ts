@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
+import {Component,OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {Title} from '@angular/platform-browser';
 
 import {CookieService} from 'angular2-cookie/core';
 
@@ -14,14 +15,19 @@ import {AlertData} from "../../bean/alertData";
   styleUrls:['./login.component.scss']
 })
 
-export class LoginComponent{
+export class LoginComponent implements OnInit{
 
   constructor(
     private loginService:LoginService,
     private cookieService:CookieService,
-    private router:Router
+    private router:Router,
+    private title:Title
   ){};
   user=new User('','');
+
+  ngOnInit(){
+    this.title.setTitle('登录');
+  }
 
   alertData:AlertData={
     type:'',

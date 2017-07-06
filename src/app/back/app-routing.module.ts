@@ -40,10 +40,8 @@ export const PanelbarRoutes:Routes=[
       { path: 'list', component: OperationListComponent,data:{name:'工单列表'} }
     ]},
 
-  ]},
-
-
-
+  ]}
+/*  {path:'**',component:OtherComponent,data:{name:'页面未找到'}}*/
 ];
 
 export const appRoutingProvider:any[]=[];

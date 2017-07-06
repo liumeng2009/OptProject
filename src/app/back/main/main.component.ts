@@ -2,6 +2,7 @@ import {Component,OnInit} from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router'
 import {Location} from '@angular/common';
 import {CookieService} from 'angular2-cookie/core';
+import {Title} from '@angular/platform-browser';
 
 import {PanelBarItemModel} from "@progress/kendo-angular-layout";
 
@@ -20,39 +21,29 @@ import {MainService} from './main.service'
 
 export class MainComponent implements OnInit{
   private user:User;
-  private router:Router;
   private selectedId:string='';
-  alertData:AlertData={
+  private routerCopy:Router;
+  private alertData:AlertData={
     type:'',
     info:''
   }
   private breadcrumb:Bread[]=[]
 
-  constructor(router:Router,private mainService:MainService,private location:Location,private route:ActivatedRoute,private cookieService:CookieService){
-    this.router=router;
+  constructor(
+    private router:Router,
+    private mainService:MainService,
+    private location:Location,
+    private route:ActivatedRoute,
+    private cookieService:CookieService,
+    private title:Title
+
+  ){
+    //this.router.navigateByUrl('login');
+    this.routerCopy=router;
   }
 
   ngOnInit(){
-    this.mainService.getUserInfo()
-      .subscribe(
-        data=>{
-          if(data.status==0){
-            this.user=data.data;
-          }
-          else{
-            this.router.navigate(['/login']);
-          }
-        },
-        error=>{
-          this.router.navigate(['/login']);
-          /*
-          this.alertData={
-            type:'danger',
-            info:<any>error
-          }
-          */
-        }
-      );
+    this.checkLogin();
     let url=this.location.path();
     url=url.substring(1,url.length);
     this.selectedId=url;
@@ -67,7 +58,29 @@ export class MainComponent implements OnInit{
         t.createBreadCrumb();
       });
     }
+  }
 
+  private checkLogin(){
+    this.mainService.getUserInfo()
+      .subscribe(
+        data=>{
+          if(data.status==0){
+            this.user=data.data;
+          }
+          else{
+            this.router.navigate(['/login']);
+          }
+        },
+        error=>{
+          this.router.navigate(['/login']);
+          /*
+           this.alertData={
+           type:'danger',
+           info:<any>error
+           }
+           */
+        }
+      );
   }
 
   private createBreadCrumb(){
@@ -78,6 +91,7 @@ export class MainComponent implements OnInit{
       name:'首页',
       path:'/admin'
     };
+    this.title.setTitle(firstBread.name);
     this.breadcrumb.push(firstBread);
     if(this.route.firstChild){
       let secondBread:Bread={
@@ -89,6 +103,7 @@ export class MainComponent implements OnInit{
 
       this.route.firstChild.data.subscribe((data => {
         this.breadcrumb[1].name=data.name
+        this.title.setTitle(data.name)
       }));
 
       this.route.firstChild.url.subscribe((url => {
@@ -105,6 +120,7 @@ export class MainComponent implements OnInit{
 
       this.route.firstChild.firstChild.data.subscribe((data => {
         this.breadcrumb[2].name=data.name
+        this.title.setTitle(data.name);
       }));
 
       this.route.firstChild.firstChild.url.subscribe((url => {
@@ -121,7 +137,17 @@ export class MainComponent implements OnInit{
 
     this.selectedId = focusedEvent.id;
     let t=this;
-    this.router.navigate(["/" + focusedEvent.id]).then(function(){
+
+    let intoOtherUrl:string;
+    if(focusedEvent.id=='admin/basic/address'){
+      intoOtherUrl='admin/basic/address/list';
+    }
+    else{
+      intoOtherUrl=focusedEvent.id;
+    }
+
+    this.router.navigate(["/" +intoOtherUrl]).then(function(){
+      t.checkLogin();
       t.createBreadCrumb();
     });
 
@@ -149,13 +175,15 @@ export class MainComponent implements OnInit{
   }
 
   private logout(){
-    this.cookieService.remove('optToken');
-    this.alertData.type='info';
-    this.alertData.info='正在退出...';
-    setTimeout(()=>{
-      this.router.navigate(['/login']);
-    },2000);
-
+    //this.cookieService.remove('optToken');
+    this.alertData={
+      type:'info',
+      info:'正在退出'
+    }
+    //let t=this;
+    this.routerCopy.navigateByUrl('login');
+    //this.router.navigate(["./login"], {relativeTo: this.route.parent});
+    //this.user=null;
   }
 
 

@@ -78,7 +78,7 @@ import {MainPipe} from './back/main/main.pipe';
     ButtonsModule,
     LayoutModule,
 
-    panelbarRouting
+    panelbarRouting,
   ],
   providers: [
     CookieService,

@@ -18,7 +18,6 @@ export class MainService{
 
   getUserInfo():Observable<ResponseData>{
     let token=this.cookieService.get('optToken');
-    console.log(this.loginurl+token);
     return this.http.get(this.loginurl+token)
       .map(this.extractData)
       .catch(this.handleError)
@@ -26,7 +25,6 @@ export class MainService{
 
   private extractData(res:Response){
     let body=res.json();
-    console.log(JSON.stringify(body));
     return body||{};
   }
   private handleError(error:Response|any){

@@ -8,10 +8,10 @@ import {AlertData} from '../../../bean/alertData'
     trigger('visibility', [
       // state 控制不同的状态下对应的不同的样式
       state('shown' , style({ transform: 'translateY(0%)' })),
-      state('hidden', style({ transform: 'translateY(-100%)' })),
+      state('hidden', style({ transform: 'translateY(-300%)' })),
       // transition 控制状态到状态以什么样的方式来进行转换
       transition('shown => hidden', animate('1000ms')),
-      transition('hidden => shown', animate('200ms')),
+      transition('hidden => shown', animate('500ms')),
     ])
   ]
 })
