@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 
+import {products} from './produce';
+
 @Component({
   selector:'address-list',
   templateUrl:'./address-list.component.html',
@@ -14,16 +16,3 @@ export class AddressListComponent{
 
   private gridData: any[] = products;
 }
-
-const products = [{
-  "ProductID": 1,
-  "ProductName": "Chai",
-  "UnitPrice": 18.0000,
-  "Discontinued": true
-}, {
-  "ProductID": 2,
-  "ProductName": "Chang",
-  "UnitPrice": 19.0000,
-  "Discontinued": false
-}
-];

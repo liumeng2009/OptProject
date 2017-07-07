@@ -1,7 +1,7 @@
 <danger [alertData]="alertData"></danger>
 <success [alertData]="alertData"></success>
 <info [alertData]="alertData"></info>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <ul class="nav navbar-nav" style="float:right">
       <li>
@@ -19,7 +19,7 @@
     </ul>
   </div>
 </nav>
-<div class="container-fluid" *ngIf="user">
+<div class="container-fluid" *ngIf="user" style="padding-top: 70px;">
   <div class="row">
     <div class="col-xs-4 col-sm-4 col-lg-2 col-md-3">
       <div>
