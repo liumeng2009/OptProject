@@ -18,7 +18,8 @@ export class MainService{
 
   getUserInfo():Observable<ResponseData>{
     let token=this.cookieService.get('optToken');
-    return this.http.get(this.loginurl+token)
+    console.log(this.loginurl+'?token='+token);
+    return this.http.get(this.loginurl+'?token='+token)
       .map(this.extractData)
       .catch(this.handleError)
   }
