@@ -128,6 +128,24 @@ export class MainComponent implements OnInit{
       }));
     }
 
+    if(this.route.firstChild&&this.route.firstChild.firstChild&&this.route.firstChild.firstChild.firstChild){
+      let fourBread:Bread={
+        name:'',
+        path:''
+      };
+
+      this.breadcrumb.push(fourBread);
+
+      this.route.firstChild.firstChild.firstChild.data.subscribe((data => {
+        this.breadcrumb[3].name=data.name
+        this.title.setTitle(this.breadcrumb[2].name+'-'+data.name);
+      }));
+
+      this.route.firstChild.firstChild.firstChild.url.subscribe((url => {
+        this.breadcrumb[3].path=this.breadcrumb[2].path+'/'+url[0].path;
+      }));
+    }
+
   }
 
   public stateChange(data:Array<PanelBarItemModel>):boolean{

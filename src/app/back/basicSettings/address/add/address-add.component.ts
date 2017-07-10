@@ -1,4 +1,6 @@
-import {Component,OnInit} from '@angular/core';
+import {Component} from '@angular/core';
+
+import {Building} from '../../../../bean/building';
 
 @Component({
   selector:'address-add',
@@ -8,7 +10,13 @@ import {Component,OnInit} from '@angular/core';
 
 export class AddressAddComponent{
 
+  building=new Building('','',0,0);
+
   constructor(
 
   ){};
+
+  private onSubmit(){
+    alert(this.building);
+  }
 }

@@ -11,6 +11,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ButtonsModule} from '@progress/kendo-angular-buttons';
 import { LayoutModule } from '@progress/kendo-angular-layout';
 import { GridModule,PDFModule,ExcelModule } from '@progress/kendo-angular-grid';
+import { InputsModule } from '@progress/kendo-angular-inputs';
 
 //登录组件
 import {LoginComponent} from './back/login/login.component';
@@ -82,6 +83,7 @@ import {MainPipe} from './back/main/main.pipe';
     GridModule,
     PDFModule,
     ExcelModule,
+    InputsModule,
 
     panelbarRouting,
   ],

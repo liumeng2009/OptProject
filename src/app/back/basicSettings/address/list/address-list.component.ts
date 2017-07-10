@@ -1,4 +1,4 @@
-import {Component,OnInit} from '@angular/core';
+import {Component,OnInit,ElementRef} from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router';
 
 import {PageChangeEvent} from '@progress/kendo-angular-grid';
@@ -7,7 +7,6 @@ import {AddressService} from '../address.service';
 
 import {AlertData} from '../../../../bean/alertData'
 
-import {products} from './products';
 
 @Component({
   selector:'address-list',
@@ -17,16 +16,17 @@ import {products} from './products';
 
 export class AddressListComponent implements OnInit{
 
-  private gridData: any[]=products;
+  private gridData: any[];
 
-  private height:number=600;
+  private height:number=0;
   private pageSize:number=10;
   private skip:number=0;
 
   constructor(
     private addressService:AddressService,
     private router:Router,
-    private route:ActivatedRoute
+    private route:ActivatedRoute,
+    private el:ElementRef
   ){};
 
   private alertData:AlertData={
@@ -37,8 +37,8 @@ export class AddressListComponent implements OnInit{
 
 
   ngOnInit(){
-
-    //this.getData();
+    this.height=(window.document.body.clientHeight-70-56-50-20);
+    this.getData();
   }
 
   private getData(){
