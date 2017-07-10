@@ -1,2 +1,21 @@
-<kendo-grid [data]="gridData" [height]="600">
+<kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+  <ng-template kendoGridToolbarTemplate>
+    <button kendoButton  (click)="add()" [primary]="true">新增</button>
+    <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
+      <span style="color:green" class="k-icon k-i-refresh"></span>
+    </button>
+  </ng-template>
+
+<!--  <kendo-grid-column field="name" title="办公楼名称">
+  </kendo-grid-column>
+  <kendo-grid-column field="minfloor" title="最低楼层">
+  </kendo-grid-column>
+  <kendo-grid-column field="maxfloor" title="最高楼层">
+  </kendo-grid-column>
+  <kendo-grid-column field="address" title="详细地址">
+  </kendo-grid-column>-->
+
+  <ng-template kendoGridNoRecordsTemplate>
+    暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.
+  </ng-template>
 </kendo-grid>

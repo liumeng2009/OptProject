@@ -10,20 +10,22 @@ import {ResponseData} from '../../../bean/responseData';
 
 import {OptConfig} from '../../../config/config'
 
+
 @Injectable()
 export class AddressService{
-  private url=new OptConfig().serverPath+'/api/address/list'
+  private url=new OptConfig().serverPath+'/api/buildings/list'
 
   constructor(private http:Http,private cookieService:CookieService){}
 
   getAddressList():Observable<ResponseData>{
     let token=this.cookieService.get('optToken');
-    return this.http.get(this.url+token)
+    return this.http.get(this.url+'?token='+token)
       .map(this.extractData)
       .catch(this.handleError)
   }
 
   private extractData(res:Response){
+    console.log(888888888888888888);
     let body=res.json();
     return body||{};
   }

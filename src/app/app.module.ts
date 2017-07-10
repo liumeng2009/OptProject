@@ -10,7 +10,7 @@ import {CookieService} from 'angular2-cookie/services/cookies.service'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ButtonsModule} from '@progress/kendo-angular-buttons';
 import { LayoutModule } from '@progress/kendo-angular-layout';
-import { GridModule } from '@progress/kendo-angular-grid';
+import { GridModule,PDFModule,ExcelModule } from '@progress/kendo-angular-grid';
 
 //登录组件
 import {LoginComponent} from './back/login/login.component';
@@ -22,6 +22,7 @@ import {AddressComponent} from './back/basicSettings/address/address.component';
 import {AddressListComponent} from './back/basicSettings/address/list/address-list.component';
 import {AddressAddComponent} from './back/basicSettings/address/add/address-add.component';
 import {AddressEditComponent} from './back/basicSettings/address/edit/address-edit.component';
+import {AddressService} from './back/basicSettings/address/address.service';
 
 //权限设置组件
 
@@ -79,6 +80,8 @@ import {MainPipe} from './back/main/main.pipe';
     ButtonsModule,
     LayoutModule,
     GridModule,
+    PDFModule,
+    ExcelModule,
 
     panelbarRouting,
   ],
@@ -87,6 +90,7 @@ import {MainPipe} from './back/main/main.pipe';
 
     LoginService,
     MainService,
+    AddressService,
 
     appRoutingProvider
   ],
