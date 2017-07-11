@@ -1,6 +1,8 @@
-import {Component} from '@angular/core';
+import {Component,OnInit} from '@angular/core';
 
 import {Building} from '../../../../bean/building';
+
+import {MissionService} from '../../../main/mission.service';
 
 @Component({
   selector:'address-add',
@@ -8,13 +10,18 @@ import {Building} from '../../../../bean/building';
   styleUrls:['./address-add.component.scss']
 })
 
-export class AddressAddComponent{
+export class AddressAddComponent implements OnInit{
 
   building=new Building('','',0,0);
 
   constructor(
-
+    private missionService:MissionService
   ){};
+
+  ngOnInit(){
+    //alert(123);
+    this.missionService.change.emit(1);
+  }
 
   private onSubmit(){
     alert(this.building);

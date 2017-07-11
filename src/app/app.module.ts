@@ -43,6 +43,7 @@ import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 import {LoginService} from './back/login/login.service'
 import {MainService} from './back/main/main.service'
 import {MainComponent} from "./back/main/main.component";
+import {MissionService} from "./back/main/mission.service";
 
 import {MainPipe} from './back/main/main.pipe';
 
@@ -93,6 +94,7 @@ import {MainPipe} from './back/main/main.pipe';
     LoginService,
     MainService,
     AddressService,
+    MissionService,
 
     appRoutingProvider
   ],

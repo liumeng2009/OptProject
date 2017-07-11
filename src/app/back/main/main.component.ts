@@ -1,5 +1,5 @@
 import {Component,OnInit} from '@angular/core';
-import {Router,ActivatedRoute} from '@angular/router'
+import {Router,ActivatedRoute,NavigationEnd} from '@angular/router'
 import {Location} from '@angular/common';
 import {CookieService} from 'angular2-cookie/core';
 import {Title} from '@angular/platform-browser';
@@ -12,6 +12,7 @@ import {Bread} from '../../bean/bread'
 
 
 import {MainService} from './main.service'
+import {MissionService} from "./mission.service";
 
 @Component({
   selector:'main-area',
@@ -35,11 +36,18 @@ export class MainComponent implements OnInit{
     private location:Location,
     private route:ActivatedRoute,
     private cookieService:CookieService,
-    private title:Title
-
+    private title:Title,
+    private missionService:MissionService
   ){
     //this.router.navigateByUrl('login');
     this.routerCopy=router;
+
+
+    missionService.change.subscribe((value:number)=>{
+      this.createBreadCrumb();
+    })
+
+
   }
 
   ngOnInit(){
@@ -58,6 +66,46 @@ export class MainComponent implements OnInit{
         t.createBreadCrumb();
       });
     }
+
+    //路由监视，导航到某些特殊路由时，需要做的一些特殊处理.
+    this.router.events
+      .subscribe((event) => {
+        console.log(event);
+        if (event instanceof NavigationEnd) { // 当导航成功结束时执行
+          let urlNow=event.url;
+          urlNow=urlNow.substring(1,urlNow.length);
+
+          //某些特殊情况的跳转
+          //导航到地址，直接跳转到地址列表
+          if(event.url=='/admin/basic/address'){
+            this.router.navigateByUrl('/admin/basic/address/list');
+          }
+          //导航到首页，直接跳转到数据综述
+          if(event.url=='/admin'){
+            this.router.navigateByUrl('/admin/total');
+          }
+
+
+
+
+          //某些特殊情况的selectedId处理
+          //当url是地址列表，将选中的selectedid值设置为地址功能页
+          if(event.url=='/admin/basic/address/list'||'/admin/basic/address/add'){
+            this.selectedId='admin/basic/address';
+          }
+          else{
+            this.selectedId=urlNow;
+            console.log(urlNow);
+          }
+
+
+
+
+
+          this.searchAndDeleteNodePropertySelected(this.router.config);
+          this.createBreadCrumb();
+        }
+      });
   }
 
   private checkLogin(){
@@ -157,12 +205,12 @@ export class MainComponent implements OnInit{
     let t=this;
 
     let intoOtherUrl:string;
-    if(focusedEvent.id=='admin/basic/address'){
-      intoOtherUrl='admin/basic/address/list';
-    }
-    else{
-      intoOtherUrl=focusedEvent.id;
-    }
+    //if(focusedEvent.id=='admin/basic/address'){
+    //  intoOtherUrl='admin/basic/address';
+    //}
+    //else{
+    intoOtherUrl=focusedEvent.id;
+    //}
 
     this.router.navigate(["/" +intoOtherUrl]).then(function(){
       t.checkLogin();
@@ -203,6 +251,8 @@ export class MainComponent implements OnInit{
     //this.router.navigate(["./login"], {relativeTo: this.route.parent});
     //this.user=null;
   }
+
+
 
 
 }
