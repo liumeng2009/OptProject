@@ -10,18 +10,31 @@ import {ResponseData} from '../../../bean/responseData';
 
 import {OptConfig} from '../../../config/config'
 
+import {Building} from '../../../bean/building';
+
 
 @Injectable()
 export class AddressService{
-  private url=new OptConfig().serverPath+'/api/buildings/list'
+  private headers = new Headers({'Content-Type': 'application/json'});
+
+  private listurl=new OptConfig().serverPath+'/api/buildings/list';
+  private saveurl=new OptConfig().serverPath+'/api/buildings/save';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
   getAddressList():Observable<ResponseData>{
     let token=this.cookieService.get('optToken');
-    return this.http.get(this.url+'?token='+token)
+    return this.http.get(this.listurl+'?token='+token)
       .map(this.extractData)
       .catch(this.handleError)
+  }
+
+  create(building:Building): Observable<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.saveurl+'?token='+token, building, {headers: this.headers})
+      .map(this.extractData)
+      .catch(this.handleError);
   }
 
   private extractData(res:Response){

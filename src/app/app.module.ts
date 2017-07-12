@@ -13,6 +13,10 @@ import { LayoutModule } from '@progress/kendo-angular-layout';
 import { GridModule,PDFModule,ExcelModule } from '@progress/kendo-angular-grid';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 
+import{CustomFormsModule} from 'ng2-validation';
+
+import {ToasterComponent, ToastComponent, ToasterAppComponent} from 'angular2-toastr/index';
+
 //登录组件
 import {LoginComponent} from './back/login/login.component';
 //基本设置组件
@@ -71,6 +75,8 @@ import {MainPipe} from './back/main/main.pipe';
     SuccessComponent,
     InfoComponent,
 
+    ToasterComponent, ToastComponent, ToasterAppComponent,
+
     MainPipe
   ],
   imports: [
@@ -85,6 +91,7 @@ import {MainPipe} from './back/main/main.pipe';
     PDFModule,
     ExcelModule,
     InputsModule,
+    CustomFormsModule,
 
     panelbarRouting,
   ],

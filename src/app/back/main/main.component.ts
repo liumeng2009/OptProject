@@ -1,7 +1,6 @@
 import {Component,OnInit} from '@angular/core';
 import {Router,ActivatedRoute,NavigationEnd} from '@angular/router'
 import {Location} from '@angular/common';
-import {CookieService} from 'angular2-cookie/core';
 import {Title} from '@angular/platform-browser';
 
 import {PanelBarItemModel} from "@progress/kendo-angular-layout";
@@ -35,16 +34,17 @@ export class MainComponent implements OnInit{
     private mainService:MainService,
     private location:Location,
     private route:ActivatedRoute,
-    private cookieService:CookieService,
     private title:Title,
     private missionService:MissionService
   ){
-    //this.router.navigateByUrl('login');
     this.routerCopy=router;
 
 
-    missionService.change.subscribe((value:number)=>{
-      this.createBreadCrumb();
+    missionService.change.subscribe((alertData:AlertData)=>{
+      this.alertData={
+        type:alertData.type,
+        info:alertData.info
+      }
     })
 
 
@@ -90,18 +90,13 @@ export class MainComponent implements OnInit{
 
           //某些特殊情况的selectedId处理
           //当url是地址列表，将选中的selectedid值设置为地址功能页
-          if(event.url=='/admin/basic/address/list'||'/admin/basic/address/add'){
+          if(event.url=='/admin/basic/address/list'||event.url=='/admin/basic/address/add'){
             this.selectedId='admin/basic/address';
           }
           else{
             this.selectedId=urlNow;
             console.log(urlNow);
           }
-
-
-
-
-
           this.searchAndDeleteNodePropertySelected(this.router.config);
           this.createBreadCrumb();
         }
@@ -121,12 +116,6 @@ export class MainComponent implements OnInit{
         },
         error=>{
           this.router.navigate(['/login']);
-          /*
-           this.alertData={
-           type:'danger',
-           info:<any>error
-           }
-           */
         }
       );
   }

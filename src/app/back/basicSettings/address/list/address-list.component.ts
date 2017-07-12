@@ -4,7 +4,7 @@ import {Router,ActivatedRoute} from '@angular/router';
 import {PageChangeEvent} from '@progress/kendo-angular-grid';
 
 import {AddressService} from '../address.service';
-import {MissionService} from '../../../main/mission.service';
+
 
 import {AlertData} from '../../../../bean/alertData'
 
@@ -28,8 +28,7 @@ export class AddressListComponent implements OnInit{
   constructor(
     private addressService:AddressService,
     private router:Router,
-    private route:ActivatedRoute,
-    private misstionService:MissionService
+    private route:ActivatedRoute
   ){};
 
   private alertData:AlertData={
@@ -40,7 +39,6 @@ export class AddressListComponent implements OnInit{
 
 
   ngOnInit(){
-    this.misstionService.change.emit(1);
     this.height=(window.document.body.clientHeight-70-56-50-20);
     this.getData();
   }
