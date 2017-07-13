@@ -6,21 +6,23 @@ import { FormsModule }   from '@angular/forms';
 import { AppComponent } from './app.component';
 
 import {CookieService} from 'angular2-cookie/services/cookies.service'
-
+//kendo ui 组件
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ButtonsModule} from '@progress/kendo-angular-buttons';
 import { LayoutModule } from '@progress/kendo-angular-layout';
 import { GridModule,PDFModule,ExcelModule } from '@progress/kendo-angular-grid';
 import { InputsModule } from '@progress/kendo-angular-inputs';
-
+//验证组件
 import{CustomFormsModule} from 'ng2-validation';
+//toast组件
+import {ToastModule} from 'ng2-toastr/ng2-toastr';
 
 //登录组件
 import {LoginComponent} from './back/login/login.component';
 //基本设置组件
 import {BasicSettingsComponent} from './back/basicSettings/baseSettings.component';
 import {WorkerComponent} from './back/basicSettings/worker/worker.component';
-
+//建筑物相关组件
 import {AddressComponent} from './back/basicSettings/address/address.component';
 import {AddressListComponent} from './back/basicSettings/address/list/address-list.component';
 import {AddressAddComponent} from './back/basicSettings/address/add/address-add.component';
@@ -46,6 +48,7 @@ import {LoginService} from './back/login/login.service'
 import {MainService} from './back/main/main.service'
 import {MainComponent} from "./back/main/main.component";
 import {MissionService} from "./back/main/mission.service";
+import {ApiResultService} from './back/main/apiResult.service';
 
 import {MainPipe} from './back/main/main.pipe';
 
@@ -89,6 +92,8 @@ import {MainPipe} from './back/main/main.pipe';
     InputsModule,
     CustomFormsModule,
 
+    ToastModule.forRoot(),
+
     panelbarRouting,
   ],
   providers: [
@@ -98,6 +103,7 @@ import {MainPipe} from './back/main/main.pipe';
     MainService,
     AddressService,
     MissionService,
+    ApiResultService,
 
     appRoutingProvider
   ],

@@ -14,13 +14,13 @@
           <label class="k-form-field">
             <span for="minfloor">最低楼层</span>
             <kendo-numerictextbox id="minfloor"  required
-               [min]="1" [max]="1000" [autoCorrect]="true" [(ngModel)]="building.minfloor" name="minfloor">
+               [min]="1" [max]="1000" [autoCorrect]="true" [decimals]="0" [(ngModel)]="building.minfloor" name="minfloor">
             </kendo-numerictextbox>
           </label>
           <label class="k-form-field">
             <span for="maxfloor">最高楼层</span>
             <kendo-numerictextbox id="maxfloor" required
-               [min]="1" [max]="1000" [autoCorrect]="true" [(ngModel)]="building.maxfloor" name="maxfloor">
+               [min]="1" [max]="1000" [autoCorrect]="true" [decimals]="0" [(ngModel)]="building.maxfloor" name="maxfloor">
             </kendo-numerictextbox>
           </label>
           <div class="text-left">

@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit{
           }
         },
         error=>{
-          http://foxandxss.github.io/angular-toastr/
+
         }
 
       );

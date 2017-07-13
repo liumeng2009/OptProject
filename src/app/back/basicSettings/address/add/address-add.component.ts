@@ -1,4 +1,4 @@
-import {Component,OnInit} from '@angular/core';
+import {Component,OnInit,ViewContainerRef} from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router';
 
 import {Building} from '../../../../bean/building';
@@ -8,6 +8,7 @@ import {MissionService} from '../../../main/mission.service';
 import {AddressService} from '../address.service';
 import {AlertData} from "../../../../bean/alertData";
 
+import {OptConfig} from '../../../../config/config';
 
 @Component({
   selector:'address-add',
@@ -17,14 +18,16 @@ import {AlertData} from "../../../../bean/alertData";
 
 export class AddressAddComponent implements OnInit{
 
-  building=new Building('','',0,0);
+  building=new Building('','',0,0,1);
 
   constructor(
     private missionService:MissionService,
     private addressService:AddressService,
     private router:Router,
     private route:ActivatedRoute
-  ){};
+  ){
+
+  };
 
 
   ngOnInit(){
@@ -37,14 +40,20 @@ export class AddressAddComponent implements OnInit{
         console.log(data);
         if(data.status==0){
           this.missionService.change.emit(new AlertData('success','保存成功'));
+          //this.toastr.success('保存成功!', 'Success!');
           this.router.navigate(['../'],{relativeTo:this.route});
         }
-      //this.gridData=data.data;
+        else if(data.status==500){
+          this.missionService.change.emit(new AlertData('danger',new OptConfig().unknownError));
+        }
+        else{
+          this.missionService.change.emit(new AlertData('danger',data.message));
+        }
       },
     error=>{
       //this.router.navigate(['/login']);
       console.log(error);
-
+      this.missionService.change.emit(new AlertData('danger','服务器内部错误'));
     }
     )
 

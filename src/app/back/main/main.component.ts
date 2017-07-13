@@ -1,4 +1,4 @@
-import {Component,OnInit} from '@angular/core';
+import {Component,OnInit,ViewContainerRef} from '@angular/core';
 import {Router,ActivatedRoute,NavigationEnd} from '@angular/router'
 import {Location} from '@angular/common';
 import {Title} from '@angular/platform-browser';
@@ -12,6 +12,8 @@ import {Bread} from '../../bean/bread'
 
 import {MainService} from './main.service'
 import {MissionService} from "./mission.service";
+
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
   selector:'main-area',
@@ -29,22 +31,40 @@ export class MainComponent implements OnInit{
   }
   private breadcrumb:Bread[]=[]
 
+  private mySubscription;
+
   constructor(
     private router:Router,
     private mainService:MainService,
     private location:Location,
     private route:ActivatedRoute,
     private title:Title,
-    private missionService:MissionService
+    private missionService:MissionService,
+    private toastr:ToastsManager,
+    private vcr:ViewContainerRef
   ){
     this.routerCopy=router;
 
+    this.toastr.setRootViewContainerRef(vcr);
 
-    missionService.change.subscribe((alertData:AlertData)=>{
-      this.alertData={
-        type:alertData.type,
-        info:alertData.info
+    let toastrOption={
+      showCloseButton:true
+    }
+
+    //操作信息的消息接收
+    this.mySubscription=missionService.change.subscribe((alertData:AlertData)=>{
+      if(alertData.type=='success'){
+        this.toastr.success(alertData.info,'',toastrOption);
       }
+      else if(alertData.type=='danger'){
+        this.toastr.error(alertData.info,'',toastrOption);
+      }else if(alertData.type=='info'){
+        this.toastr.info(alertData.info,'',toastrOption);
+      }
+      else{
+        this.toastr.warning(alertData.info,'',toastrOption);
+      }
+
     })
 
 
@@ -85,7 +105,10 @@ export class MainComponent implements OnInit{
             this.router.navigateByUrl('/admin/total');
           }
 
-
+          //当到达login界面时，取消toast的消息订阅
+          if(event.url=='./login'){
+            this.mySubscription.unsubscribe();
+          }
 
 
           //某些特殊情况的selectedId处理

@@ -8,6 +8,12 @@ import {AddressService} from '../address.service';
 
 import {AlertData} from '../../../../bean/alertData'
 
+import {MissionService} from '../../../main/mission.service';
+
+import {OptConfig} from '../../../../config/config';
+
+import {ApiResultService} from '../../../main/apiResult.service';
+
 
 @Component({
   selector:'address-list',
@@ -16,8 +22,6 @@ import {AlertData} from '../../../../bean/alertData'
 })
 
 export class AddressListComponent implements OnInit{
-
-  @Output() changeBread:EventEmitter<number>=new EventEmitter();
 
   private gridData: any[];
 
@@ -28,13 +32,10 @@ export class AddressListComponent implements OnInit{
   constructor(
     private addressService:AddressService,
     private router:Router,
-    private route:ActivatedRoute
+    private route:ActivatedRoute,
+    private missionService:MissionService,
+    private apiResultService:ApiResultService
   ){};
-
-  private alertData:AlertData={
-    type:'',
-    info:''
-  }
 
 
 
@@ -48,15 +49,11 @@ export class AddressListComponent implements OnInit{
       .subscribe(
         data=>{
           console.log(data);
-          this.gridData=data.data;
+          this.apiResultService.result(data,this.gridData);
         },
         error=>{
-          //this.router.navigate(['/login']);
           console.log(error);
-          this.alertData={
-            type:'danger',
-            info:<any>error
-          }
+          this.missionService.change.emit(new AlertData('danger',error));
 
         }
       );
