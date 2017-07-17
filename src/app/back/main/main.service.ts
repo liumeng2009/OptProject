@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Http,Response,Headers,RequestOptions} from '@angular/http';
 
-import {Observable} from 'rxjs/observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+
 import {CookieService} from 'angular2-cookie/core';
 
 import {ResponseData} from '../../bean/responseData';
@@ -16,11 +15,12 @@ export class MainService{
 
   constructor(private http:Http,private cookieService:CookieService){}
 
-  getUserInfo():Observable<ResponseData>{
+  getUserInfo():Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     console.log(this.loginurl+'?token='+token);
     return this.http.get(this.loginurl+'?token='+token)
-      .map(this.extractData)
+      .toPromise()
+      .then(this.extractData)
       .catch(this.handleError)
   }
 
@@ -40,7 +40,7 @@ export class MainService{
       errMsg=error.message?error.message:error.toString();
     }
     console.error(errMsg);
-    return Observable.throw(errMsg);
+    return Promise.reject(errMsg);
   }
 }
 

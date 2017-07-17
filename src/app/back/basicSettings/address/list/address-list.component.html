@@ -1,4 +1,4 @@
-<kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+<kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true"   [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
   <ng-template kendoGridToolbarTemplate>
     <button kendoButton  (click)="add()" [primary]="true">新增</button>
     <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
@@ -15,7 +15,22 @@
   <kendo-grid-column field="address" title="详细地址">
   </kendo-grid-column>
 
+  <kendo-grid-column field="id" title="操作">
+    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+      <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
+      <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
+    </ng-template>
+  </kendo-grid-column>
+
   <ng-template kendoGridNoRecordsTemplate>
     暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.
   </ng-template>
+
+  <ng-template kendoPagerTemplate let-totalPages="totalPages" let-currentPage="currentPage">
+    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+    <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
+    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+    <div class="k-pager-info k-label">{{firstRecord}}-{{lastRecord}} 共 {{total}}条记录</div>
+  </ng-template>
+
 </kendo-grid>
