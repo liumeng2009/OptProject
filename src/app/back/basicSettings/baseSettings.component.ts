@@ -10,7 +10,7 @@ import {Router,ActivatedRoute} from '@angular/router'
 })
 
 export class BasicSettingsComponent {
-  private showInfo=false;
+  private showInfo=true;
 
   private onActivate(){
     this.showInfo=false;

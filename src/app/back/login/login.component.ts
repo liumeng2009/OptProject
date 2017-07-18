@@ -8,9 +8,6 @@ import {User} from '../../bean/user'
 
 import {LoginService} from './login.service'
 
-import {environment} from '../../../environments/environment'
-import {OptConfig} from "../../config/config";
-
 @Component({
   selector:'login-area',
   templateUrl:'./login.component.html',
@@ -25,9 +22,6 @@ export class LoginComponent implements OnInit{
     private router:Router,
     private title:Title
   ){};
-
-  private errorMessage:string
-
   user=new User('','');
 
   ngOnInit(){
@@ -37,7 +31,7 @@ export class LoginComponent implements OnInit{
 
   onButtonClick():void{
     this.loginService.login(this.user.username,this.user.password)
-      .then(
+      .subscribe(
         data=>{
           if(data.status==0){
             //this.user=data.data;
@@ -47,16 +41,11 @@ export class LoginComponent implements OnInit{
             this.cookieService.put('optToken',data.data.token,{expires:date});
           }
           else{
-            this.errorMessage=data.message
+
           }
         },
         error=>{
-          if(environment.production){
-            this.errorMessage=new OptConfig().ajaxError;
-          }
-          else {
-            this.errorMessage = error;
-          }
+
         }
 
       );

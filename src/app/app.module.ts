@@ -45,7 +45,6 @@ import {MainService} from './back/main/main.service'
 import {MainComponent} from "./back/main/main.component";
 import {MissionService} from "./back/main/mission.service";
 import {ApiResultService} from './back/main/apiResult.service';
-import {AjaxExceptionService} from './back/main/ajaxExceptionService';
 
 import {MainPipe} from './back/main/main.pipe';
 
@@ -98,7 +97,6 @@ import {MainPipe} from './back/main/main.pipe';
     AddressService,
     MissionService,
     ApiResultService,
-    AjaxExceptionService,
 
     appRoutingProvider
   ],

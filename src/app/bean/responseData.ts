@@ -3,7 +3,6 @@ export class ResponseData {
     public status: number,
     public name: string,
     public message:string,
-    public data:any,
-    public total:number
+    public data:any
   ) {  }
 }

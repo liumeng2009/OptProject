@@ -6,26 +6,26 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import {CookieService} from 'angular2-cookie/core';
 
-import {ResponseData} from '../../bean/responseData';
+import {ResponseData} from './bean/responseData';
 
-import {OptConfig} from '../../config/config'
+import {OptConfig} from './config/config'
 
 @Injectable()
-export class MainService{
+export class AppService{
   private loginurl=new OptConfig().serverPath+'/api/user/'
 
   constructor(private http:Http,private cookieService:CookieService){}
 
   getUserInfo():Observable<ResponseData>{
     let token=this.cookieService.get('optToken');
-    console.log(this.loginurl+'?token='+token);
-    return this.http.get(this.loginurl+'?token='+token)
+    return this.http.get(this.loginurl+token)
       .map(this.extractData)
       .catch(this.handleError)
   }
 
   private extractData(res:Response){
     let body=res.json();
+    console.log(JSON.stringify(body));
     return body||{};
   }
   private handleError(error:Response|any){

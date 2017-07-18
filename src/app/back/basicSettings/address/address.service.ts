@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Http,Response,Headers,RequestOptions} from '@angular/http';
 
-import 'rxjs/add/operator/toPromise';
-
+import {Observable} from 'rxjs/observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 import {CookieService} from 'angular2-cookie/core';
 
 import {ResponseData} from '../../../bean/responseData';
@@ -18,48 +19,31 @@ export class AddressService{
 
   private listurl=new OptConfig().serverPath+'/api/buildings/list';
   private saveurl=new OptConfig().serverPath+'/api/buildings/save';
-  private deleteurl=new OptConfig().serverPath+'/api/buildings/delete';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
-  getAddressList(pageid):Promise<ResponseData>{
+  getAddressList():Observable<ResponseData>{
     let token=this.cookieService.get('optToken');
-    let url='';
-    if(pageid){
-      url=this.listurl+'/page/'+pageid+'?token='+token
-    }
-    else{
-      url=this.listurl+'?token='+token
-    }
-    return this.http.get(url)
-      .toPromise()
-      .then(this.extractData)
+    return this.http.get(this.listurl+'?token='+token)
+      .map(this.extractData)
       .catch(this.handleError)
   }
 
-  create(building:Building): Promise<ResponseData> {
+  create(building:Building): Observable<ResponseData> {
     let token=this.cookieService.get('optToken');
     return this.http
       .post(this.saveurl+'?token='+token, building, {headers: this.headers})
-      .toPromise()
-      .then(this.extractData)
+      .map(this.extractData)
       .catch(this.handleError);
   }
 
-  delete(id:string):Promise<ResponseData> {
-  let token=this.cookieService.get('optToken');
-  return this.http
-    .get(this.deleteurl+'/'+id+'?token='+token)
-    .toPromise()
-    .then(this.extractData)
-    .catch(this.handleError);
-}
-
   private extractData(res:Response){
+    console.log(888888888888888888);
     let body=res.json();
     return body||{};
   }
   private handleError(error:Response|any){
+    console.log('9999999999999999');
     let errMsg:string;
     if(error instanceof Response){
       const body=error.json()||'';
@@ -70,6 +54,6 @@ export class AddressService{
       errMsg=error.message?error.message:error.toString();
     }
     console.error(errMsg);
-    return Promise.reject(errMsg);
+    return Observable.throw(errMsg);
   }
 }

@@ -10,8 +10,6 @@ import {AlertData} from "../../../../bean/alertData";
 
 import {OptConfig} from '../../../../config/config';
 
-import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
-
 @Component({
   selector:'address-add',
   templateUrl:'./address-add.component.html',
@@ -26,8 +24,7 @@ export class AddressAddComponent implements OnInit{
     private missionService:MissionService,
     private addressService:AddressService,
     private router:Router,
-    private route:ActivatedRoute,
-    private ajaxExceptionService:AjaxExceptionService
+    private route:ActivatedRoute
   ){
 
   };
@@ -38,7 +35,7 @@ export class AddressAddComponent implements OnInit{
 
   private onSubmit(){
     //alert(this.building);
-    this.addressService.create(this.building).then(
+    this.addressService.create(this.building).subscribe(
       data=>{
         console.log(data);
         if(data.status==0){
@@ -54,7 +51,9 @@ export class AddressAddComponent implements OnInit{
         }
       },
     error=>{
-      this.ajaxExceptionService.simpleOp(error);
+      //this.router.navigate(['/login']);
+      console.log(error);
+      this.missionService.change.emit(new AlertData('danger','服务器内部错误'));
     }
     )
 

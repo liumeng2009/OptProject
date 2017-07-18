@@ -15,12 +15,6 @@ import {MissionService} from "./mission.service";
 
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
-import {ApiResultService} from './apiResult.service';
-import {AjaxExceptionService} from './ajaxExceptionService';
-
-import {environment} from '../../../environments/environment';
-import {OptConfig} from "../../config/config";
-
 @Component({
   selector:'main-area',
   templateUrl:'./main.component.html',
@@ -47,9 +41,7 @@ export class MainComponent implements OnInit{
     private title:Title,
     private missionService:MissionService,
     private toastr:ToastsManager,
-    private vcr:ViewContainerRef,
-    private apiResultService:ApiResultService,
-    private ajaxExceptionService:AjaxExceptionService
+    private vcr:ViewContainerRef
   ){
     this.routerCopy=router;
 
@@ -112,10 +104,13 @@ export class MainComponent implements OnInit{
           if(event.url=='/admin'){
             this.router.navigateByUrl('/admin/total');
           }
+
           //当到达login界面时，取消toast的消息订阅
-          if(event.url=='/login'){
+          if(event.url=='./login'){
             this.mySubscription.unsubscribe();
           }
+
+
           //某些特殊情况的selectedId处理
           //当url是地址列表，将选中的selectedid值设置为地址功能页
           if(event.url=='/admin/basic/address/list'||event.url=='/admin/basic/address/add'){
@@ -133,12 +128,17 @@ export class MainComponent implements OnInit{
 
   private checkLogin(){
     this.mainService.getUserInfo()
-      .then(
+      .subscribe(
         data=>{
-          this.user=this.apiResultService.result(data).data;
+          if(data.status==0){
+            this.user=data.data;
+          }
+          else{
+            this.router.navigate(['/login']);
+          }
         },
         error=>{
-          this.ajaxExceptionService.simpleOp(error);
+          this.router.navigate(['/login']);
         }
       );
   }
