@@ -7,6 +7,8 @@ import {CookieService} from 'angular2-cookie/core';
 import {User} from '../../bean/user'
 
 import {LoginService} from './login.service'
+import {OptConfig} from "../../config/config";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector:'login-area',
@@ -15,6 +17,8 @@ import {LoginService} from './login.service'
 })
 
 export class LoginComponent implements OnInit{
+
+  private errorMessage:string
 
   constructor(
     private loginService:LoginService,
@@ -31,7 +35,7 @@ export class LoginComponent implements OnInit{
 
   onButtonClick():void{
     this.loginService.login(this.user.username,this.user.password)
-      .subscribe(
+      .then(
         data=>{
           if(data.status==0){
             //this.user=data.data;
@@ -41,11 +45,16 @@ export class LoginComponent implements OnInit{
             this.cookieService.put('optToken',data.data.token,{expires:date});
           }
           else{
-
+            this.errorMessage=data.message
           }
         },
         error=>{
-
+          if(environment.production){
+            this.errorMessage=new OptConfig().ajaxError;
+          }
+          else {
+            this.errorMessage = error;
+          }
         }
 
       );

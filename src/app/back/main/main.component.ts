@@ -14,6 +14,8 @@ import {MainService} from './main.service'
 import {MissionService} from "./mission.service";
 
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import {ApiResultService} from "./apiResult.service";
+import {AjaxExceptionService} from "./ajaxExceptionService";
 
 @Component({
   selector:'main-area',
@@ -41,7 +43,9 @@ export class MainComponent implements OnInit{
     private title:Title,
     private missionService:MissionService,
     private toastr:ToastsManager,
-    private vcr:ViewContainerRef
+    private vcr:ViewContainerRef,
+    private apiResultService:ApiResultService,
+    private ajaxExceptionService:AjaxExceptionService
   ){
     this.routerCopy=router;
 
@@ -128,17 +132,12 @@ export class MainComponent implements OnInit{
 
   private checkLogin(){
     this.mainService.getUserInfo()
-      .subscribe(
+      .then(
         data=>{
-          if(data.status==0){
-            this.user=data.data;
-          }
-          else{
-            this.router.navigate(['/login']);
-          }
+          this.user=this.apiResultService.result(data).data;
         },
         error=>{
-          this.router.navigate(['/login']);
+          this.ajaxExceptionService.simpleOp(error);
         }
       );
   }

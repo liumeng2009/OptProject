@@ -19,9 +19,9 @@ export class ApiResultService {
 
   }
 
-  private result(data:ResponseData,componentDataResource:any){
+  result(data:ResponseData){
     if(data.status==0){
-      componentDataResource=data.data;
+      return data;
     }
     else if(data.status=10003){
       this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));

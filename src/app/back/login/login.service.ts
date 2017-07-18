@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Http,Response,Headers,RequestOptions} from '@angular/http';
 
-import {Observable} from 'rxjs/observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
+
+import 'rxjs/add/operator/toPromise';
 
 import {User} from '../../bean/user';
 
@@ -16,13 +15,14 @@ export class LoginService{
 
   constructor(private http:Http){}
 
-  login(username:string,password:string):Observable<ResponseData>{
+  login(username:string,password:string):Promise<ResponseData>{
 
     let headers=new Headers({'Content-Type':'application/json'});
     let options=new RequestOptions(headers);
     console.log('请求的url是：'+this.loginurl);
     return this.http.post(this.loginurl,{username:username,password:password},options)
-      .map(this.extractData)
+      .toPromise()
+      .then(this.extractData)
       .catch(this.handleError)
   }
 
@@ -42,7 +42,7 @@ export class LoginService{
       errMsg=error.message?error.message:error.toString();
     }
     console.error(errMsg);
-    return Observable.throw(errMsg);
+    return Promise.reject(errMsg);
   }
 }
 

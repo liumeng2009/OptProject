@@ -27,7 +27,7 @@
                             </span>
         </div>
       </div>
-      <kendo-panelbar (stateChange)="stateChange($event)" [selectable]="false">
+      <kendo-panelbar (stateChange)="stateChange($event)" [selectable]="false" >
         <kendo-panelbar-item
           *ngFor="let route of (router.config[2].children | urlshow)"
           [id]="'admin/'+route.path"
