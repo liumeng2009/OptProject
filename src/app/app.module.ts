@@ -7,11 +7,12 @@ import { AppComponent } from './app.component';
 
 import {CookieService} from 'angular2-cookie/services/cookies.service'
 //kendo ui 组件
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ButtonsModule} from '@progress/kendo-angular-buttons';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { LayoutModule } from '@progress/kendo-angular-layout';
 import { GridModule,PDFModule,ExcelModule } from '@progress/kendo-angular-grid';
 import { InputsModule } from '@progress/kendo-angular-inputs';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 //验证组件
 import{CustomFormsModule} from 'ng2-validation';
 //toast组件
@@ -36,11 +37,6 @@ import {OperationsComponent} from './back/operations/operations.component';
 import {OperationListComponent} from './back/operations/list/operation_list.component';
 //信息综述
 import {TotalComponent} from './back/total/total.component';
-
-
-import {DangerComponent} from './back/components/danger/danger.component';
-import {SuccessComponent} from './back/components/success/success.component';
-import {InfoComponent} from './back/components/info/info.component';
 
 import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 
@@ -73,10 +69,6 @@ import {MainPipe} from './back/main/main.pipe';
 
     TotalComponent,
 
-    DangerComponent,
-    SuccessComponent,
-    InfoComponent,
-
     MainPipe
   ],
   imports: [
@@ -92,6 +84,7 @@ import {MainPipe} from './back/main/main.pipe';
     ExcelModule,
     InputsModule,
     CustomFormsModule,
+    DialogModule,
 
     ToastModule.forRoot(),
 

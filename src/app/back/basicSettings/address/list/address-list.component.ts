@@ -8,8 +8,6 @@ import {AddressService} from '../address.service';
 
 import {AlertData} from '../../../../bean/alertData'
 
-import {MissionService} from '../../../main/mission.service';
-
 import {OptConfig} from '../../../../config/config';
 
 import {ApiResultService} from '../../../main/apiResult.service';
@@ -40,7 +38,6 @@ export class AddressListComponent implements OnInit{
     private addressService:AddressService,
     private router:Router,
     private route:ActivatedRoute,
-    private missionService:MissionService,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService
   ){};
@@ -89,6 +86,29 @@ export class AddressListComponent implements OnInit{
   }
 
   private deleteRow(id){
+/*    const dialog: DialogRef = this.dialogService.open({
+      title: "Please confirm",
+      content: "Are you sure?",
+      actions: [
+        { text: "No" },
+        { text: "Yes", primary: true }
+      ]
+    });*/
+
+/*    dialog.result.subscribe((result) => {
+      if (result instanceof DialogCloseResult) {
+        console.log("close");
+      } else {
+        console.log("action", result);
+      }
+
+      this.result = JSON.stringify(result);
+    });*/
+
+
+
+
+
     this.addressService.delete(id)
       .then(
         data=>{

@@ -12,7 +12,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^4.2.6",
+    "@angular/animations": "^4.3.0",
     "@angular/common": "^4.0.0",
     "@angular/compiler": "^4.0.0",
     "@angular/core": "^4.0.0",
@@ -23,6 +23,7 @@
     "@angular/router": "^4.0.0",
     "@progress/kendo-angular-buttons": "^1.0.5",
     "@progress/kendo-angular-dateinputs": "^1.0.5",
+    "@progress/kendo-angular-dialog": "^1.0.4",
     "@progress/kendo-angular-dropdowns": "^1.1.1",
     "@progress/kendo-angular-excel-export": "^1.0.3",
     "@progress/kendo-angular-grid": "^1.2.1",
