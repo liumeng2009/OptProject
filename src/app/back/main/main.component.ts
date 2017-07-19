@@ -117,7 +117,7 @@ export class MainComponent implements OnInit{
 
           //某些特殊情况的selectedId处理
           //当url是地址列表，将选中的selectedid值设置为地址功能页
-          if(event.url=='/admin/basic/address/list'||event.url=='/admin/basic/address/add'){
+          if(event.url.indexOf('/admin/basic/address/')>-1){
             this.selectedId='admin/basic/address';
           }
           else{
@@ -134,7 +134,9 @@ export class MainComponent implements OnInit{
     this.mainService.getUserInfo()
       .then(
         data=>{
-          this.user=this.apiResultService.result(data).data;
+          if(this.apiResultService.result(data)) {
+            this.user =this.apiResultService.result(data).data;
+          }
         },
         error=>{
           this.ajaxExceptionService.simpleOp(error);

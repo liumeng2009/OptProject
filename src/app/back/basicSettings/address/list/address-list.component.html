@@ -15,8 +15,16 @@
   <kendo-grid-column field="address" title="详细地址">
   </kendo-grid-column>
 
+  <kendo-grid-column field="id" title="操作">
+    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+      <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
+      <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
+    </ng-template>
+  </kendo-grid-column>
+
   <ng-template kendoGridNoRecordsTemplate>
-    暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.
+    <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
+    <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
   </ng-template>
 
   <ng-template kendoPagerTemplate let-totalPages="totalPages" let-currentPage="currentPage">
@@ -26,3 +34,4 @@
     <div class="k-pager-info k-label">{{firstRecord}}-{{lastRecord}} 共 {{total}}条记录</div>
   </ng-template>
 </kendo-grid>
+<div kendoDialogContainer></div>

@@ -20,6 +20,7 @@ export class AddressService{
   private listurl=new OptConfig().serverPath+'/api/buildings/list';
   private saveurl=new OptConfig().serverPath+'/api/buildings/save';
   private deleteurl=new OptConfig().serverPath+'/api/buildings/delete';
+  private geturl=new OptConfig().serverPath+'/api/buildings/';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
@@ -56,9 +57,18 @@ export class AddressService{
       .catch(this.handleError);
   }
 
+  getAddress(id:string):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.geturl+id+'?token='+token;
+    return this.http.get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
+  }
+
   private extractData(res:Response){
     let body=res.json();
-    return body||{};
+    return body||{} ;
   }
   private handleError(error:Response|any){
     let errMsg:string;

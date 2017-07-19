@@ -10,23 +10,11 @@ export class MainPipe implements PipeTransform{
   }
 
   transform(routerConfig:any[]){
-    for(let i=0;i<routerConfig.length;i++){
-      if(!routerConfig[i].children){
-        //routerConfig.splice(i,1);
-        //i--;
-      }
-    }
-    //只剩下一个主节点，将主节点删除
-    //for(let i=0;i<routerConfig[0].children.length;i++){
-    //  routerConfig[0].children[0].path='admin/'+routerConfig[0].children[0].path;
-    //}
     let url=this.location.path();
     url=url.substring(1,url.length);
     let pathArray=url.split('/');
     let pathNowSecond=pathArray.length>1?pathArray[1]:'';
     let pathNowThird=pathArray.length>2?pathArray[2]:'';
-
-    //let opConfig=routerConfig[2].children;
 
     if(pathNowSecond!=''){
       for(let i=0;i<routerConfig.length;i++){

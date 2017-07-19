@@ -21,7 +21,7 @@ import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
 
 export class AddressAddComponent implements OnInit{
 
-  building=new Building('','',0,0,1);
+  building=new Building('','','',0,0,1);
 
   constructor(
     private missionService:MissionService,
@@ -57,6 +57,5 @@ export class AddressAddComponent implements OnInit{
 
     }
     )
-
   }
 }

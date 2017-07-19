@@ -1,1 +1,34 @@
-<h1>编辑地址</h1>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 offset-sm-12">
+    <div class="card">
+      <div class="card-block">
+        <form class="k-form"  (ngSubmit)="onSubmit()" #buildingForm="ngForm">
+          <label class="k-form-field">
+            <span for="name">办公楼名称</span>
+            <input id="name" class="k-textbox" placeholder="办公楼名称" required [(ngModel)]="building.name" name="name" />
+          </label>
+          <label class="k-form-field">
+            <span for="address">详细地址</span>
+            <input id="address" class="k-textbox" value="" placeholder="详细地址" required [(ngModel)]="building.address" name="address" />
+          </label>
+          <label class="k-form-field">
+            <span for="minfloor">最低楼层</span>
+            <kendo-numerictextbox id="minfloor"  required
+                                  [min]="1" [max]="1000" [autoCorrect]="true" [decimals]="0" [(ngModel)]="building.minfloor" name="minfloor">
+            </kendo-numerictextbox>
+          </label>
+          <label class="k-form-field">
+            <span for="maxfloor">最高楼层</span>
+            <kendo-numerictextbox id="maxfloor" required
+                                  [min]="1" [max]="1000" [autoCorrect]="true" [decimals]="0" [(ngModel)]="building.maxfloor" name="maxfloor">
+            </kendo-numerictextbox>
+          </label>
+          <div class="text-left">
+            <button class="k-button k-primary" [disabled]="!buildingForm.form.valid">提交</button>
+            <button class="k-button">重置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

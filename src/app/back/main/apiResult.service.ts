@@ -23,13 +23,13 @@ export class ApiResultService {
     if(data.status==0){
       return data;
     }
-    else if(data.status=10003){
+    else if(data.status==10003){
       this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));
       setTimeout(()=>{
-        this.router.navigateByUrl('./login');
+        this.router.navigateByUrl('/login');
       },2000);
     }
-    else if(data.status=500){
+    else if(data.status==500){
       this.missionService.change.emit(new AlertData('danger',new OptConfig().unknownError));
     }
     else{
