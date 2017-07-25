@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 offset-sm-12">
+    <div class="card">
+      <div class="card-block">
+        <form class="k-form"  (ngSubmit)="onSubmit()" #groupForm="ngForm">
+          <label class="k-form-field">
+            <span for="name">办公楼名称</span>
+            <input id="name" class="k-textbox" placeholder="办公楼名称" required [(ngModel)]="group.name" name="name" />
+          </label>
+          <label class="k-form-field">
+            <span for="description">详细地址</span>
+            <input id="description" class="k-textbox" value="" placeholder="详细地址" required [(ngModel)]="group.description" name="description" />
+          </label>
+          <div class="text-left">
+            <button class="k-button k-primary" [disabled]="!groupForm.form.valid">提交</button>
+            <button class="k-button">重置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

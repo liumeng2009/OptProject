@@ -4,8 +4,8 @@ import {Router,ActivatedRoute,Params} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 
-import {Building} from "../../../../bean/building";
-import {AddressService} from "../address.service";
+import {Group} from "../../../../bean/group";
+import {GroupService} from "../group.service";
 import {ApiResultService} from "../../../main/apiResult.service";
 import {AjaxExceptionService} from "../../../main/ajaxExceptionService";
 import {MissionService} from "../../../main/mission.service";
@@ -13,20 +13,20 @@ import {AlertData} from "../../../../bean/alertData";
 import {OptConfig} from "../../../../config/config";
 
 @Component({
-  selector:'address-edit',
-  templateUrl:'./address-edit.component.html',
-  styleUrls:['./address-edit.component.scss']
+  selector:'group-edit',
+  templateUrl:'./group-edit.component.html',
+  styleUrls:['./group-edit.component.scss']
 })
 
-export class AddressEditComponent implements OnInit{
+export class GroupEditComponent implements OnInit{
 
-  building=new Building('','','',0,0,1);
+  group=new Group('','','',1);
 
   constructor(
     private router:Router,
     private route:ActivatedRoute,
     private missionService:MissionService,
-    private addressService:AddressService,
+    private groupService:GroupService,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService
   ){}
@@ -38,15 +38,13 @@ export class AddressEditComponent implements OnInit{
   }
 
   private getData(id){
-    this.addressService.getAddress(id).then(
+    this.groupService.getGroup(id).then(
       data=>{
         let buildobj=this.apiResultService.result(data);
         if(buildobj){
-          this.building.name=buildobj.data.name;
-          this.building.address=buildobj.data.address;
-          this.building.minfloor=buildobj.data.minfloor;
-          this.building.maxfloor=buildobj.data.maxfloor;
-          this.building.id=buildobj.data.id;
+          this.group.name=buildobj.data.name;
+          this.group.description=buildobj.data.description;
+          this.group.id=buildobj.data.id;
         }
         else{
           //编辑页面没有内容，说明内容获取出错，返回list页面
@@ -60,7 +58,7 @@ export class AddressEditComponent implements OnInit{
   }
   private onSubmit(){
     //alert(this.building);
-    this.addressService.create(this.building).then(
+    this.groupService.create(this.group).then(
       data=>{
         console.log(data);
         if(data.status==0){

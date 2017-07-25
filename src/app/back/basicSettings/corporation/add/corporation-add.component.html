@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 offset-sm-12">
+    <div class="card">
+      <div class="card-block">
+        <form class="k-form"  (ngSubmit)="onSubmit()" #corporationForm="ngForm">
+          <label class="k-form-field">
+            <span for="name">公司名称<span class="k-required">*</span></span>
+            <input id="name" class="k-textbox" placeholder="办公楼名称" required [(ngModel)]="corporation.name" name="name" />
+          </label>
+          <label class="k-form-field">
+            <span for="description">公司简介<span class="k-required">*</span></span>
+            <input id="description" class="k-textbox" value="" placeholder="详细地址" required [(ngModel)]="corporation.description" name="description" />
+          </label>
+          <label class="k-form-field">
+            <span for="groupId">所属组织<span class="k-required">*</span></span>
+            <kendo-dropdownlist
+              name="groupId"
+              [data]="groups"
+              [textField]="'name'"
+              [valueField]="'id'"
+              [valuePrimitive]="true"
+              [(ngModel)]="corporation.groupId"
+              style="float:left"            >
+            </kendo-dropdownlist>
+            <span *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:14px;margin-left: 5px;"></span>
+            <div style="clear: both"></div>
+          </label>
+
+          <label class="k-form-field">
+            <span for="description">公司地点</span>
+            <kendo-grid>
+              <ng-template kendoGridToolbarTemplate>
+                <button kendoButton (click)="addBuilding()" >新增</button>
+              </ng-template>
+              <kendo-grid-column field="groupId" title="办公楼"></kendo-grid-column>
+              <kendo-grid-column field="floor" title="楼层"></kendo-grid-column>
+              <kendo-grid-column field="position" title="方位"></kendo-grid-column>
+              <kendo-grid-column title="操作">
+
+              </kendo-grid-column>
+
+              <ng-template kendoGridNoRecordsTemplate>
+                <div>暂时还没有记录 <a href="javascript:;" (click)="refreshBuilding()">点击刷新</a>.</div>
+              </ng-template>
+            </kendo-grid>
+          </label>
+
+          <div class="text-left">
+            <button class="k-button k-primary" [disabled]="!corporationForm.form.valid">提交</button>
+            <button class="k-button">重置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ import { LayoutModule } from '@progress/kendo-angular-layout';
 import { GridModule,PDFModule,ExcelModule } from '@progress/kendo-angular-grid';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { DialogModule } from '@progress/kendo-angular-dialog';
+import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 //验证组件
 import{CustomFormsModule} from 'ng2-validation';
 //toast组件
@@ -29,7 +30,19 @@ import {AddressListComponent} from './back/basicSettings/address/list/address-li
 import {AddressAddComponent} from './back/basicSettings/address/add/address-add.component';
 import {AddressEditComponent} from './back/basicSettings/address/edit/address-edit.component';
 import {AddressService} from './back/basicSettings/address/address.service';
-
+//组织相关组件
+import {GroupComponent} from './back/basicSettings/group/group.component';
+import {GroupListComponent} from './back/basicSettings/group/list/group-list.component';
+import {GroupAddComponent} from './back/basicSettings/group/add/group-add.component';
+import {GroupEditComponent} from './back/basicSettings/group/edit/group-edit.component';
+import {GroupService} from './back/basicSettings/group/group.service';
+//公司相关组件
+import {CorporationComponent} from "./back/basicSettings/corporation/corporation.component";
+import {CorporationListComponent} from "./back/basicSettings/corporation/list/corporation-list.component";
+import {CorporationAddComponent} from "./back/basicSettings/corporation/add/corporation-add.component";
+import {CorporationEditComponent} from "./back/basicSettings/corporation/edit/corporation-edit.component";
+import {CorporationService} from './back/basicSettings/corporation/corporation.service';
+import {CorpBuildingService} from './back/basicSettings/corporation/corpBuilding.service';
 //权限设置组件
 
 //工单组件
@@ -58,11 +71,23 @@ import {MainPipe} from './back/main/main.pipe';
     MainComponent,
 
     BasicSettingsComponent,
+
     WorkerComponent,
+
     AddressComponent,
     AddressListComponent,
     AddressAddComponent,
     AddressEditComponent,
+
+    GroupComponent,
+    GroupListComponent,
+    GroupAddComponent,
+    GroupEditComponent,
+
+    CorporationComponent,
+    CorporationListComponent,
+    CorporationAddComponent,
+    CorporationEditComponent,
 
     OperationsComponent,
     OperationListComponent,
@@ -85,6 +110,7 @@ import {MainPipe} from './back/main/main.pipe';
     InputsModule,
     CustomFormsModule,
     DialogModule,
+    DropDownsModule,
 
     ToastModule.forRoot(),
 
@@ -96,6 +122,10 @@ import {MainPipe} from './back/main/main.pipe';
     LoginService,
     MainService,
     AddressService,
+    GroupService,
+    CorporationService,
+    CorpBuildingService,
+
     MissionService,
     ApiResultService,
     AjaxExceptionService,

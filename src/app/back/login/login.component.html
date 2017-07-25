@@ -15,7 +15,9 @@
                 <input id="password" name="password" [(ngModel)]="user.password" #password="ngModel" class="k-textbox" placeholder="密码" type="password" />
               </label>
               <label>
-                <button kendoButton (click)="onButtonClick()" [icon]="'lock'" type="submit" >登录</button>
+                <button kendoButton (click)="onButtonClick()" [iconClass]="iconClass" type="submit" [disabled]="isDisabled" [primary]="true" >
+                  &nbsp;登录
+                </button>
               </label>
               <label>{{errorMessage}}</label>
             </fieldset>

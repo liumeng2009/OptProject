@@ -4,7 +4,7 @@ import {Router,ActivatedRoute} from '@angular/router';
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
 
-import {AddressService} from '../address.service';
+import {CorporationService} from '../corporation.service';
 
 
 import {AlertData} from '../../../../bean/alertData'
@@ -18,12 +18,12 @@ import {ResultFunc} from "rxjs/observable/GenerateObservable";
 
 
 @Component({
-  selector:'address-list',
-  templateUrl:'./address-list.component.html',
-  styleUrls:['./address-list.component.scss']
+  selector:'corporation-list',
+  templateUrl:'./corporation-list.component.html',
+  styleUrls:['./corporation-list.component.scss']
 })
 
-export class AddressListComponent implements OnInit{
+export class CorporationListComponent implements OnInit{
 
   private gridData:GridDataResult={
     data:[],
@@ -40,7 +40,7 @@ export class AddressListComponent implements OnInit{
   private isLoading:boolean=true;
 
   constructor(
-    private addressService:AddressService,
+    private corporationService:CorporationService,
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
@@ -55,12 +55,12 @@ export class AddressListComponent implements OnInit{
   }
 
   private getData(pageid){
-    this.addressService.getAddressList(pageid)
+    this.corporationService.getCorporationList(pageid)
       .then(
         data=>{
-          if(this.apiResultService.result(data)){
-            this.gridData.data=this.apiResultService.result(data).data;
-            this.total=this.gridData.total=this.apiResultService.result(data).total;
+          if(this.apiResultService.result(data)) {
+            this.gridData.data = this.apiResultService.result(data).data;
+            this.total = this.gridData.total = this.apiResultService.result(data).total;
             this.firstRecord=this.skip+1;
             this.lastRecord=this.apiResultService.result(data).data.length+this.skip;
           }
@@ -112,7 +112,7 @@ export class AddressListComponent implements OnInit{
       }
       this.result = result;
       if(this.result.text=='是'){
-        this.addressService.delete(id).then(
+        this.corporationService.delete(id).then(
           data=>{
             let dataObj=this.apiResultService.result(data);
             if(dataObj.status==0){

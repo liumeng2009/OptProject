@@ -14,7 +14,10 @@ import {AddressListComponent} from './basicSettings/address/list/address-list.co
 import {AddressAddComponent} from './basicSettings/address/add/address-add.component';
 import {AddressEditComponent} from './basicSettings/address/edit/address-edit.component';
 
-
+import {GroupComponent} from './basicSettings/group/group.component';
+import {GroupListComponent} from './basicSettings/group/list/group-list.component';
+import {GroupAddComponent} from './basicSettings/group/add/group-add.component';
+import {GroupEditComponent} from './basicSettings/group/edit/group-edit.component';
 
 import {WorkerComponent} from './basicSettings/worker/worker.component';
 //工单记录
@@ -22,6 +25,11 @@ import {OperationsComponent} from './operations/operations.component';
 import {OperationListComponent} from './operations/list/operation_list.component';
 //信息综述
 import {TotalComponent} from './total/total.component';
+
+import {CorporationComponent} from "./basicSettings/corporation/corporation.component";
+import {CorporationListComponent} from "./basicSettings/corporation/list/corporation-list.component";
+import {CorporationAddComponent} from "./basicSettings/corporation/add/corporation-add.component";
+import {CorporationEditComponent} from "./basicSettings/corporation/edit/corporation-edit.component";
 
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
@@ -33,6 +41,16 @@ export const PanelbarRoutes:Routes=[
         {path:'list',component:AddressListComponent,data:{name:'列表'}},
         {path:'add',component:AddressAddComponent,data:{name:'新增'}},
         {path:':id',component:AddressEditComponent,data:{name:'编辑'}}
+      ] },
+      { path: 'group' ,component: GroupComponent,data:{name:'组织设置'},children:[
+        {path:'list',component:GroupListComponent,data:{name:'列表'}},
+        {path:'add',component:GroupAddComponent,data:{name:'新增'}},
+        {path:':id',component:GroupEditComponent,data:{name:'编辑'}}
+      ] },
+      { path: 'corporation' ,component: CorporationComponent,data:{name:'公司设置'},children:[
+        {path:'list',component:CorporationListComponent,data:{name:'列表'}},
+        {path:'add',component:CorporationAddComponent,data:{name:'新增'}},
+        {path:':id',component:CorporationEditComponent,data:{name:'编辑'}}
       ] },
       { path: 'worker', component: WorkerComponent,data:{name:'人员设置'} }
     ]},

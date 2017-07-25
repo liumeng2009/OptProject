@@ -3,6 +3,9 @@ import {Router,ActivatedRoute,NavigationEnd} from '@angular/router'
 import {Location} from '@angular/common';
 import {Title} from '@angular/platform-browser';
 
+import {OptConfig} from "../../config/config";
+import {CookieService} from "angular2-cookie/core";
+
 import {PanelBarItemModel} from "@progress/kendo-angular-layout";
 
 import {User} from '../../bean/user'
@@ -17,6 +20,7 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import {ApiResultService} from "./apiResult.service";
 import {AjaxExceptionService} from "./ajaxExceptionService";
 
+
 @Component({
   selector:'main-area',
   templateUrl:'./main.component.html',
@@ -27,10 +31,6 @@ export class MainComponent implements OnInit{
   private user:User;
   private selectedId:string='';
   private routerCopy:Router;
-  private alertData:AlertData={
-    type:'',
-    info:''
-  }
   private breadcrumb:Bread[]=[]
 
   private mySubscription;
@@ -38,6 +38,7 @@ export class MainComponent implements OnInit{
   constructor(
     private router:Router,
     private mainService:MainService,
+    private cookieService:CookieService,
     private location:Location,
     private route:ActivatedRoute,
     private title:Title,
@@ -104,13 +105,19 @@ export class MainComponent implements OnInit{
           if(event.url=='/admin/basic/address'){
             this.router.navigateByUrl('/admin/basic/address/list');
           }
+          if(event.url=='/admin/basic/group'){
+            this.router.navigateByUrl('/admin/basic/group/list');
+          }
+          if(event.url=='/admin/basic/corporation'){
+            this.router.navigateByUrl('/admin/basic/corporation/list');
+          }
           //导航到首页，直接跳转到数据综述
           if(event.url=='/admin'){
             this.router.navigateByUrl('/admin/total');
           }
 
           //当到达login界面时，取消toast的消息订阅
-          if(event.url=='./login'){
+          if(event.url=='/login'){
             this.mySubscription.unsubscribe();
           }
 
@@ -119,6 +126,12 @@ export class MainComponent implements OnInit{
           //当url是地址列表，将选中的selectedid值设置为地址功能页
           if(event.url.indexOf('/admin/basic/address/')>-1){
             this.selectedId='admin/basic/address';
+          }
+          else if(event.url.indexOf('/admin/basic/group/')>-1){
+            this.selectedId='admin/basic/group';
+          }
+          else if(event.url.indexOf('/admin/basic/corporation/')>-1){
+            this.selectedId='admin/basic/corporation';
           }
           else{
             this.selectedId=urlNow;
@@ -139,6 +152,7 @@ export class MainComponent implements OnInit{
           }
         },
         error=>{
+          alert(123);
           this.ajaxExceptionService.simpleOp(error);
         }
       );
@@ -254,18 +268,13 @@ export class MainComponent implements OnInit{
   }
 
   private logout(){
-    //this.cookieService.remove('optToken');
-    this.alertData={
-      type:'info',
-      info:'正在退出'
+    this.cookieService.remove('optToken');
+    let toastrOption={
+      showCloseButton:true
     }
-    //let t=this;
-    this.routerCopy.navigateByUrl('login');
-    //this.router.navigate(["./login"], {relativeTo: this.route.parent});
-    //this.user=null;
+    this.toastr.warning(new OptConfig().closing,'',toastrOption);
+    setTimeout(()=>{
+      this.routerCopy.navigateByUrl('login');
+    },2000);
   }
-
-
-
-
 }
