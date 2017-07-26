@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule,ReactiveFormsModule }   from '@angular/forms';
 
 import { AppComponent } from './app.component';
 
@@ -13,7 +13,7 @@ import { LayoutModule } from '@progress/kendo-angular-layout';
 import { GridModule,PDFModule,ExcelModule } from '@progress/kendo-angular-grid';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+import { DropDownsModule,DropDownListModule } from '@progress/kendo-angular-dropdowns';
 //验证组件
 import{CustomFormsModule} from 'ng2-validation';
 //toast组件
@@ -100,6 +100,7 @@ import {MainPipe} from './back/main/main.pipe';
     BrowserModule,
     HttpModule,
     FormsModule,
+    ReactiveFormsModule,
 
     BrowserAnimationsModule,
     ButtonsModule,
@@ -111,6 +112,7 @@ import {MainPipe} from './back/main/main.pipe';
     CustomFormsModule,
     DialogModule,
     DropDownsModule,
+    DropDownListModule,
 
     ToastModule.forRoot(),
 

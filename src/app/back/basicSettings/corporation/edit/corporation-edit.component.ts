@@ -19,6 +19,13 @@ import {CorpBuilding} from "../../../../bean/corpBuilding";
 import {CorpBuildingService} from '../corpBuilding.service';
 import {AddressService} from '../../address/address.service';
 import {Building} from "../../../../bean/building";
+import {max} from "rxjs/operator/max";
+
+const formGroup = dataItem => new FormGroup({
+  'buildingId': new FormControl(dataItem.buildingId),
+  'floor': new FormControl(dataItem.floor),
+  'position': new FormControl(dataItem.position)
+});
 
 @Component({
   selector:'corporation-edit',
@@ -27,12 +34,13 @@ import {Building} from "../../../../bean/building";
 })
 
 export class CorporationEditComponent implements OnInit{
-
   corporation=new Corporation('','','','',1);
 
   corpBuildings:CorpBuilding[];
   groups:Group[];
   buildings:Building[];
+  floors:number[]=[];
+  positions:any[]=[];
 
   isLoading:boolean=false;
   isCorpBuildingLoading:boolean=false;
@@ -59,6 +67,18 @@ export class CorporationEditComponent implements OnInit{
     })
     this.setGroupData();
     this.setCorpBuildingData();
+    this.setBuildingData();
+
+    let posEast=new Map().set('E','东');
+    let posWest=new Map().set('W','西');
+    let posSouth=new Map().set('S','南');
+    let posNorth=new Map().set('N','北');
+    let posAll=new Map().set('A','所有区域');
+    this.positions.push(posEast);
+    this.positions.push(posWest);
+    this.positions.push(posSouth);
+    this.positions.push(posNorth);
+    this.positions.push(posAll);
   }
   private setGroupData(){
     this.isLoading=true;
@@ -84,6 +104,7 @@ export class CorporationEditComponent implements OnInit{
         data=>{
           if(this.apiResultService.result(data)) {
             this.buildings= this.apiResultService.result(data).data;
+            //alert(JSON.stringify(this.buildings));
           }
           this.isBuildingLoading=false;
         },
@@ -92,6 +113,15 @@ export class CorporationEditComponent implements OnInit{
           this.isBuildingLoading=false;
         }
       );
+  }
+
+  private buildingChange(event){
+    this.floors.splice(0,this.floors.length);
+    let minfloor=event.minfloor;
+    let maxfloor=event.maxfloor;
+    for(var i=minfloor;i<maxfloor+1;i++){
+      this.floors.push(i);
+    }
   }
 
   private setCorpBuildingData(){
@@ -156,21 +186,30 @@ export class CorporationEditComponent implements OnInit{
       }
     )
   }
+  private onSubmit1(){
+    alert('heihei');
+  }
 
   protected addHandler({sender}) {
+    if(this.buildings.length>0){
+      let minfloor=this.buildings[0].minfloor;
+      let maxfloor=this.buildings[0].maxfloor;
+      for(var i=minfloor;i<maxfloor+1;i++){
+        this.floors.push(i);
+      }
+    }
     this.closeEditor(sender);
-    this.formGroup = new FormGroup({
-      'buildingId': new FormControl("", Validators.required),
-      'floor': new FormControl(0),
-      'position': new FormControl(""),
+    alert(this.floors[0]);
+    this.formGroup =formGroup({
+      'buildingId':this.buildings.length>0?this.buildings[0].id:'',
+      'floor': this.floors.length>0?this.floors[0]:0,
+      'position': "",
     });
     sender.addRow(this.formGroup);
-    this.setBuildingData();
-    return false;
   }
 
   protected editHandler({sender, rowIndex, dataItem}) {
-    this.closeEditor(sender);
+/*    this.closeEditor(sender);
 
     this.formGroup = new FormGroup({
       'ProductID': new FormControl(dataItem.ProductID),
@@ -182,7 +221,7 @@ export class CorporationEditComponent implements OnInit{
 
     this.editedRowIndex = rowIndex;
 
-    sender.editRow(rowIndex, this.formGroup);
+    sender.editRow(rowIndex, this.formGroup);*/
   }
 
   protected cancelHandler({sender, rowIndex}) {

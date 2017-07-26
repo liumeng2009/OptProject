@@ -2,7 +2,7 @@
   <div class="col-xs-12 col-sm-12 offset-sm-12">
     <div class="card">
       <div class="card-block">
-        <form class="k-form"  (ngSubmit)="onSubmit()" #corporationForm="ngForm">
+        <form class="k-form" (ngSubmit)="onSubmit1()" #corporationForm="ngForm">
           <label class="k-form-field">
             <span for="name">办公楼名称</span>
             <input id="name" class="k-textbox" placeholder="办公楼名称" required [(ngModel)]="corporation.name" name="name" />
@@ -25,11 +25,10 @@
             </kendo-dropdownlist>
           </label>
 
-          <label class="k-form-field">
-            <span for="description">公司地点</span>
+          <div class="k-form-field">
+            <span style="font-weight:700;" for="description">公司地点</span>
             <kendo-grid
               [data]="corpBuildings"
-              (dataStateChange)="onStateChange($event)"
               (edit)="editHandler($event)" (cancel)="cancelHandler($event)"
               (save)="saveHandler($event)" (remove)="removeHandler($event)"
               (add)="addHandler($event)"
@@ -37,24 +36,77 @@
               <ng-template kendoGridToolbarTemplate>
                 <button kendoGridAddCommand type="button" >新增</button>
               </ng-template>
-              <kendo-grid-column field="groupId" title="办公楼">
-                <ng-template kendoGridEditTemplate let-dataItem="dataItem">
-                  <input [(ngModel)]="buildings" name="ProductName" class="k-textbox" required/>
+
+              <kendo-grid-column field="buildingId" title="办公楼">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem}}
+                </ng-template>
+                <ng-template kendoGridEditTemplate
+                             let-dataItem="dataItem"
+                             let-formGroup="formGroup">
+                  <kendo-dropdownlist
+                    [data]="buildings"
+                    textField="name"
+                    valueField="id"
+                    [(ngModel)]="dataItem.buildingId"
+                    name="buildingId"
+                    (selectionChange)="buildingChange($event)"
+                  >
+                  </kendo-dropdownlist>
                 </ng-template>
               </kendo-grid-column>
-              <kendo-grid-column field="floor" title="楼层"></kendo-grid-column>
-              <kendo-grid-column field="position" title="方位"></kendo-grid-column>
-              <kendo-grid-column title="操作">
 
+
+
+
+              <kendo-grid-column field="floor" title="楼层">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem}}
+                </ng-template>
+                <ng-template kendoGridEditTemplate
+                             let-dataItem="dataItem"
+                             let-formGroup="formGroup">
+                  <kendo-dropdownlist
+                    [data]="floors"
+                    [(ngModel)]="dataItem.floor"
+                    name="floor"
+                  >
+                  </kendo-dropdownlist>
+                </ng-template>
               </kendo-grid-column>
+
+              <kendo-grid-column field="position" title="所在楼层区域">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem}}
+                </ng-template>
+                <ng-template kendoGridEditTemplate
+                             let-dataItem="dataItem"
+                             let-formGroup="formGroup">
+                  <kendo-dropdownlist
+                    [data]="positions"
+                    [(ngModel)]="dataItem.position"
+                    name="position"
+                  >
+                  </kendo-dropdownlist>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-command-column title="操作" width="220">
+                <ng-template kendoGridCellTemplate let-isNew="isNew">
+                  <button type="button" kendoGridEditCommand class="k-primary">编辑</button>
+                  <button type="button" kendoGridRemoveCommand>删除</button>
+                  <button type="button" kendoGridSaveCommand [disabled]="formGroup?.invalid">{{ isNew ? '保存' : '更新' }}</button>
+                  <button type="button" kendoGridCancelCommand>{{ isNew ? '取消' : '取消' }}</button>
+                </ng-template>
+              </kendo-grid-command-column>
               <ng-template kendoGridNoRecordsTemplate>
                 <div>暂时还没有记录 <a href="javascript:;" (click)="refreshBuilding()">点击刷新</a>.</div>
               </ng-template>
             </kendo-grid>
-          </label>
+          </div>
 
           <div class="text-left">
-            <button class="k-button k-primary" type="submit" [disabled]="!corporationForm.form.valid">提交</button>
+            <button class="k-button k-primary" type="submit" (click)="onSubmit()" [disabled]="!corporationForm.form.valid">提交</button>
             <button class="k-button" type="reset">重置</button>
           </div>
         </form>
