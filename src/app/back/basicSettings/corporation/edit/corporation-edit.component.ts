@@ -19,7 +19,9 @@ import {CorpBuilding} from "../../../../bean/corpBuilding";
 import {CorpBuildingService} from '../corpBuilding.service';
 import {AddressService} from '../../address/address.service';
 import {Building} from "../../../../bean/building";
-import {max} from "rxjs/operator/max";
+import {Floor} from "../../../../bean/floor";
+import {Position} from "../../../../bean/position";
+
 
 const formGroup = dataItem => new FormGroup({
   'buildingId': new FormControl(dataItem.buildingId),
@@ -39,8 +41,8 @@ export class CorporationEditComponent implements OnInit{
   corpBuildings:CorpBuilding[];
   groups:Group[];
   buildings:Building[];
-  floors:number[]=[];
-  positions:any[]=[];
+  floors:Floor[]=[];
+  positions:Position[]=[];
 
   isLoading:boolean=false;
   isCorpBuildingLoading:boolean=false;
@@ -69,16 +71,16 @@ export class CorporationEditComponent implements OnInit{
     this.setCorpBuildingData();
     this.setBuildingData();
 
-    let posEast=new Map().set('E','东');
-    let posWest=new Map().set('W','西');
-    let posSouth=new Map().set('S','南');
-    let posNorth=new Map().set('N','北');
-    let posAll=new Map().set('A','所有区域');
+    let posEast=new Position('E','东');
+    let posWest=new Position('W','西');
+    let posSouth=new Position('S','南');
+    let posNorth=new Position('N','北');
+    let posAll=new Position('A','所有区域');
+    this.positions.push(posAll);
     this.positions.push(posEast);
     this.positions.push(posWest);
     this.positions.push(posSouth);
     this.positions.push(posNorth);
-    this.positions.push(posAll);
   }
   private setGroupData(){
     this.isLoading=true;
@@ -119,8 +121,11 @@ export class CorporationEditComponent implements OnInit{
     this.floors.splice(0,this.floors.length);
     let minfloor=event.minfloor;
     let maxfloor=event.maxfloor;
+    let floor=new Floor('全部',0);
+    this.floors.push(floor);
     for(var i=minfloor;i<maxfloor+1;i++){
-      this.floors.push(i);
+      let floor=new Floor(i.toString(),i);
+      this.floors.push(floor);
     }
   }
 
@@ -192,18 +197,20 @@ export class CorporationEditComponent implements OnInit{
 
   protected addHandler({sender}) {
     if(this.buildings.length>0){
+      let floor=new Floor('全部',0);
+      this.floors.push(floor);
       let minfloor=this.buildings[0].minfloor;
       let maxfloor=this.buildings[0].maxfloor;
       for(var i=minfloor;i<maxfloor+1;i++){
-        this.floors.push(i);
+        let floor=new Floor(i.toString(),i);
+        this.floors.push(floor);
       }
     }
     this.closeEditor(sender);
-    alert(this.floors[0]);
     this.formGroup =formGroup({
       'buildingId':this.buildings.length>0?this.buildings[0].id:'',
       'floor': this.floors.length>0?this.floors[0]:0,
-      'position': "",
+      'position': "A",
     });
     sender.addRow(this.formGroup);
   }
@@ -234,17 +241,24 @@ export class CorporationEditComponent implements OnInit{
     this.formGroup = undefined;
   }
 
-/*  protected saveHandler({sender, rowIndex, formGroup, isNew}) {
-    const product: Product = formGroup.value;
-
-    this.editService.save(product, isNew);
-
+  protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+    console.log(sender);
+    const corpBuilding: CorpBuilding = formGroup.value;
+    this.corpBuildingService.create(corpBuilding).then(
+      data=>{
+        console.log(data);
+        this.missionService.change.emit(new AlertData('success','保存成功'));
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
     sender.closeRow(rowIndex);
   }
 
   protected removeHandler({dataItem}) {
-    this.editService.remove(dataItem);
-  }*/
+    //this.editService.remove(dataItem);
+  }
 
 
 

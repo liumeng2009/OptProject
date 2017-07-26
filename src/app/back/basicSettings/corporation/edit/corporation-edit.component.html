@@ -69,6 +69,8 @@
                   <kendo-dropdownlist
                     [data]="floors"
                     [(ngModel)]="dataItem.floor"
+                    textField="name"
+                    valueField="value"
                     name="floor"
                   >
                   </kendo-dropdownlist>
@@ -84,6 +86,8 @@
                              let-formGroup="formGroup">
                   <kendo-dropdownlist
                     [data]="positions"
+                    textField="name"
+                    valueField="value"
                     [(ngModel)]="dataItem.position"
                     name="position"
                   >
