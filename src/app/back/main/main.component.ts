@@ -92,6 +92,17 @@ export class MainComponent implements OnInit{
       });
     }
 
+    //起始路由，也会有一些特殊处理
+    if(url=='admin/basic/address'){
+      this.router.navigateByUrl('/admin/basic/address/list');
+    }
+    if(url=='admin/basic/group'){
+      this.router.navigateByUrl('/admin/basic/group/list');
+    }
+    if(url=='admin/basic/corporation'){
+      this.router.navigateByUrl('/admin/basic/corporation/list');
+    }
+
     //路由监视，导航到某些特殊路由时，需要做的一些特殊处理.
     this.router.events
       .subscribe((event) => {

@@ -21,6 +21,9 @@ export class ApiResultService {
 
   result(data:ResponseData){
     if(data.status==0){
+      if(data.message&&data.message!=''){
+        this.missionService.change.emit(new AlertData('success',data.message));
+      }
       return data;
     }
     else if(data.status==10001){

@@ -5,5 +5,6 @@ export class OptConfig{
   ajaxError='网络连接错误，您可以刷新页面重试！'
   closing='正在退出登录...'
 
+
   pageSize=10
 }

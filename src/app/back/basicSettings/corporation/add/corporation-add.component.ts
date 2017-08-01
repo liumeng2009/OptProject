@@ -92,17 +92,10 @@ export class CorporationAddComponent implements OnInit{
       //自动新增，然后跳转到edit页面
       this.corporationService.create(this.corporation).then(
         data=>{
-          console.log(data);
+          this.apiResultService.result(data);
+          let t=this;
           if(data.status==0){
-            //this.missionService.change.emit(new AlertData('success','保存成功'));
-            //this.toastr.success('保存成功!', 'Success!');
             this.router.navigate(['../'+data.data.id],{relativeTo:this.route});
-          }
-          else if(data.status==500){
-            this.missionService.change.emit(new AlertData('danger',new OptConfig().unknownError));
-          }
-          else{
-            this.missionService.change.emit(new AlertData('danger',data.message));
           }
         },
         error=>{

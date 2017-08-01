@@ -1,6 +1,6 @@
 export class Position {
   constructor(
-    public value: string,
-    public name: string
+    public name: string,
+    public value: string
   ) {  }
 }

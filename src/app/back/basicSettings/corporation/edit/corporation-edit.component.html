@@ -2,7 +2,7 @@
   <div class="col-xs-12 col-sm-12 offset-sm-12">
     <div class="card">
       <div class="card-block">
-        <form class="k-form" (ngSubmit)="onSubmit1()" #corporationForm="ngForm">
+        <form class="k-form" (ngSubmit)="onSubmit()" #corporationForm="ngForm">
           <label class="k-form-field">
             <span for="name">办公楼名称</span>
             <input id="name" class="k-textbox" placeholder="办公楼名称" required [(ngModel)]="corporation.name" name="name" />
@@ -26,24 +26,31 @@
           </label>
 
           <div class="k-form-field">
-            <span style="font-weight:700;" for="description">公司地点</span>
+            <span style="font-weight:700;">公司地点</span>
             <kendo-grid
               [data]="corpBuildings"
               (edit)="editHandler($event)" (cancel)="cancelHandler($event)"
               (save)="saveHandler($event)" (remove)="removeHandler($event)"
               (add)="addHandler($event)"
+              #kendoGridInstance="kendoGrid"
             >
+
               <ng-template kendoGridToolbarTemplate>
                 <button kendoGridAddCommand type="button" >新增</button>
+                <button kendoButton type="button" style="float:right" class="k-button"  (click)="refreshCorpBuilding()" title="刷新数据">
+                  <span style="color:green" class="k-icon k-i-refresh"></span>
+                </button>
               </ng-template>
 
               <kendo-grid-column field="buildingId" title="办公楼">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  {{dataItem}}
+                  <input type="hidden" [(ngModel)]="dataItem.id" name="id" >
+                  {{dataItem.building?.name}}
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
-                             let-formGroup="formGroup">
+                             let-formGroup="formGroup"
+                >
                   <kendo-dropdownlist
                     [data]="buildings"
                     textField="name"
@@ -51,27 +58,27 @@
                     [(ngModel)]="dataItem.buildingId"
                     name="buildingId"
                     (selectionChange)="buildingChange($event)"
+                    [formControl]="formGroup.get('buildingId')"
                   >
                   </kendo-dropdownlist>
                 </ng-template>
               </kendo-grid-column>
 
-
-
-
               <kendo-grid-column field="floor" title="楼层">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  {{dataItem}}
+                  {{dataItem.floor==0?'全部':dataItem.floor}}
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
-                             let-formGroup="formGroup">
+                             let-formGroup="formGroup"
+                >
                   <kendo-dropdownlist
                     [data]="floors"
                     [(ngModel)]="dataItem.floor"
                     textField="name"
                     valueField="value"
                     name="floor"
+                    [formControl]="formGroup.get('floor')"
                   >
                   </kendo-dropdownlist>
                 </ng-template>
@@ -79,17 +86,23 @@
 
               <kendo-grid-column field="position" title="所在楼层区域">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  {{dataItem}}
+                  <span *ngIf="dataItem.position=='A'">全部区域</span>
+                  <span *ngIf="dataItem.position=='E'">东区</span>
+                  <span *ngIf="dataItem.position=='S'">南区</span>
+                  <span *ngIf="dataItem.position=='W'">西区</span>
+                  <span *ngIf="dataItem.position=='N'">北区</span>
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
-                             let-formGroup="formGroup">
+                             let-formGroup="formGroup"
+                >
                   <kendo-dropdownlist
                     [data]="positions"
                     textField="name"
                     valueField="value"
                     [(ngModel)]="dataItem.position"
                     name="position"
+                    [formControl]="formGroup.get('position')"
                   >
                   </kendo-dropdownlist>
                 </ng-template>
@@ -99,7 +112,7 @@
                 <ng-template kendoGridCellTemplate let-isNew="isNew">
                   <button type="button" kendoGridEditCommand class="k-primary">编辑</button>
                   <button type="button" kendoGridRemoveCommand>删除</button>
-                  <button type="button" kendoGridSaveCommand [disabled]="formGroup?.invalid">{{ isNew ? '保存' : '更新' }}</button>
+                  <button type="button" class="k-primary" kendoGridSaveCommand [disabled]="formGroup?.invalid">{{ isNew ? '保存' : '更新' }}</button>
                   <button type="button" kendoGridCancelCommand>{{ isNew ? '取消' : '取消' }}</button>
                 </ng-template>
               </kendo-grid-command-column>
@@ -118,3 +131,4 @@
     </div>
   </div>
 </div>
+<div kendoDialogContainer></div>

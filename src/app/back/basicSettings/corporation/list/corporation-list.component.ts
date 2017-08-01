@@ -117,7 +117,7 @@ export class CorporationListComponent implements OnInit{
             let dataObj=this.apiResultService.result(data);
             if(dataObj.status==0){
               dialog.close();
-              this.missionService.change.emit(new AlertData('success','删除成功'));
+              //this.missionService.change.emit(new AlertData('success','删除成功'));
               this.refresh();
             }
           },

@@ -1,10 +1,13 @@
-import {Component,OnInit} from '@angular/core';
+import {Component,OnInit,ViewChild,AfterViewInit} from '@angular/core';
 import {Router,ActivatedRoute,Params} from '@angular/router';
+import {Location} from '@angular/common';
 
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
 
 import {Corporation} from "../../../../bean/corporation";
 import {CorporationService} from "../corporation.service";
@@ -22,8 +25,11 @@ import {Building} from "../../../../bean/building";
 import {Floor} from "../../../../bean/floor";
 import {Position} from "../../../../bean/position";
 
+import {GridComponent} from '@progress/kendo-angular-grid';
+
 
 const formGroup = dataItem => new FormGroup({
+  'id':new FormControl(dataItem.id),
   'buildingId': new FormControl(dataItem.buildingId),
   'floor': new FormControl(dataItem.floor),
   'position': new FormControl(dataItem.position)
@@ -35,12 +41,12 @@ const formGroup = dataItem => new FormGroup({
   styleUrls:['./corporation-edit.component.scss']
 })
 
-export class CorporationEditComponent implements OnInit{
+export class CorporationEditComponent implements OnInit,AfterViewInit{
   corporation=new Corporation('','','','',1);
 
   corpBuildings:CorpBuilding[];
   groups:Group[];
-  buildings:Building[];
+  buildings:Building[]=[];
   floors:Floor[]=[];
   positions:Position[]=[];
 
@@ -51,17 +57,52 @@ export class CorporationEditComponent implements OnInit{
   private formGroup: FormGroup;
   private editedRowIndex: number;
 
+  private result;
+
+  @ViewChild(GridComponent) grid: GridComponent;
+
   constructor(
+    private location:Location,
     private router:Router,
     private route:ActivatedRoute,
-    private missionService:MissionService,
     private corporationService:CorporationService,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
     private groupService:GroupService,
     private corpBuildingService:CorpBuildingService,
-    private addressService:AddressService
-  ){}
+    private addressService:AddressService,
+    private dialogService:DialogService
+  ){
+
+  }
+
+  ngAfterViewInit() {
+    if(this.location.path().indexOf('autoadd')>-1){
+      this.myAddRow(this.grid);
+    }
+  }
+
+  private myAddRow(grid){
+      //let sender=this.grid;
+    if(this.buildings.length>0){
+      let floor=new Floor('全部',0);
+      this.floors.push(floor);
+      let minfloor=this.buildings[0].minfloor;
+      let maxfloor=this.buildings[0].maxfloor;
+      for(var i=minfloor;i<maxfloor+1;i++){
+        let floor=new Floor(i.toString(),i);
+        this.floors.push(floor);
+      }
+    }
+    this.formGroup =formGroup({
+      'buildingId':this.buildings.length>0?this.buildings[0]:'',
+      'floor': new Floor('全部',0),
+      'position': new Position('全部区域','A'),
+      'id':''
+    });
+    console.log(this.formGroup);
+    grid.addRow(this.formGroup);
+  }
 
   ngOnInit(){
     this.route.params.subscribe((params: Params) =>{
@@ -71,11 +112,11 @@ export class CorporationEditComponent implements OnInit{
     this.setCorpBuildingData();
     this.setBuildingData();
 
-    let posEast=new Position('E','东');
-    let posWest=new Position('W','西');
-    let posSouth=new Position('S','南');
-    let posNorth=new Position('N','北');
-    let posAll=new Position('A','所有区域');
+    let posEast=new Position('东区','E');
+    let posWest=new Position('西区','W');
+    let posSouth=new Position('南区','S');
+    let posNorth=new Position('北区','N');
+    let posAll=new Position('全部区域','A');
     this.positions.push(posAll);
     this.positions.push(posEast);
     this.positions.push(posWest);
@@ -106,7 +147,6 @@ export class CorporationEditComponent implements OnInit{
         data=>{
           if(this.apiResultService.result(data)) {
             this.buildings= this.apiResultService.result(data).data;
-            //alert(JSON.stringify(this.buildings));
           }
           this.isBuildingLoading=false;
         },
@@ -137,6 +177,7 @@ export class CorporationEditComponent implements OnInit{
         data=>{
           if(this.apiResultService.result(data)) {
             this.corpBuildings= this.apiResultService.result(data).data;
+            console.log(this.corpBuildings);
           }
           this.isCorpBuildingLoading=false;
         },
@@ -146,6 +187,10 @@ export class CorporationEditComponent implements OnInit{
         }
       )
     })
+  }
+
+  private refreshCorpBuilding(){
+    this.setCorpBuildingData();
   }
 
   private getData(id){
@@ -170,29 +215,19 @@ export class CorporationEditComponent implements OnInit{
     );
   }
   private onSubmit(){
-    //alert(this.building);
     this.corporationService.create(this.corporation).then(
       data=>{
-        console.log(data);
+        this.apiResultService.result(data);
         if(data.status==0){
-          this.missionService.change.emit(new AlertData('success','保存成功'));
+          //this.missionService.change.emit(new AlertData('success','保存成功'));
           //this.toastr.success('保存成功!', 'Success!');
           this.router.navigate(['../'],{relativeTo:this.route});
-        }
-        else if(data.status==500){
-          this.missionService.change.emit(new AlertData('danger',new OptConfig().unknownError));
-        }
-        else{
-          this.missionService.change.emit(new AlertData('danger',data.message));
         }
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
       }
     )
-  }
-  private onSubmit1(){
-    alert('heihei');
   }
 
   protected addHandler({sender}) {
@@ -208,27 +243,74 @@ export class CorporationEditComponent implements OnInit{
     }
     this.closeEditor(sender);
     this.formGroup =formGroup({
-      'buildingId':this.buildings.length>0?this.buildings[0].id:'',
-      'floor': this.floors.length>0?this.floors[0]:0,
-      'position': "A",
+      'buildingId':this.buildings.length>0?this.buildings[0]:'',
+      'floor': new Floor('全部',0),
+      'position': new Position('全部区域','A'),
+      'id':''
     });
     sender.addRow(this.formGroup);
   }
 
   protected editHandler({sender, rowIndex, dataItem}) {
-/*    this.closeEditor(sender);
+    if(this.buildings.length>0){
+      let floor=new Floor('全部',0);
+      this.floors.push(floor);
+      let minfloor=this.buildings[0].minfloor;
+      let maxfloor=this.buildings[0].maxfloor;
+      for(var i=minfloor;i<maxfloor+1;i++){
+        let floor=new Floor(i.toString(),i);
+        this.floors.push(floor);
+      }
+    }
+    console.log(dataItem);
 
-    this.formGroup = new FormGroup({
-      'ProductID': new FormControl(dataItem.ProductID),
-      'ProductName': new FormControl(dataItem.ProductName, Validators.required),
-      'UnitPrice': new FormControl(dataItem.UnitPrice),
-      'UnitsInStock': new FormControl(dataItem.UnitsInStock, Validators.compose([Validators.required, Validators.pattern('^[0-9]{1,2}')])),
-      'Discontinued': new FormControl(dataItem.Discontinued)
+    this.closeEditor(sender);
+
+    let floorObj;
+    if(dataItem.floor==0){
+      floorObj=new Floor('全部',0);
+    }
+    else{
+      floorObj=new Floor(dataItem.floor.toString(),dataItem.floor);
+    }
+
+    let positionObj;
+    if(dataItem.position=='A'){
+      positionObj=new Position('全部区域','A')
+    }
+    else if(dataItem.position=='E'){
+      positionObj=new Position('东区','E')
+    }
+    else if(dataItem.position=='S'){
+      positionObj=new Position('南区','S')
+    }
+    else if(dataItem.position=='W'){
+      positionObj=new Position('西区','W')
+    }
+    else if(dataItem.position=='N'){
+      positionObj=new Position('北区','N')
+    }
+    else{
+      positionObj=new Position('','')
+    }
+    console.log(dataItem);
+    console.log(floorObj);
+    console.log(positionObj);
+
+    dataItem.buildingId=dataItem.building;
+    dataItem.floor=floorObj;
+    dataItem.position=positionObj;
+
+    this.formGroup = formGroup({
+      'buildingId': dataItem.building,
+      'floor': dataItem.floor,
+      'position':dataItem.position,
+      'id':dataItem.id
     });
 
+    console.log(this.formGroup);
     this.editedRowIndex = rowIndex;
-
-    sender.editRow(rowIndex, this.formGroup);*/
+    sender.editRow(rowIndex,this.formGroup);
   }
 
   protected cancelHandler({sender, rowIndex}) {
@@ -242,22 +324,60 @@ export class CorporationEditComponent implements OnInit{
   }
 
   protected saveHandler({sender, rowIndex, formGroup, isNew}) {
-    console.log(sender);
-    const corpBuilding: CorpBuilding = formGroup.value;
-    this.corpBuildingService.create(corpBuilding).then(
-      data=>{
-        console.log(data);
-        this.missionService.change.emit(new AlertData('success','保存成功'));
-      },
-      error=>{
-        this.ajaxExceptionService.simpleOp(error);
-      }
-    );
-    sender.closeRow(rowIndex);
+    this.route.params.subscribe((params: Params) =>{
+      let corpid=params.id;
+
+      console.log(formGroup);
+      console.log(this.formGroup);
+
+      const corpBuilding: CorpBuilding =formGroup.value;
+      corpBuilding.corporationId=corpid;
+
+      console.log(corpBuilding);
+
+      this.corpBuildingService.create(corpBuilding).then(
+        data=>{
+          this.apiResultService.result(data);
+          this.setCorpBuildingData();
+          sender.closeRow(rowIndex);
+        },
+        error=>{
+          this.ajaxExceptionService.simpleOp(error);
+        }
+      );
+    });
   }
 
   protected removeHandler({dataItem}) {
-    //this.editService.remove(dataItem);
+
+    const dialog: DialogRef = this.dialogService.open({
+      title: "确认删除？",
+      content: "确定删除吗？",
+      actions: [
+        { text: "否" },
+        { text: "是", primary: true }
+      ]
+    });
+
+    dialog.result.subscribe((result) => {
+      if (result instanceof DialogCloseResult) {
+        console.log("close");
+      } else {
+
+      }
+      this.result = result;
+      if(this.result.text=='是'){
+        this.corpBuildingService.delete(dataItem.id).then(
+          data=>{
+            this.apiResultService.result(data);
+            this.setCorpBuildingData();
+          },
+          error=>{
+            this.ajaxExceptionService.simpleOp(error)
+          }
+        );
+      }
+    });
   }
 
 
