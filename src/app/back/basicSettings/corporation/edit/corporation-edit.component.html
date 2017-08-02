@@ -60,6 +60,7 @@
                     (selectionChange)="buildingChange($event)"
                     [formControl]="formGroup.get('buildingId')"
                   >
+
                   </kendo-dropdownlist>
                 </ng-template>
               </kendo-grid-column>
@@ -81,6 +82,8 @@
                     [formControl]="formGroup.get('floor')"
                   >
                   </kendo-dropdownlist>
+                  <span *ngIf="isBuildingLoading" class="k-icon k-i-loading" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:14px;margin-left: 5px;"></span>
+                  <div style="clear: both"></div>
                 </ng-template>
               </kendo-grid-column>
 

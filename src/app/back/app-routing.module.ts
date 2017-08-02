@@ -4,6 +4,8 @@ import {RouterModule,Routes} from '@angular/router';
 
 import {LoginComponent} from './login/login.component';
 
+import {RegComponent} from './register/reg.component';
+
 import {MainComponent} from './main/main.component';
 
 //基本信息设置
@@ -34,6 +36,7 @@ import {CorporationEditComponent} from "./basicSettings/corporation/edit/corpora
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
   {path:'login',component:LoginComponent,data:{name:'登录'}},
+  {path:'reg',component:RegComponent,data:{name:'注册'}},
   {path:'admin',component:MainComponent,data:{name:'首页'},children:[
     {path:'total',component:TotalComponent,data:{name:'数据综述'},},
     {path:'basic',component:BasicSettingsComponent,data:{name:'基本设置'},children:[

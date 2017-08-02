@@ -1,6 +1,5 @@
 import {Component,OnInit,ViewChild,AfterViewInit} from '@angular/core';
 import {Router,ActivatedRoute,Params} from '@angular/router';
-import {Location} from '@angular/common';
 
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +25,7 @@ import {Floor} from "../../../../bean/floor";
 import {Position} from "../../../../bean/position";
 
 import {GridComponent} from '@progress/kendo-angular-grid';
+import {SwitchService} from "../../../main/switchService";
 
 
 const formGroup = dataItem => new FormGroup({
@@ -59,10 +59,10 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
 
   private result;
 
+
   @ViewChild(GridComponent) grid: GridComponent;
 
   constructor(
-    private location:Location,
     private router:Router,
     private route:ActivatedRoute,
     private corporationService:CorporationService,
@@ -71,31 +71,22 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     private groupService:GroupService,
     private corpBuildingService:CorpBuildingService,
     private addressService:AddressService,
-    private dialogService:DialogService
+    private dialogService:DialogService,
+    private switchService:SwitchService
   ){
 
   }
 
   ngAfterViewInit() {
-    if(this.location.path().indexOf('autoadd')>-1){
+    if(this.switchService.getCorpBuildingListAutoAdd()){
       this.myAddRow(this.grid);
+      this.switchService.setCorpBuildingListAutoAdd(false);
     }
   }
 
   private myAddRow(grid){
-      //let sender=this.grid;
-    if(this.buildings.length>0){
-      let floor=new Floor('全部',0);
-      this.floors.push(floor);
-      let minfloor=this.buildings[0].minfloor;
-      let maxfloor=this.buildings[0].maxfloor;
-      for(var i=minfloor;i<maxfloor+1;i++){
-        let floor=new Floor(i.toString(),i);
-        this.floors.push(floor);
-      }
-    }
     this.formGroup =formGroup({
-      'buildingId':this.buildings.length>0?this.buildings[0]:'',
+      'buildingId':null,
       'floor': new Floor('全部',0),
       'position': new Position('全部区域','A'),
       'id':''
@@ -147,6 +138,27 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
         data=>{
           if(this.apiResultService.result(data)) {
             this.buildings= this.apiResultService.result(data).data;
+            if(this.formGroup&&this.formGroup.value&&(this.formGroup.value.buildingId==''||this.formGroup.value.buildingId==null)){
+              this.floors.splice(0,this.floors.length);
+              let minfloor=this.buildings.length>0?this.buildings[0].minfloor:0;
+              let maxfloor=this.buildings.length>0?this.buildings[0].maxfloor:0;
+              let floor=new Floor('全部',0);
+              this.floors.push(floor);
+              for(var i=minfloor;i<maxfloor+1;i++){
+                let floor=new Floor(i.toString(),i);
+                this.floors.push(floor);
+              }
+
+              this.formGroup =formGroup({
+                'buildingId':this.buildings[0],
+                'floor': new Floor('全部',0),
+                'position': new Position('全部区域','A'),
+                'id':''
+              });
+
+              //alert('增加');
+              this.grid.addRow(this.formGroup);
+            }
           }
           this.isBuildingLoading=false;
         },

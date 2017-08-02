@@ -14,6 +14,7 @@ import {OptConfig} from '../../../../config/config';
 
 import {ApiResultService} from '../../../main/apiResult.service';
 import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
+import {SwitchService} from '../../../main/switchService';
 
 @Component({
   selector:'corporation-add',
@@ -34,7 +35,8 @@ export class CorporationAddComponent implements OnInit{
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
-    private ajaxExceptionService:AjaxExceptionService
+    private ajaxExceptionService:AjaxExceptionService,
+    private switchService:SwitchService
   ){
 
   };
@@ -95,7 +97,9 @@ export class CorporationAddComponent implements OnInit{
           this.apiResultService.result(data);
           let t=this;
           if(data.status==0){
-            this.router.navigate(['../'+data.data.id],{relativeTo:this.route});
+            this.router.navigate(['../'+data.data.id],{relativeTo:this.route}).then(function(){
+              t.switchService.setCorpBuildingListAutoAdd(true);
+            });
           }
         },
         error=>{

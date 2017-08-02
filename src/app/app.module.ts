@@ -21,6 +21,8 @@ import {ToastModule} from 'ng2-toastr/ng2-toastr';
 
 //登录组件
 import {LoginComponent} from './back/login/login.component';
+//登录组件
+import {RegComponent} from './back/register/reg.component';
 //基本设置组件
 import {BasicSettingsComponent} from './back/basicSettings/baseSettings.component';
 import {WorkerComponent} from './back/basicSettings/worker/worker.component';
@@ -54,19 +56,24 @@ import {TotalComponent} from './back/total/total.component';
 import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 
 import {LoginService} from './back/login/login.service'
+import {RegService} from './back/register/reg.service'
 import {MainService} from './back/main/main.service'
 import {MainComponent} from "./back/main/main.component";
 import {MissionService} from "./back/main/mission.service";
 import {ApiResultService} from './back/main/apiResult.service';
 import {AjaxExceptionService} from './back/main/ajaxExceptionService';
+import {SwitchService} from "./back/main/switchService";
 
 import {MainPipe} from './back/main/main.pipe';
+
 
 @NgModule({
   declarations: [
     AppComponent,
 
     LoginComponent,
+
+    RegComponent,
 
     MainComponent,
 
@@ -122,6 +129,7 @@ import {MainPipe} from './back/main/main.pipe';
     CookieService,
 
     LoginService,
+    RegService,
     MainService,
     AddressService,
     GroupService,
@@ -131,6 +139,7 @@ import {MainPipe} from './back/main/main.pipe';
     MissionService,
     ApiResultService,
     AjaxExceptionService,
+    SwitchService,
 
     appRoutingProvider
   ],

@@ -1,0 +1,43 @@
+<div style="width: 100%;height:100%;padding-top: 150px;background-color: #eee;">
+  <div class="row login-container">
+    <div class="col-xs-12 col-sm-6 col-lg-6 col-md-6">
+      <div class="card">
+        <div class="card-block">
+          <form class="k-form" (ngSubmit)="onSubmit()" #regForm="ngForm">
+            <fieldset>
+              <legend>填写注册信息</legend>
+              <label class="k-form-field">
+                <label for="username">用户名<span class="k-required">*</span></label>
+                <input id="username" name="username" [(ngModel)]="user.username" class="k-textbox" placeholder="用户名" required autofocus>
+              </label>
+              <label class="k-form-field" style="position:relative;">
+                <label for="password">密码<span class="k-required">*</span></label>
+                <input *ngIf="!showPassword" id="password" name="password" [(ngModel)]="user.password" class="k-textbox" placeholder="密码" type="password" required />
+                <input *ngIf="showPassword" id="passwordShow" name="passwordShow" [(ngModel)]="user.password" class="k-textbox" placeholder="密码" type="text" required />
+                <button kendoButton (click)="previewPassword()"  [bare]="true" style="position:absolute;bottom:3px;right:0px;" type="button" >
+                  <span class="{{showPasswordIcon}}"></span>
+                </button>
+              </label>
+              <label>
+                <button kendoButton [iconClass]="iconClass" type="submit" [disabled]="!regForm.form.valid" [primary]="true" >
+                  &nbsp;注册
+                </button>
+              </label>
+            </fieldset>
+          </form>
+
+          <div class="row" style="padding: 16px;padding-top: 0px;">
+            <div class="col-xs-12 col-sm-6 col-lg-6 col-md-6">
+              已经有账户了，<a routerLink="/login">点击登录</a>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-lg-6 col-md-6" style="text-align: right">
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
