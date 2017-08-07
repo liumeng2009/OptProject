@@ -27,7 +27,6 @@ export class RegComponent implements OnInit{
 
   constructor(
     private regService:RegService,
-    private cookieService:CookieService,
     private router:Router,
     private title:Title,
     private toastr:ToastsManager,
@@ -42,40 +41,36 @@ export class RegComponent implements OnInit{
   }
 
 
-  onButtonClick():void{
+  onSubmit():void{
     this.isDisabled=true;
     this.iconClass='k-icon k-i-loading';
-    this.regService.login(this.user.username,this.user.password)
+    this.regService.reg(this.user.username,this.user.password)
       .then(
         data=>{
           if(data.status==0){
             //this.user=data.data;
-            this.toastr.success('欢迎您,'+data.data.name,'登录成功');
+            this.toastr.success(data.message||'注册成功！正在跳转到登录页面。。。');
             setTimeout(()=>{
               this.isDisabled=false;
-              this.iconClass='k-icon k-i-lock';
-              this.router.navigate(['/admin']);
-              let date=new Date();
-              date.setDate(date.getDate()+999);
-              this.cookieService.put('optToken',data.data.token,{expires:date});
+              this.iconClass='k-icon k-i-track-changes-enable';
+              this.router.navigate(['/login']);
             },2000);
           }
           else{
             this.isDisabled=false;
-            this.iconClass='k-icon k-i-lock';
-            this.toastr.error(data.message,'登录失败');
-            //this.errorMessage=data.message
+            this.iconClass='k-icon k-i-track-changes-enable';
+            this.toastr.error(data.message,'注册失败');
           }
         },
         error=>{
           this.isDisabled=false;
-          this.iconClass='k-icon k-i-lock';
+          this.iconClass='k-icon k-i-track-changes-enable';
           if(environment.production){
-            this.toastr.error(new OptConfig().ajaxError,'登录失败');
+            this.toastr.error(new OptConfig().ajaxError,'注册失败');
             //this.errorMessage=new OptConfig().ajaxError;
           }
           else {
-            this.toastr.error(error,'登录失败');
+            this.toastr.error(error,'注册失败');
             //this.errorMessage = error;
           }
         }

@@ -40,14 +40,13 @@ export class LoginComponent implements OnInit{
   }
 
 
-  onButtonClick():void{
+  onSubmit():void{
     this.isDisabled=true;
     this.iconClass='k-icon k-i-loading';
     this.loginService.login(this.user.username,this.user.password)
       .then(
         data=>{
           if(data.status==0){
-            //this.user=data.data;
             this.toastr.success('欢迎您,'+data.data.name,'登录成功');
             setTimeout(()=>{
               this.isDisabled=false;

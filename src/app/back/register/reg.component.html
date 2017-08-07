@@ -14,12 +14,12 @@
                 <label for="password">密码<span class="k-required">*</span></label>
                 <input *ngIf="!showPassword" id="password" name="password" [(ngModel)]="user.password" class="k-textbox" placeholder="密码" type="password" required />
                 <input *ngIf="showPassword" id="passwordShow" name="passwordShow" [(ngModel)]="user.password" class="k-textbox" placeholder="密码" type="text" required />
-                <button kendoButton (click)="previewPassword()"  [bare]="true" style="position:absolute;bottom:3px;right:0px;" type="button" >
+                <a  (click)="previewPassword()"   style="position:absolute;bottom:3px;right:10px;color:#ff6358;cursor: pointer;" >
                   <span class="{{showPasswordIcon}}"></span>
-                </button>
+                </a>
               </label>
               <label>
-                <button kendoButton [iconClass]="iconClass" type="submit" [disabled]="!regForm.form.valid" [primary]="true" >
+                <button kendoButton [iconClass]="iconClass" type="submit" [disabled]="isDisabled||!regForm.form.valid" [primary]="true" >
                   &nbsp;注册
                 </button>
               </label>

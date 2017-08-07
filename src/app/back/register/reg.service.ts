@@ -15,7 +15,7 @@ export class RegService{
 
   constructor(private http:Http){}
 
-  login(username:string,password:string):Promise<ResponseData>{
+  reg(username:string,password:string):Promise<ResponseData>{
 
     let headers=new Headers({'Content-Type':'application/json'});
     let options=new RequestOptions(headers);

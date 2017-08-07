@@ -3,19 +3,19 @@
     <div class="col-xs-12 col-sm-6 col-lg-6 col-md-6">
       <div class="card">
         <div class="card-block">
-          <form class="k-form">
+          <form class="k-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
             <fieldset>
               <legend>请您登录</legend>
               <label class="k-form-field">
                 <label for="username">用户名：</label>
-                <input id="username" name="username" [(ngModel)]="user.username" #username="ngModel" class="k-textbox" placeholder="用户名" required autofocus>
+                <input id="username" name="username" [(ngModel)]="user.username" class="k-textbox" placeholder="用户名" required autofocus>
               </label>
               <label class="k-form-field">
                 <label for="password">密码：</label>
-                <input id="password" name="password" [(ngModel)]="user.password" #password="ngModel" class="k-textbox" placeholder="密码" type="password" />
+                <input id="password" name="password" [(ngModel)]="user.password" class="k-textbox" placeholder="密码" type="password" />
               </label>
               <label>
-                <button kendoButton (click)="onButtonClick()" [iconClass]="iconClass" type="submit" [disabled]="isDisabled" [primary]="true" >
+                <button kendoButton [iconClass]="iconClass" type="submit" [disabled]="isDisabled||!loginForm.form.valid" [primary]="true" >
                   &nbsp;登录
                 </button>
               </label>
