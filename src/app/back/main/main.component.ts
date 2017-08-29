@@ -102,11 +102,14 @@ export class MainComponent implements OnInit{
     if(url=='admin/basic/corporation'){
       this.router.navigateByUrl('/admin/basic/corporation/list');
     }
+    if(url=='admin/auth/user'){
+      this.router.navigateByUrl('/admin/auth/user/list');
+    }
 
     //路由监视，导航到某些特殊路由时，需要做的一些特殊处理.
     this.router.events
       .subscribe((event) => {
-        console.log(event);
+        //console.log(event);
         if (event instanceof NavigationEnd) { // 当导航成功结束时执行
           let urlNow=event.url;
           urlNow=urlNow.substring(1,urlNow.length);
@@ -121,6 +124,12 @@ export class MainComponent implements OnInit{
           }
           if(event.url=='/admin/basic/corporation'){
             this.router.navigateByUrl('/admin/basic/corporation/list');
+          }
+          if(event.url=='/admin/auth/user'){
+            this.router.navigateByUrl('/admin/auth/user/list');
+          }
+          if(event.url=='/admin/operations/business'){
+            this.router.navigateByUrl('/admin/operations/business/list');
           }
           //导航到首页，直接跳转到数据综述
           if(event.url=='/admin'){
@@ -144,9 +153,14 @@ export class MainComponent implements OnInit{
           else if(event.url.indexOf('/admin/basic/corporation/')>-1){
             this.selectedId='admin/basic/corporation';
           }
+          else if(event.url.indexOf('/admin/auth/user/')>-1){
+            this.selectedId='admin/auth/user';
+          }
+          else if(event.url.indexOf('/admin/operations/business/')>-1){
+            this.selectedId='admin/operations/business';
+          }
           else{
             this.selectedId=urlNow;
-            console.log(urlNow);
           }
           this.searchAndDeleteNodePropertySelected(this.router.config);
           this.createBreadCrumb();
@@ -163,7 +177,6 @@ export class MainComponent implements OnInit{
           }
         },
         error=>{
-          alert(123);
           this.ajaxExceptionService.simpleOp(error);
         }
       );

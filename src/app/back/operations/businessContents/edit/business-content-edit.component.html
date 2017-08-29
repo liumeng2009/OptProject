@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 offset-sm-12">
+    <div class="card">
+      <div class="card-block">
+        <form class="k-form"  (ngSubmit)="onSubmit()" #businessForm="ngForm">
+          <label class="k-form-field">
+            <span for="type">类型<span class="k-required">*</span></span>
+            <kendo-dropdownlist name="type" [data]="types" [(ngModel)]="business.type"
+                                [textField]="'name'"
+                                [valueField]="'value'"
+                                [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+          </label>
+          <label class="k-form-field">
+            <span for="equipment">设备名称<span class="k-required">*</span></span>
+            <input id="equipment" class="k-textbox" placeholder="设备名称" required [(ngModel)]="business.equipment" name="equipment" />
+          </label>
+          <label class="k-form-field">
+            <span for="equipment">操作<span class="k-required">*</span></span>
+          </label>
+          <div class="k-form-field">
+            <kendo-grid [data]="operations">
+
+              <kendo-grid-column field="op" title="选择" width="150">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  <input type="checkbox" class="k-checkbox" id="{{dataItem.op}}" name="{{dataItem.op}}" [(ngModel)]="business.operations[rowIndex].checked" value="{{dataItem.op}}" >
+                  <label class="k-checkbox-label" for="{{dataItem.op}}">{{dataItem.name}}</label>
+                  <input type="hidden" name="hfd{{dataItem.op}}" [(ngModel)]="business.operations[rowIndex].id" >
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column field="weight" title="设置权重值" >
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  <table>
+                    <tr>
+                      <td width="50">
+                        <label>{{business.operations[rowIndex].weight}}</label>
+                      </td>
+                      <td>
+                        <kendo-slider
+                          [min]="1"
+                          [max]="10"
+                          [smallStep]="1"
+                          [(ngModel)] = "business.operations[rowIndex].weight"
+                          id="Slide{{dataItem.name}}"
+                          name="weight{{dataItem.name}}"
+                          disabled="{{!business.operations[rowIndex].checked}}"
+                        ></kendo-slider>
+                      </td>
+                    </tr>
+                  </table>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column field="remark" title="备注" width="205">
+                <ng-template  kendoGridCellTemplate let-dataItem  let-rowIndex="rowIndex">
+                  <input type="text" class="k-textbox" id="txt{{dataItem.op}}" name="remark{{dataItem.op}}" [(ngModel)]="business.operations[rowIndex].remark" disabled="{{!business.operations[rowIndex].checked}}" >
+                </ng-template>
+
+              </kendo-grid-column>
+
+            </kendo-grid>
+
+          </div>
+
+
+
+          <div class="text-left">
+            <button class="k-button k-primary" [disabled]="!businessForm.form.valid||oneChecked">提交</button>
+            <button class="k-button">重置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

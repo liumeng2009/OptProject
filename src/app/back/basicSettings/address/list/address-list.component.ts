@@ -106,7 +106,7 @@ export class AddressListComponent implements OnInit{
 
     dialog.result.subscribe((result) => {
       if (result instanceof DialogCloseResult) {
-        console.log("close");
+
       } else {
 
       }
@@ -115,9 +115,8 @@ export class AddressListComponent implements OnInit{
         this.addressService.delete(id).then(
           data=>{
             let dataObj=this.apiResultService.result(data);
-            if(dataObj.status==0){
+            if(dataObj&&dataObj.status==0){
               dialog.close();
-              this.missionService.change.emit(new AlertData('success','删除成功'));
               this.refresh();
             }
           },
@@ -128,7 +127,6 @@ export class AddressListComponent implements OnInit{
         )
       }
     });
-
   }
 
 }

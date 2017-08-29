@@ -17,7 +17,6 @@ export class MainService{
 
   getUserInfo():Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-    console.log(this.loginurl+'?token='+token);
     return this.http.get(this.loginurl+'?token='+token)
       .toPromise()
       .then(this.extractData)

@@ -19,7 +19,6 @@ export class LoginService{
 
     let headers=new Headers({'Content-Type':'application/json'});
     let options=new RequestOptions(headers);
-    console.log('请求的url是：'+this.loginurl);
     return this.http.post(this.loginurl,{username:username,password:password},options)
       .toPromise()
       .then(this.extractData)
@@ -28,7 +27,7 @@ export class LoginService{
 
   private extractData(res:Response){
     let body=res.json();
-    console.log(JSON.stringify(body));
+    //console.log(JSON.stringify(body));
     return body||{};
   }
   private handleError(error:Response|any){

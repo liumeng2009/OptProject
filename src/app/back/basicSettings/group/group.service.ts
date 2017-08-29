@@ -33,7 +33,6 @@ export class GroupService{
     else{
       url=this.listurl+'?token='+token
     }
-    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)

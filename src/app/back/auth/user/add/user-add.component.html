@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 offset-sm-12">
+    <div class="card">
+      <div class="card-block">
+        <form class="k-form"  (ngSubmit)="onSubmit()" #userForm="ngForm">
+          <label class="k-form-field">
+            <span for="name">用户名<span class="k-required">*</span></span>
+            <input id="name" class="k-textbox" placeholder="用户名" required [(ngModel)]="user.username" name="username" />
+          </label>
+          <label class="k-form-field">
+            <span for="password">密码<span class="k-required">*</span></span>
+            <input id="password" type="password" class="k-textbox" value="" placeholder="密码" required [(ngModel)]="user.password" name="password" />
+          </label>
+
+          <label class="k-form-field">
+            <span for="password">是否可以登录<span class="k-required">*</span></span>
+            <kendo-switch [(ngModel)]="user.canLogin" name="canLogin" id="canLogin" [onLabel]="'是'" [offLabel]="'否'" ></kendo-switch>
+          </label>
+
+          <label class="k-form-field">
+            <span for="gender">性别</span>
+
+              <label style="float:left;margin-top: 3px;" *ngFor="let g of genders">
+                <input type="radio" name="gender" id="gender{{g.value}}" class="k-radio" value="{{g.value}}" [(ngModel)]="user.gender">
+                <label class="k-radio-label" for="gender{{g.value}}">{{g.name}}</label>
+              </label>
+              <div style="clear:both">
+
+              </div>
+          </label>
+          <label class="k-form-field">
+            <span for="phone">电话</span>
+            <input id="phone" class="k-textbox"  placeholder="电话号码" [(ngModel)]="user.phone" name="phone" />
+          </label>
+          <label class="k-form-field">
+            <span for="email">邮箱</span>
+            <input id="email" class="k-textbox"  placeholder="电子邮箱" [(ngModel)]="user.email" name="email" />
+          </label>
+          <div class="text-left">
+            <button class="k-button k-primary" [disabled]="!userForm.form.valid">提交</button>
+            <button class="k-button">重置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

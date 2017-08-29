@@ -10,39 +10,39 @@ import {ResponseData} from '../../../bean/responseData';
 
 import {OptConfig} from '../../../config/config'
 
-import {Corporation} from '../../../bean/corporation';
+import {User} from '../../../bean/user';
 
 
 @Injectable()
-export class CorporationService{
+export class UserService{
   private headers = new Headers({'Content-Type': 'application/json'});
 
-  private listurl=new OptConfig().serverPath+'/api/corporations/list';
-  private saveurl=new OptConfig().serverPath+'/api/corporations/save';
-  private deleteurl=new OptConfig().serverPath+'/api/corporations/delete';
-  private geturl=new OptConfig().serverPath+'/api/corporations/';
+  private listurl=new OptConfig().serverPath+'/api/user/list';
+  private saveurl=new OptConfig().serverPath+'/api/user/reg';
+  private deleteurl=new OptConfig().serverPath+'/api/user/delete';
+  private geturl=new OptConfig().serverPath+'/api/user/';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
-  getCorporationList(pageid):Promise<ResponseData>{
+  getUserList(pageid):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
-      url=this.listurl+'/page/'+pageid+'?token='+token
-    }
+        url=this.listurl+'/page/'+pageid+'?token='+token
+        }
     else{
-      url=this.listurl+'?token='+token
-    }
+        url=this.listurl+'?token='+token
+        }
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
-  create(group:Corporation): Promise<ResponseData> {
+  create(user:User): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveurl+'?token='+token, group, {headers: this.headers})
+      .post(this.saveurl+'?token='+token, user, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -57,7 +57,7 @@ export class CorporationService{
       .catch(this.handleError);
   }
 
-  getCorporation(id:string):Promise<ResponseData>{
+  getUser(id:string):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url=this.geturl+id+'?token='+token;
     return this.http.get(url)

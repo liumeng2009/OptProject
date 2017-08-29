@@ -23,6 +23,7 @@
               style="float:left"            >
             </kendo-dropdownlist>
             <span *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:14px;margin-left: 5px;"></span>
+            <a *ngIf="groups==null||groups.length==0" routerLink="/admin/basic/group/add" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:30px;margin-left: 5px;">没有组织信息？请点击添加。</a>
             <div style="clear: both"></div>
           </label>
 

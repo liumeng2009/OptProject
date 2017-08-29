@@ -25,7 +25,6 @@ import {LoginComponent} from './back/login/login.component';
 import {RegComponent} from './back/register/reg.component';
 //基本设置组件
 import {BasicSettingsComponent} from './back/basicSettings/baseSettings.component';
-import {WorkerComponent} from './back/basicSettings/worker/worker.component';
 //建筑物相关组件
 import {AddressComponent} from './back/basicSettings/address/address.component';
 import {AddressListComponent} from './back/basicSettings/address/list/address-list.component';
@@ -50,8 +49,30 @@ import {CorpBuildingService} from './back/basicSettings/corporation/corpBuilding
 //工单组件
 import {OperationsComponent} from './back/operations/operations.component';
 import {OperationListComponent} from './back/operations/list/operation_list.component';
+//权限组件
+import {AuthComponent} from './back/auth/auth.component';
+
+//用户组件
+import {UserComponent} from './back/auth/user/user.component';
+import {UserListComponent} from './back/auth/user/list/user-list.component';
+import {UserAddComponent} from './back/auth/user/add/user-add.component';
+import {UserEditComponent} from "./back/auth/user/edit/user-edit.component";
+import {UserService} from './back/auth/user/user.service';
+
+import {WorkerComponent} from './back/basicSettings/worker/worker.component';
+import {WorkerService} from './back/basicSettings/worker/worker.service';
+
+import {BusinessContentComponent} from './back/operations/businessContents/businessContent.component';
+import {BusinessContentService} from './back/operations/businessContents/businessContent.service';
+import {BusinessContentListComponent} from './back/operations/businessContents/list/business-content-list.component';
+import {BusinessContentAddComponent} from './back/operations/businessContents/add/business-content-add.component';
+import {BusinessContentEditComponent} from './back/operations/businessContents/edit/business-content-edit.component';
+
+
 //信息综述
 import {TotalComponent} from './back/total/total.component';
+
+import {OtherComponent} from './back/components/other.component';
 
 import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 
@@ -63,6 +84,7 @@ import {MissionService} from "./back/main/mission.service";
 import {ApiResultService} from './back/main/apiResult.service';
 import {AjaxExceptionService} from './back/main/ajaxExceptionService';
 import {SwitchService} from "./back/main/switchService";
+
 
 import {MainPipe} from './back/main/main.pipe';
 
@@ -99,7 +121,21 @@ import {MainPipe} from './back/main/main.pipe';
     OperationsComponent,
     OperationListComponent,
 
+    AuthComponent,
+
+    UserComponent,
+    UserListComponent,
+    UserAddComponent,
+    UserEditComponent,
+
+    BusinessContentComponent,
+    BusinessContentListComponent,
+    BusinessContentAddComponent,
+    BusinessContentEditComponent,
+
     TotalComponent,
+
+    OtherComponent,
 
     MainPipe
   ],
@@ -135,6 +171,9 @@ import {MainPipe} from './back/main/main.pipe';
     GroupService,
     CorporationService,
     CorpBuildingService,
+    UserService,
+    WorkerService,
+    BusinessContentService,
 
     MissionService,
     ApiResultService,

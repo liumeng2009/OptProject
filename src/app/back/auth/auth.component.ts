@@ -3,13 +3,13 @@ import {Router,ActivatedRoute} from '@angular/router'
 
 @Component({
   template: `
-    <h1 *ngIf="showInfo">基本信息</h1>
+    <h1 *ngIf="showInfo">用户权限管理</h1>
         <router-outlet (activate)='onActivate($event)'
   (deactivate)='onDeactivate($event)'></router-outlet>
     `
 })
 
-export class BasicSettingsComponent {
+export class AuthComponent {
   private showInfo=true;
 
   private onActivate(){

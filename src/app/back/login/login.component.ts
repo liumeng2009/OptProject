@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit{
   ){
     this.toastr.setRootViewContainerRef(vcr);
   };
-  user=new User('','');
+  user=new User(null,null,null,null,null,null,null);
 
   ngOnInit(){
     this.title.setTitle('登录');

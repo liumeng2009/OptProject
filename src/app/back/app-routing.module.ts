@@ -8,7 +8,7 @@ import {RegComponent} from './register/reg.component';
 
 import {MainComponent} from './main/main.component';
 
-//基本信息设置
+
 import {BasicSettingsComponent} from './basicSettings/baseSettings.component';
 
 import {AddressComponent} from './basicSettings/address/address.component';
@@ -22,16 +22,30 @@ import {GroupAddComponent} from './basicSettings/group/add/group-add.component';
 import {GroupEditComponent} from './basicSettings/group/edit/group-edit.component';
 
 import {WorkerComponent} from './basicSettings/worker/worker.component';
-//工单记录
+
 import {OperationsComponent} from './operations/operations.component';
 import {OperationListComponent} from './operations/list/operation_list.component';
-//信息综述
+
 import {TotalComponent} from './total/total.component';
 
 import {CorporationComponent} from "./basicSettings/corporation/corporation.component";
 import {CorporationListComponent} from "./basicSettings/corporation/list/corporation-list.component";
 import {CorporationAddComponent} from "./basicSettings/corporation/add/corporation-add.component";
 import {CorporationEditComponent} from "./basicSettings/corporation/edit/corporation-edit.component";
+
+import {AuthComponent} from "./auth/auth.component";
+
+import {UserListComponent} from "./auth/user/list/user-list.component";
+import {UserComponent} from "./auth/user/user.component";
+import {UserAddComponent} from "./auth/user/add/user-add.component";
+import {UserEditComponent} from "./auth/user/edit/user-edit.component";
+
+import {BusinessContentComponent} from './operations/businessContents/businessContent.component';
+import {BusinessContentListComponent} from './operations/businessContents/list/business-content-list.component';
+import {BusinessContentAddComponent} from './operations/businessContents/add/business-content-add.component';
+import {BusinessContentEditComponent} from './operations/businessContents/edit/business-content-edit.component';
+
+import {OtherComponent} from "./components/other.component";
 
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
@@ -58,11 +72,22 @@ export const PanelbarRoutes:Routes=[
       { path: 'worker', component: WorkerComponent,data:{name:'人员设置'} }
     ]},
     {path:'operations',component:OperationsComponent,data:{name:'工单'},children:[
-      { path: 'list', component: OperationListComponent,data:{name:'工单列表'} }
+      { path: 'list', component: OperationListComponent,data:{name:'工单列表'} },
+      { path: 'business', component: BusinessContentComponent,data:{name:'业务内容设置'},children:[
+        {path:'list',component:BusinessContentListComponent,data:{name:'列表'}},
+        {path:'add',component:BusinessContentAddComponent,data:{name:'新增'}},
+        {path:':id',component:BusinessContentEditComponent,data:{name:'编辑'}}
+      ] }
     ]},
-
-  ]}
-/*  {path:'**',component:OtherComponent,data:{name:'页面未找到'}}*/
+    {path:'auth',component:AuthComponent,data:{name:'用户权限管理'},children:[
+      { path: 'user', component: UserComponent,data:{name:'用户管理'},children:[
+        {path:'list',component:UserListComponent,data:{name:'列表'}},
+        {path:'add',component:UserAddComponent,data:{name:'新增'}},
+        {path:':id',component:UserEditComponent,data:{name:'编辑'}}
+      ] }
+    ]}
+  ]},
+  {path:'**',component:OtherComponent,data:{name:'页面未找到'}}
 ];
 
 export const appRoutingProvider:any[]=[];

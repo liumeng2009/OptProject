@@ -1,29 +1,21 @@
-import {Component,OnInit,Output,EventEmitter} from '@angular/core';
+import {Component,OnInit} from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router';
 
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
 
-import {CorporationService} from '../corporation.service';
-
-
-import {AlertData} from '../../../../bean/alertData'
-
-import {OptConfig} from '../../../../config/config';
-
-import {MissionService} from '../../../main/mission.service';
-import {ApiResultService} from '../../../main/apiResult.service';
+import {UserService} from "../user.service";
+import {ApiResultService} from "../../../main/apiResult.service";
 import {AjaxExceptionService} from "../../../main/ajaxExceptionService";
-import {ResultFunc} from "rxjs/observable/GenerateObservable";
-
+import {OptConfig} from "../../../../config/config";
 
 @Component({
-  selector:'corporation-list',
-  templateUrl:'./corporation-list.component.html',
-  styleUrls:['./corporation-list.component.scss']
+  selector:'user-list',
+  templateUrl:'./user-list.component.html',
+  styleUrls:['./user-list.component.scss']
 })
 
-export class CorporationListComponent implements OnInit{
+export class UserListComponent implements OnInit{
 
   private gridData:GridDataResult={
     data:[],
@@ -40,14 +32,14 @@ export class CorporationListComponent implements OnInit{
   private isLoading:boolean=true;
 
   constructor(
-    private corporationService:CorporationService,
+    private userService:UserService,
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
-    private dialogService:DialogService,
-    private missionService:MissionService
-  ){};
+    private dialogService:DialogService
+  ){
+  };
 
   ngOnInit(){
     this.height=(window.document.body.clientHeight-70-56-50-20);
@@ -55,7 +47,7 @@ export class CorporationListComponent implements OnInit{
   }
 
   private getData(pageid){
-    this.corporationService.getCorporationList(pageid)
+    this.userService.getUserList(pageid)
       .then(
         data=>{
           if(this.apiResultService.result(data)) {
@@ -72,22 +64,14 @@ export class CorporationListComponent implements OnInit{
         }
       );
   }
-
   private refresh(){
     this.gridData.data=[];
     this.gridData.total=0;
     this.isLoading=true;
-    this.getData(this.skip/this.pageSize);
+    this.getData(this.skip/this.pageSize+1);
   }
-
   private add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
-  }
-
-  private pageChange(event,PageChangeEvent){
-    this.skip=event.skip;
-    this.isLoading=true;
-    this.getData(this.skip/this.pageSize+1);
   }
 
   private editRow(id){
@@ -112,7 +96,7 @@ export class CorporationListComponent implements OnInit{
       }
       this.result = result;
       if(this.result.text=='是'){
-        this.corporationService.delete(id).then(
+        this.userService.delete(id).then(
           data=>{
             let dataObj=this.apiResultService.result(data);
             if(dataObj&&dataObj.status==0){
@@ -128,7 +112,7 @@ export class CorporationListComponent implements OnInit{
         )
       }
     });
-
   }
+
 
 }
