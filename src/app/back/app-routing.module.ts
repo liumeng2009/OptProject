@@ -46,6 +46,10 @@ import {BusinessContentAddComponent} from './operations/businessContents/add/bus
 import {BusinessContentEditComponent} from './operations/businessContents/edit/business-content-edit.component';
 
 import {OtherComponent} from "./components/other.component";
+import {OrderComponent} from "./operations/order/order.component";
+import {OrderListComponent} from "./operations/order/list/order-list.component";
+import {OrderAddComponent} from "./operations/order/add/order-add.component";
+import {OrderEditComponent} from "./operations/order/edit/order-edit.component";
 
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
@@ -73,6 +77,11 @@ export const PanelbarRoutes:Routes=[
     ]},
     {path:'operations',component:OperationsComponent,data:{name:'工单'},children:[
       { path: 'list', component: OperationListComponent,data:{name:'工单列表'} },
+      { path: 'order', component: OrderComponent,data:{name:'客户需求'},children:[
+        {path:'list',component:OrderListComponent,data:{name:'列表'}},
+        {path:'add',component:OrderAddComponent,data:{name:'新增'}},
+        {path:':id',component:OrderEditComponent,data:{name:'编辑'}}
+      ] },
       { path: 'business', component: BusinessContentComponent,data:{name:'业务内容设置'},children:[
         {path:'list',component:BusinessContentListComponent,data:{name:'列表'}},
         {path:'add',component:BusinessContentAddComponent,data:{name:'新增'}},

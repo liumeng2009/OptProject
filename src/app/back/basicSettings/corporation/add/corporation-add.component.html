@@ -5,11 +5,11 @@
         <form class="k-form"  (ngSubmit)="onSubmit()" #corporationForm="ngForm">
           <label class="k-form-field">
             <span for="name">公司名称<span class="k-required">*</span></span>
-            <input id="name" class="k-textbox" placeholder="办公楼名称" required [(ngModel)]="corporation.name" name="name" />
+            <input id="name" class="k-textbox" placeholder="公司名称" required [(ngModel)]="corporation.name" name="name" />
           </label>
           <label class="k-form-field">
             <span for="description">公司简介<span class="k-required">*</span></span>
-            <input id="description" class="k-textbox" value="" placeholder="详细地址" required [(ngModel)]="corporation.description" name="description" />
+            <input id="description" class="k-textbox" value="" placeholder="公司简介" required [(ngModel)]="corporation.description" name="description" />
           </label>
           <label class="k-form-field">
             <span for="groupId">所属组织<span class="k-required">*</span></span>

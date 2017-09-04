@@ -1,0 +1,110 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 offset-sm-12">
+    <div class="card">
+      <div class="card-block">
+        <form class="k-form"  (ngSubmit)="onSubmit()" #orderForm="ngForm">
+          <label class="k-form-field">
+            <span for="no">订单序号<span class="k-required">*</span></span>
+            <input id="no" class="k-textbox" placeholder="订单序号" required [(ngModel)]="order.no" name="no" />
+          </label>
+          <label class="k-form-field">
+            <span for="custom_name">客户名称</span>
+            <input id="custom_name" class="k-textbox" placeholder="设备名称" required [(ngModel)]="order.custom_name" name="custom_name" />
+          </label>
+          <label class="k-form-field">
+            <span for="custom_phone">来电号码<span class="k-required">*</span></span>
+            <input id="custom_phone" class="k-textbox" placeholder="来电号码" required [(ngModel)]="order.custom_phone" name="custom_phone" />
+          </label>
+          <label class="k-form-field">
+            <span for="incoming_time">来电时间<span class="k-required">*</span></span>
+            <input id="incoming_time" class="k-textbox" placeholder="来电时间" required [(ngModel)]="order.incoming_time" name="incoming_time" />
+          </label>
+          <label class="k-form-field">
+            <span for="custom_position">地点<span class="k-required">*</span></span>
+
+            <span>组织</span>
+            <kendo-dropdownlist
+              name="group"
+              [data]="groups"
+              [textField]="'name'"
+              [valueField]="'id'"
+              [valuePrimitive]="true">
+            </kendo-dropdownlist>
+
+            <span>公司</span>
+            <kendo-dropdownlist
+              name="corporation"
+              [data]="corporations"
+              [textField]="'name'"
+              [valueField]="'id'"
+              [valuePrimitive]="true">
+            </kendo-dropdownlist>
+
+            <span>楼层位置</span>
+            <kendo-dropdownlist
+              name="position"
+              [data]="positions"
+              [textField]="'name'"
+              [valueField]="'id'"
+              [valuePrimitive]="true">
+            </kendo-dropdownlist>
+
+
+            <input id="custom_position" class="k-textbox" placeholder="来电时间" required [(ngModel)]="order.custom_position" name="custom_position" />
+          </label>
+
+          <div class="k-form-field">
+            <kendo-grid [data]="operations">
+
+              <kendo-grid-column field="op" title="选择" width="150">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  <input type="checkbox" class="k-checkbox" id="{{dataItem.op}}" name="{{dataItem.op}}" [(ngModel)]="business.operations[rowIndex].checked" value="{{dataItem.op}}" >
+                  <label class="k-checkbox-label" for="{{dataItem.op}}">{{dataItem.name}}</label>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column field="weight" title="设置权重值" >
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  <table>
+                    <tr>
+                      <td width="50">
+                        <label>{{business.operations[rowIndex].weight}}</label>
+                      </td>
+                      <td>
+                        <kendo-slider
+                          [min]="1"
+                          [max]="10"
+                          [smallStep]="1"
+                          [(ngModel)] = "business.operations[rowIndex].weight"
+                          id="Slide{{dataItem.name}}"
+                          name="weight{{dataItem.name}}"
+                          disabled="{{!business.operations[rowIndex].checked}}"
+                        ></kendo-slider>
+                      </td>
+                    </tr>
+                  </table>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column field="remark" title="备注" width="205">
+                <ng-template  kendoGridCellTemplate let-dataItem  let-rowIndex="rowIndex">
+                  <input type="text" class="k-textbox" id="txt{{dataItem.op}}" name="remark{{dataItem.op}}" [(ngModel)]="business.operations[rowIndex].remark" disabled="{{!business.operations[rowIndex].checked}}" >
+                </ng-template>
+
+              </kendo-grid-column>
+
+            </kendo-grid>
+
+          </div>
+
+
+
+          <div class="text-left">
+            <button class="k-button k-primary" [disabled]="!businessForm.form.valid||oneChecked">提交</button>
+            <button class="k-button">重置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

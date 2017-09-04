@@ -1,0 +1,50 @@
+<kendo-grid
+  [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+
+  <ng-template kendoGridToolbarTemplate>
+    <button kendoButton  (click)="add()" [primary]="true">新增</button>
+
+    <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
+      <span style="color:green" class="k-icon k-i-refresh"></span>
+    </button>
+  </ng-template>
+
+
+  <kendo-grid-column field="no" title="序号">
+  </kendo-grid-column>
+
+  <kendo-grid-column field="equipment" title="地点" [width]="190">
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{dataItem.corporationname}} {{dataItem.buildingname}} {{dataItem.floor}} {{dataItem.corpostion}}
+    </ng-template>
+  </kendo-grid-column>
+
+  <kendo-grid-column field="custom_phone" title="来电">
+
+  </kendo-grid-column>
+
+
+  <kendo-grid-column field="id" title="操作"  [width]="130">
+    <ng-template kendoGridFilterCellTemplate>
+
+    </ng-template>
+    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+      <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
+      <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
+    </ng-template>
+  </kendo-grid-column>
+
+  <ng-template kendoGridNoRecordsTemplate>
+    <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
+    <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
+  </ng-template>
+
+  <ng-template kendoPagerTemplate let-totalPages="totalPages" let-currentPage="currentPage">
+    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+    <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
+    <kendo-pager-next-buttons></kendo-pager-next-buttons>
+    <div class="k-pager-info k-label">{{firstRecord}}-{{lastRecord}} 共 {{total}}条记录</div>
+  </ng-template>
+</kendo-grid>
+<div kendoDialogContainer></div>
+
