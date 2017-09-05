@@ -48,6 +48,7 @@ export class OrderAddComponent implements OnInit{
       data=>{
         let result=this.apiResultService.result(data);
         if(result.status==0){
+          console.log(result);
           for(let data of result.data){
             let group=new Group(data.id,data.name,null,data.status);
             this.groups.push(group);

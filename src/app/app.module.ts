@@ -68,6 +68,7 @@ import {BusinessContentListComponent} from './back/operations/businessContents/l
 import {BusinessContentAddComponent} from './back/operations/businessContents/add/business-content-add.component';
 import {BusinessContentEditComponent} from './back/operations/businessContents/edit/business-content-edit.component';
 
+import {OrderComponent} from './back/operations/order/order.component';
 import {OrderListComponent} from './back/operations/order/list/order-list.component';
 import {OrderAddComponent} from './back/operations/order/add/order-add.component';
 import {OrderEditComponent} from './back/operations/order/edit/order-edit.component';
@@ -138,6 +139,7 @@ import {MainPipe} from './back/main/main.pipe';
     BusinessContentAddComponent,
     BusinessContentEditComponent,
 
+    OrderComponent,
     OrderListComponent,
     OrderAddComponent,
     OrderEditComponent,
