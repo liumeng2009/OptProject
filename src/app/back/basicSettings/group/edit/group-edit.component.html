@@ -1,22 +1,14 @@
-<div class="row">
-  <div class="col-xs-12 col-sm-12 offset-sm-12">
-    <div class="card">
-      <div class="card-block">
-        <form class="k-form"  (ngSubmit)="onSubmit()" #groupForm="ngForm">
-          <label class="k-form-field">
-            <span for="name">组织名称</span>
-            <input id="name" class="k-textbox" placeholder="组织名称" required [(ngModel)]="group.name" name="name" />
-          </label>
-          <label class="k-form-field">
-            <span for="description">组织描述</span>
-            <input id="description" class="k-textbox" value="" placeholder="组织描述" required [(ngModel)]="group.description" name="description" />
-          </label>
-          <div class="text-left">
-            <button class="k-button k-primary" type="submit" [disabled]="!groupForm.form.valid">提交</button>
-            <button class="k-button" type="reset">重置</button>
-          </div>
-        </form>
-      </div>
-    </div>
+<form class="k-form"  (ngSubmit)="onSubmit()" #groupForm="ngForm">
+  <label class="k-form-field">
+    <span for="name">组织名称</span>
+    <input id="name" class="k-textbox" placeholder="组织名称" required [(ngModel)]="group.name" name="name" />
+  </label>
+  <label class="k-form-field">
+    <span for="description">组织描述</span>
+    <input id="description" class="k-textbox" value="" placeholder="组织描述" required [(ngModel)]="group.description" name="description" />
+  </label>
+  <div class="text-left">
+    <button class="k-button k-primary" type="submit" [disabled]="!groupForm.form.valid">提交</button>
+    <button class="k-button" type="reset">重置</button>
   </div>
-</div>
+</form>

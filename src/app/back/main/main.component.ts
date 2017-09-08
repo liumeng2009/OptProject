@@ -310,4 +310,8 @@ export class MainComponent implements OnInit{
       this.routerCopy.navigateByUrl('login');
     },2000);
   }
+
+  private back(){
+    window.history.go(-1);
+  }
 }

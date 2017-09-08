@@ -46,12 +46,27 @@
       </kendo-panelbar>
     </div>
     <div class="col-xs-8 col-sm-8 col-lg-10 col-md-9">
-      <ol class="breadcrumb">
-        <li *ngFor="let bread of breadcrumb">
-          <a routerLink="{{bread.path}}" routerLinkActive="active" >{{bread.name}}</a>
-        </li>
-      </ol>
-      <router-outlet></router-outlet>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <button class="k-button" type="button" (click)="back()">
+                返回
+              </button>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <ol class="breadcrumb" style="margin-bottom: 0px;padding: 5px 15px;float:right;">
+                <li *ngFor="let bread of breadcrumb">
+                  <a routerLink="{{bread.path}}" routerLinkActive="active" >{{bread.name}}</a>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
     </div>
   </div>
 </div>
