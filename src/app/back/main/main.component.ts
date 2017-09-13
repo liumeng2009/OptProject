@@ -312,6 +312,28 @@ export class MainComponent implements OnInit{
   }
 
   private back(){
-    window.history.go(-1);
+    let historyGo=-1;
+    let url=this.location.path();
+    url=url.substring(1,url.length);
+    //起始路由，也会有一些特殊处理
+    if(url=='admin/basic/address/list'){
+      historyGo=-2;
+    }
+    if(url=='admin/basic/group/list'){
+      historyGo=-2;
+    }
+    if(url=='admin/basic/corporation/list'){
+      historyGo=-2;
+    }
+    if(url=='admin/operations/order/list'){
+      historyGo=-2
+    }
+    if(url=='admin/operations/business/list'){
+      historyGo=-2
+    }
+    if(url=='admin/auth/user/list'){
+      historyGo=-2
+    }
+    window.history.go(historyGo);
   }
 }

@@ -42,7 +42,7 @@ export class OrderListComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.height = (window.document.body.clientHeight - 70 - 56 - 50 - 20);
+    this.height = (window.document.body.clientHeight - 70 - 56 - 50 - 20-20);
     this.getData(1);
   }
 
@@ -50,6 +50,7 @@ export class OrderListComponent implements OnInit {
     this.orderService.getOrderList(pageid)
       .then(
         data=> {
+          console.log(data);
           if (this.apiResultService.result(data)) {
             this.gridData.data = this.apiResultService.result(data).data;
             this.total = this.gridData.total = this.apiResultService.result(data).total;
