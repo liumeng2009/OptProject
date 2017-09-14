@@ -11,6 +11,8 @@ import {ResponseData} from '../../../bean/responseData';
 import {OptConfig} from '../../../config/config'
 
 import {BusinessContent} from '../../../bean/businessContent';
+import {EquipType} from "../../../bean/equipType";
+import {EquipOp} from "../../../bean/equipOp";
 
 
 @Injectable()
@@ -21,7 +23,12 @@ export class BusinessContentService{
   private saveurl=new OptConfig().serverPath+'/api/business/save';
   private geturl=new OptConfig().serverPath+'/api/business/';
   private getequipment=new OptConfig().serverPath+'/api/business/getequip/get';
-  private deleteurl=new OptConfig().serverPath+'/api/business/delete'
+  private deleteurl=new OptConfig().serverPath+'/api/business/delete';
+
+  private gettypeurl=new OptConfig().serverPath+'/api/equipType/list';
+  private savetypeurl=new OptConfig().serverPath+'/api/equipType/save';
+  private getopurl=new OptConfig().serverPath+'/api/equipOp/list';
+  private saveopurl=new OptConfig().serverPath+'/api/equipOp/save';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
@@ -83,6 +90,39 @@ export class BusinessContentService{
         .then(this.extractData)
         .catch(this.handleError);
     }
+  }
+
+  getType():Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .get(this.gettypeurl+'?token='+token)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  createType(equipType:EquipType): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.savetypeurl+'?token='+token, equipType, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  getOp():Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .get(this.getopurl+'?token='+token)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  createOp(equipOp:EquipOp): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.saveopurl+'?token='+token, equipOp, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {

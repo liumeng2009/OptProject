@@ -4,12 +4,17 @@ import {Router,ActivatedRoute} from '@angular/router';
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
 import { filterBy, FilterDescriptor, CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import {
+  PopupService,
+  PopupRef
+} from '@progress/kendo-angular-popup';
 
 import {BusinessContentService} from "../businessContent.service";
 import {ApiResultService} from "../../../main/apiResult.service";
 import {AjaxExceptionService} from "../../../main/ajaxExceptionService";
 import {OptConfig} from "../../../../config/config";
 import {Position} from "../../../../bean/position";
+import {EquipTypeComponent} from "../equipType.component";
 
 @Component({
   selector:'business-list',
@@ -52,7 +57,8 @@ export class BusinessContentListComponent implements OnInit{
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
-    private dialogService:DialogService
+    private dialogService:DialogService,
+    private popService:PopupService
   ){
     let gSET=new Position('安装','SETUP');
     let gDE=new Position('调试','DEBUG');
@@ -226,6 +232,12 @@ export class BusinessContentListComponent implements OnInit{
         this.ajaxExceptionService.simpleOp(error);
       }
     )
+  }
+
+  private configType(){
+    this.popService.open({
+      content: EquipTypeComponent
+    });
   }
 
 }

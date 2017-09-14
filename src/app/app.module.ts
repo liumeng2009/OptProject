@@ -67,6 +67,7 @@ import {BusinessContentService} from './back/operations/businessContents/busines
 import {BusinessContentListComponent} from './back/operations/businessContents/list/business-content-list.component';
 import {BusinessContentAddComponent} from './back/operations/businessContents/add/business-content-add.component';
 import {BusinessContentEditComponent} from './back/operations/businessContents/edit/business-content-edit.component';
+import {EquipTypeComponent} from './back/operations/businessContents/equipType.component';
 
 import {OrderComponent} from './back/operations/order/order.component';
 import {OrderListComponent} from './back/operations/order/list/order-list.component';
@@ -138,6 +139,7 @@ import {MainPipe} from './back/main/main.pipe';
     BusinessContentListComponent,
     BusinessContentAddComponent,
     BusinessContentEditComponent,
+    EquipTypeComponent,
 
     OrderComponent,
     OrderListComponent,
@@ -150,6 +152,7 @@ import {MainPipe} from './back/main/main.pipe';
 
     MainPipe
   ],
+  entryComponents: [ EquipTypeComponent ],
   imports: [
     BrowserModule,
     HttpModule,
