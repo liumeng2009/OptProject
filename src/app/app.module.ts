@@ -14,6 +14,7 @@ import { GridModule,PDFModule,ExcelModule } from '@progress/kendo-angular-grid';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { DropDownsModule,DropDownListModule } from '@progress/kendo-angular-dropdowns';
+import { PopupModule }  from '@progress/kendo-angular-popup';
 //验证组件
 import{CustomFormsModule} from 'ng2-validation';
 //toast组件
@@ -67,7 +68,6 @@ import {BusinessContentService} from './back/operations/businessContents/busines
 import {BusinessContentListComponent} from './back/operations/businessContents/list/business-content-list.component';
 import {BusinessContentAddComponent} from './back/operations/businessContents/add/business-content-add.component';
 import {BusinessContentEditComponent} from './back/operations/businessContents/edit/business-content-edit.component';
-import {EquipTypeComponent} from './back/operations/businessContents/equipType.component';
 
 import {OrderComponent} from './back/operations/order/order.component';
 import {OrderListComponent} from './back/operations/order/list/order-list.component';
@@ -139,7 +139,6 @@ import {MainPipe} from './back/main/main.pipe';
     BusinessContentListComponent,
     BusinessContentAddComponent,
     BusinessContentEditComponent,
-    EquipTypeComponent,
 
     OrderComponent,
     OrderListComponent,
@@ -152,7 +151,6 @@ import {MainPipe} from './back/main/main.pipe';
 
     MainPipe
   ],
-  entryComponents: [ EquipTypeComponent ],
   imports: [
     BrowserModule,
     HttpModule,
@@ -170,6 +168,7 @@ import {MainPipe} from './back/main/main.pipe';
     DialogModule,
     DropDownsModule,
     DropDownListModule,
+    PopupModule,
 
     ToastModule.forRoot(),
 

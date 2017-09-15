@@ -16,7 +16,17 @@
   <kendo-grid-column field="type" title="类型" [width]="190">
     <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
       {{column.title}}
-      <span class="k-icon k-i-gear" style="color:green;" (click)="configType()"></span>
+      <span #anchor class="k-icon k-i-gear" style="color:green;" (click)="configTypeToggle()"></span>
+      <kendo-popup #popup [anchor]="anchor" popupClass="content" *ngIf="show">
+        <div style="margin:15px" *ngIf="show">
+          <div *ngFor="let et of equiptypes">
+            {{et.name}}{{et.code}}{{et.id}}
+          </div>
+          <input type="text" ([ngModel])="equiptype.name" >
+          <input type="text" ([ngModel])="equiptype.code" >
+          <button class="k-button" (click)="savetype()">新增</button>
+        </div>
+      </kendo-popup>
     </ng-template>
     <ng-template kendoGridFilterCellTemplate>
       <kendo-dropdownlist

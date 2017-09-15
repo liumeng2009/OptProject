@@ -1,4 +1,4 @@
-import {Component,OnInit} from '@angular/core';
+import {Component,OnInit,ElementRef,HostListener,ViewEncapsulation,ViewChild } from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router';
 
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
@@ -14,12 +14,13 @@ import {ApiResultService} from "../../../main/apiResult.service";
 import {AjaxExceptionService} from "../../../main/ajaxExceptionService";
 import {OptConfig} from "../../../../config/config";
 import {Position} from "../../../../bean/position";
-import {EquipTypeComponent} from "../equipType.component";
+import {EquipType} from "../../../../bean/equipType";
 
 @Component({
   selector:'business-list',
   templateUrl:'./business-content-list.component.html',
-  styleUrls:['./business-content-list.component.scss']
+  styleUrls:['./business-content-list.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class BusinessContentListComponent implements OnInit{
@@ -28,6 +29,8 @@ export class BusinessContentListComponent implements OnInit{
     data:[],
     total:0
   };
+
+  private show:boolean=false;
 
   private height:number=0;
   private pageSize:number=new OptConfig().pageSize;
@@ -234,10 +237,64 @@ export class BusinessContentListComponent implements OnInit{
     )
   }
 
-  private configType(){
-    this.popService.open({
-      content: EquipTypeComponent
-    });
+  private configTypeToggle(show){
+    if(show!=undefined){
+      this.show=show;
+    }
+    else{
+      if(this.show){
+        this.show=false;
+      }
+      else{
+        this.show=true;
+      }
+    }
+  }
+
+  @ViewChild('anchor') public anchor: ElementRef;
+  @ViewChild('popup', { read: ElementRef }) public popup: ElementRef;
+  private contains(target: any): boolean {
+    return this.anchor.nativeElement.contains(target) ||
+      (this.popup ? this.popup.nativeElement.contains(target): false);
+  }
+  @HostListener('document:click', ['$event'])
+  public documentClick(event: any): void {
+    if (!this.contains(event.target)) {
+      this.configTypeToggle(false);
+    }
+  }
+
+  private equiptype=new EquipType(null,null,null);
+  private equiptypes:EquipType[]=[];
+
+  private savetype(){
+    this.businessContentService.createType(this.equiptype).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result.status==0){
+          this.getEquipTypeList();
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
+  private getEquipTypeList(){
+    this.businessContentService.getType().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result.status==0&&result.data.length>0){
+          for(let d of result.data){
+            let et=new EquipType(d.id,d.name,d.code);
+            this.equiptypes.push(et);
+          }
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
   }
 
 }
