@@ -5,7 +5,7 @@ import {Title} from '@angular/platform-browser';
 @Component({
   selector:'other-area',
   template:`
-    <h1>404，页面未找到！</h1>
+    <h1 style="text-align: center;">404，页面未找到！</h1>
   `
 })
 

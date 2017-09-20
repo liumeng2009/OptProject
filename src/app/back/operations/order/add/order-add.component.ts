@@ -17,6 +17,8 @@ import {Order} from "../../../../bean/order";
 import {Position} from "../../../../bean/position";
 import {Operation} from "../../../../bean/operation";
 import {Group} from "../../../../bean/group";
+import {CorporationService} from "../../../basicSettings/corporation/corporation.service";
+import {Corporation} from "../../../../bean/corporation";
 
 @Component({
   selector:'order-add',
@@ -26,8 +28,9 @@ import {Group} from "../../../../bean/group";
 
 export class OrderAddComponent implements OnInit{
 
-  order=new Order(null,null,null,null,null,null,null,null);
+  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null);
   groups:Group[]=[];
+  public value: Date = new Date(2000, 2, 10, 10, 30, 0);
 
   constructor(
     private orderService:OrderService,
@@ -35,7 +38,8 @@ export class OrderAddComponent implements OnInit{
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
-    private ajaxExceptionService:AjaxExceptionService
+    private ajaxExceptionService:AjaxExceptionService,
+    private corporationService:CorporationService
   ){
   };
 
@@ -48,17 +52,40 @@ export class OrderAddComponent implements OnInit{
       data=>{
         let result=this.apiResultService.result(data);
         if(result.status==0){
-          console.log(result);
+          //console.log(result);
           for(let data of result.data){
             let group=new Group(data.id,data.name,null,data.status);
             this.groups.push(group);
           }
+          this.order.group=this.groups[0]?this.groups[0].id:'';
+          console.log(this.order);
+          this.initCorporation();
         }
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
       }
     );
+  }
+  private corporations:Corporation[]=[];
+  private initCorporation(){
+    this.corporations.splice(0,this.corporations.length);
+    this.corporationService.getCorporationList(null,this.order.group).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result.status==0){
+          for(let data of result.data){
+            let corp=new Corporation(data.id,data.name,data.description,data.groupId,data.status);
+            this.corporations.push(corp);
+          }
+          this.order.corporation=this.corporations[0]?this.corporations[0].id:''
+          console.log(this.order)
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
   }
 
   private onSubmit(){

@@ -29,6 +29,8 @@ export class BusinessContentService{
   private savetypeurl=new OptConfig().serverPath+'/api/equipType/save';
   private getopurl=new OptConfig().serverPath+'/api/equipOp/list';
   private saveopurl=new OptConfig().serverPath+'/api/equipOp/save';
+  private deletetypeurl=new OptConfig().serverPath+'/api/equipType/delete';
+  private deleteopurl=new OptConfig().serverPath+'/api/equipOp/delete';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
@@ -47,8 +49,6 @@ export class BusinessContentService{
     if(equipment&&equipment!=''){
       url=url+'&equipment='+equipment
     }
-
-
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
@@ -129,6 +129,24 @@ export class BusinessContentService{
     let token=this.cookieService.get('optToken');
     return this.http
       .get(this.deleteurl+'/'+id+'?token='+token)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  deletetype(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .get(this.deletetypeurl+'/'+id+'?token='+token)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  deleteop(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .get(this.deleteopurl+'/'+id+'?token='+token)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

@@ -15,6 +15,7 @@ import {AjaxExceptionService} from "../../../main/ajaxExceptionService";
 import {OptConfig} from "../../../../config/config";
 import {Position} from "../../../../bean/position";
 import {EquipType} from "../../../../bean/equipType";
+import {EquipOp} from "../../../../bean/equipOp";
 
 @Component({
   selector:'business-list',
@@ -30,8 +31,6 @@ export class BusinessContentListComponent implements OnInit{
     total:0
   };
 
-  private show:boolean=false;
-
   private height:number=0;
   private pageSize:number=new OptConfig().pageSize;
   private skip:number=0;
@@ -41,14 +40,11 @@ export class BusinessContentListComponent implements OnInit{
   private result;
   private isLoading:boolean=true;
 
-  private operationName:Position[]=[];
-  private typeName:Position[]=[];
-
-  private searchTypeName:Position[]=[];
+  private searchTypeName:EquipType[]=[];
   private searchEquipment:Position[]=[];
 
   private searchObj={
-    type:{name:null,value:''},
+    type:{name:null,code:''},
     equipment:{name:null,value:''}
   }
 
@@ -60,50 +56,17 @@ export class BusinessContentListComponent implements OnInit{
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
-    private dialogService:DialogService,
-    private popService:PopupService
+    private dialogService:DialogService
   ){
-    let gSET=new Position('安装','SETUP');
-    let gDE=new Position('调试','DEBUG');
-    let gFIX=new Position('修复','FIX');
-    let gADV=new Position('咨询','ADVICE');
-    let gSUP=new Position('现场技术支持','SUPPORT');
-    this.operationName.push(gSET);
-    this.operationName.push(gDE);
-    this.operationName.push(gFIX);
-    this.operationName.push(gADV);
-    this.operationName.push(gSUP);
-
-    let pNET=new Position('网络','NET');
-    let pHW=new Position('硬件','HARDWARE');
-    let pSW=new Position('软件','SOFTWARE');
-    let pSYS=new Position('系统','SYSTEM');
-    let pOT=new Position('其他','OTHER');
-    this.typeName.push(pNET);
-    this.typeName.push(pHW);
-    this.typeName.push(pSW);
-    this.typeName.push(pSYS);
-    this.typeName.push(pOT);
-
-    let spNET=new Position('网络','NET');
-    let spHW=new Position('硬件','HARDWARE');
-    let spSW=new Position('软件','SOFTWARE');
-    let spSYS=new Position('系统','SYSTEM');
-    let spOT=new Position('其他','OTHER');
-    let spAll=new Position('全部类型','');
-    this.searchTypeName.push(spAll);
-    this.searchTypeName.push(spNET);
-    this.searchTypeName.push(spHW);
-    this.searchTypeName.push(spSW);
-    this.searchTypeName.push(spSYS);
-    this.searchTypeName.push(spOT);
 
   };
 
   ngOnInit(){
-    this.height=(window.document.body.clientHeight-70-56-50-20);
-    this.getData(1,this.searchObj.type.value,this.searchObj.equipment.value);
-    this.getSearchEquipment(this.searchObj.type.value);
+    this.height=(window.document.body.clientHeight-70-56-50-20-20);
+    this.getData(1,this.searchObj.type.code,this.searchObj.equipment.value);
+    this.getSearchEquipment(this.searchObj.type.code);
+    this.getEquipTypeList();
+    this.getEquipOpList();
   }
 
   private getData(pageid,type,equipment){
@@ -128,7 +91,7 @@ export class BusinessContentListComponent implements OnInit{
     this.gridData.data=[];
     this.gridData.total=0;
     this.isLoading=true;
-    this.getData(this.skip/this.pageSize+1,this.searchObj.type.value,this.searchObj.equipment.value);
+    this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.value);
   }
   private add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
@@ -137,7 +100,7 @@ export class BusinessContentListComponent implements OnInit{
   private pageChange(event,PageChangeEvent){
     this.skip=event.skip;
     this.isLoading=true;
-    this.getData(this.skip/this.pageSize+1,this.searchObj.type.value,this.searchObj.equipment.value);
+    this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.value);
   }
 
   private editRow(id){
@@ -153,8 +116,10 @@ export class BusinessContentListComponent implements OnInit{
         { text: "是", primary: true }
       ]
     });
+    this.dialogShow=true;
 
     dialog.result.subscribe((result) => {
+      setTimeout(()=>{this.dialogShow=false},1000);
       if (result instanceof DialogCloseResult) {
 
       } else {
@@ -180,10 +145,10 @@ export class BusinessContentListComponent implements OnInit{
 
 
   private handleTypeChange(e){
-    this.getSearchEquipment(this.searchObj.type.value);
+    this.getSearchEquipment(this.searchObj.type.code);
     this.searchObj.equipment=this.searchEquipment[0]?this.searchEquipment[0]:null;
 
-    this.businessContentService.getBusinessContentList(1,this.searchObj.type.value,this.searchObj.equipment.value).then(
+    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(
       data=>{
         if(this.apiResultService.result(data)) {
           this.gridData.data = this.apiResultService.result(data).data;
@@ -202,7 +167,7 @@ export class BusinessContentListComponent implements OnInit{
   }
 
   private handleEquimentChange(e){
-    this.businessContentService.getBusinessContentList(1,this.searchObj.type.value,this.searchObj.equipment.value).then(
+    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(
       data=>{
         if(this.apiResultService.result(data)) {
           this.gridData.data = this.apiResultService.result(data).data;
@@ -221,7 +186,7 @@ export class BusinessContentListComponent implements OnInit{
   }
 
   private getSearchEquipment(type:string){
-    this.searchEquipment.splice(0,this.searchTypeName.length);
+    this.searchEquipment.splice(0,this.searchEquipment.length);
     this.searchEquipment.push(new Position('全部设备',''));
     this.businessContentService.getEquipment(type).then(
       data=>{
@@ -237,11 +202,9 @@ export class BusinessContentListComponent implements OnInit{
     )
   }
 
+  private show:boolean=false;
   private configTypeToggle(show){
-    if(show!=undefined){
-      this.show=show;
-    }
-    else{
+    if(show==undefined){
       if(this.show){
         this.show=false;
       }
@@ -249,30 +212,82 @@ export class BusinessContentListComponent implements OnInit{
         this.show=true;
       }
     }
+    else{
+      this.show=show;
+    }
   }
 
+  private showOp:boolean=false;
+  private configOpToggle(show){
+    if(show==undefined){
+      if(this.showOp){
+        this.showOp=false;
+      }
+      else{
+        this.showOp=true;
+      }
+    }
+    else{
+      this.showOp=show;
+    }
+  }
+
+  private dialogShow:boolean=false;
   @ViewChild('anchor') public anchor: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popup: ElementRef;
   private contains(target: any): boolean {
     return this.anchor.nativeElement.contains(target) ||
-      (this.popup ? this.popup.nativeElement.contains(target): false);
+      (this.popup ? this.popup.nativeElement.contains(target): false)||this.dialogShow;
   }
+
+  @ViewChild('anchorOp') public anchorOp: ElementRef;
+  @ViewChild('popupOp', { read: ElementRef }) public popupOp: ElementRef;
+  private containsOp(target: any): boolean {
+    return this.anchorOp.nativeElement.contains(target) ||
+      (this.popupOp ? this.popupOp.nativeElement.contains(target): false)||this.dialogShow;
+  }
+
   @HostListener('document:click', ['$event'])
   public documentClick(event: any): void {
     if (!this.contains(event.target)) {
       this.configTypeToggle(false);
     }
+    if (!this.containsOp(event.target)) {
+      this.configOpToggle(false);
+    }
   }
 
   private equiptype=new EquipType(null,null,null);
   private equiptypes:EquipType[]=[];
+  private equiptypesFilter:EquipType[]=[];
 
   private savetype(){
+    console.log(this.equiptype);
     this.businessContentService.createType(this.equiptype).then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result.status==0){
           this.getEquipTypeList();
+          this.equiptype.name=null;
+          this.equiptype.code=null;
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
+
+  private equipop=new EquipOp(null,null,null);
+  private saveop(){
+    console.log(this.equipop);
+    this.businessContentService.createOp(this.equipop).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result.status==0){
+          this.getEquipOpList();
+          this.equipop.name=null;
+          this.equipop.code=null;
         }
       },
       error=>{
@@ -281,6 +296,7 @@ export class BusinessContentListComponent implements OnInit{
     );
   }
   private getEquipTypeList(){
+    this.equiptypes.splice(0,this.equiptypes.length);
     this.businessContentService.getType().then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -290,6 +306,27 @@ export class BusinessContentListComponent implements OnInit{
             this.equiptypes.push(et);
           }
         }
+        let spAll=new EquipType('','全部类型','');
+        this.equiptypesFilter=this.equiptypes.slice(0);
+        this.equiptypesFilter.splice(0,0,spAll);
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
+  private equipops:EquipOp[]=[];
+  private getEquipOpList(){
+    this.equipops.splice(0,this.equipops.length);
+    this.businessContentService.getOp().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result.status==0&&result.data.length>0){
+          for(let d of result.data){
+            let eo=new EquipOp(d.id,d.name,d.code);
+            this.equipops.push(eo);
+          }
+        }
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
@@ -297,4 +334,82 @@ export class BusinessContentListComponent implements OnInit{
     );
   }
 
+  private deletetype(id){
+    const dialog: DialogRef = this.dialogService.open({
+      title: "确认删除？",
+      content: "确定删除吗？",
+      actions: [
+        { text: "否" },
+        { text: "是", primary: true }
+      ]
+    });
+
+    this.dialogShow=true;
+
+    dialog.result.subscribe((result) => {
+      setTimeout(()=>{this.dialogShow=false},1000);
+      if (result instanceof DialogCloseResult) {
+        console.log("close");
+      } else {
+
+      }
+      this.result = result;
+      if(this.result.text=='是'){
+        this.businessContentService.deletetype(id).then(
+          data=>{
+            let result=this.apiResultService.result(data);
+            if(result.status==0){
+              this.getEquipTypeList();
+            }
+          },
+          error=>{
+            this.ajaxExceptionService.simpleOp(error);
+          }
+        );
+      }
+    });
+  }
+  private deleteop(id){
+    const dialog: DialogRef = this.dialogService.open({
+      title: "确认删除？",
+      content: "确定删除吗？",
+      actions: [
+        { text: "否" },
+        { text: "是", primary: true }
+      ]
+    });
+
+    this.dialogShow=true;
+
+    dialog.result.subscribe((result) => {
+      setTimeout(()=>{this.dialogShow=false},1000);
+      if (result instanceof DialogCloseResult) {
+        console.log("close");
+      } else {
+
+      }
+      this.result = result;
+      if(this.result.text=='是'){
+        this.businessContentService.deleteop(id).then(
+          data=>{
+            let result=this.apiResultService.result(data);
+            if(result.status==0){
+              this.getEquipOpList();
+            }
+          },
+          error=>{
+            this.ajaxExceptionService.simpleOp(error);
+          }
+        );
+      }
+    });
+  }
+  private cleartypeform(){
+    this.equiptype.name=null;
+    this.equiptype.code=null;
+  }
+  private clearopform(){
+    this.equipop.name=null;
+    this.equipop.code=null;
+  }
 }

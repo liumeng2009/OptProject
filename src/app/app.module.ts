@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule,LOCALE_ID } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule,ReactiveFormsModule }   from '@angular/forms';
 
@@ -15,6 +15,8 @@ import { InputsModule } from '@progress/kendo-angular-inputs';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { DropDownsModule,DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { PopupModule }  from '@progress/kendo-angular-popup';
+import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
+import { IntlModule } from '@progress/kendo-angular-intl';
 //验证组件
 import{CustomFormsModule} from 'ng2-validation';
 //toast组件
@@ -95,6 +97,12 @@ import {SwitchService} from "./back/main/switchService";
 
 import {MainPipe} from './back/main/main.pipe';
 
+// Load all required data for the bg locale
+import '@progress/kendo-angular-intl/locales/zh/all';
+
+// Load the required calendar data for the de locale
+import '@progress/kendo-angular-intl/locales/zh/calendar';
+
 
 @NgModule({
   declarations: [
@@ -157,7 +165,9 @@ import {MainPipe} from './back/main/main.pipe';
     FormsModule,
     ReactiveFormsModule,
 
+
     BrowserAnimationsModule,
+    IntlModule,
     ButtonsModule,
     LayoutModule,
     GridModule,
@@ -169,6 +179,7 @@ import {MainPipe} from './back/main/main.pipe';
     DropDownsModule,
     DropDownListModule,
     PopupModule,
+    DateInputsModule,
 
     ToastModule.forRoot(),
 
@@ -194,7 +205,10 @@ import {MainPipe} from './back/main/main.pipe';
     AjaxExceptionService,
     SwitchService,
 
-    appRoutingProvider
+    appRoutingProvider,
+    {
+      provide:LOCALE_ID,useValue:'zh-CN'
+    }
   ],
   bootstrap: [AppComponent]
 })

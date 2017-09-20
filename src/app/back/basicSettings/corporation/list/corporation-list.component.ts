@@ -55,7 +55,7 @@ export class CorporationListComponent implements OnInit{
   }
 
   private getData(pageid){
-    this.corporationService.getCorporationList(pageid)
+    this.corporationService.getCorporationList(pageid,null)
       .then(
         data=>{
           if(this.apiResultService.result(data)) {

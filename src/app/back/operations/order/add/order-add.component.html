@@ -16,8 +16,43 @@
             <input id="custom_phone" class="k-textbox" placeholder="来电号码" required [(ngModel)]="order.custom_phone" name="custom_phone" />
           </label>
           <label class="k-form-field">
-            <span for="incoming_time">来电时间<span class="k-required">*</span></span>
-            <input id="incoming_time" class="k-textbox" placeholder="来电时间" required [(ngModel)]="order.incoming_time" name="incoming_time" />
+            <div class="row">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <p>
+                  来电时间<span class="k-required">*</span>
+                </p>
+                <kendo-datepicker [value]="value" [format]="'yyyy年MM月dd日'">
+                  <kendo-datepicker-messages
+                    today="今天"
+                    toggle="选择日期"
+                  ></kendo-datepicker-messages>
+                </kendo-datepicker>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <p>
+                  时<span class="k-required">*</span>
+                </p>
+                <kendo-numerictextbox id="hour" [(ngModel)]="days" style="width: 80px;" name="hour">
+                </kendo-numerictextbox>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <p>
+                  分<span class="k-required">*</span>
+                </p>
+                <kendo-numerictextbox id="minute" [(ngModel)]="days" style="width: 80px;" name="minute">
+                </kendo-numerictextbox>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <p>
+                  秒<span class="k-required">*</span>
+                </p>
+                <kendo-numerictextbox id="second" [(ngModel)]="second" style="width: 80px;" name="second">
+                </kendo-numerictextbox>
+              </div>
+
+            </div>
+
+
           </label>
           <label class="k-form-field">
             <div class="ddl-float">
@@ -27,7 +62,10 @@
                 [data]="groups"
                 [textField]="'name'"
                 [valueField]="'id'"
-                [valuePrimitive]="true">
+                [(ngModel)]="order.group"
+                [valuePrimitive]="true"
+                (valueChange)="initCorporation($event)"
+              >
               </kendo-dropdownlist>
             </div>
             <div class="ddl-float">
@@ -37,7 +75,9 @@
                 [data]="corporations"
                 [textField]="'name'"
                 [valueField]="'id'"
-                [valuePrimitive]="true">
+                [valuePrimitive]="true"
+                [(ngModel)]="order.corporation"
+              >
               </kendo-dropdownlist>
             </div>
             <div class="ddl-float">

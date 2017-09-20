@@ -13,6 +13,7 @@ import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
 import {BusinessContent} from "../../../../bean/businessContent";
 import {Position} from "../../../../bean/position";
 import {Operation} from "../../../../bean/operation";
+import {EquipType} from "../../../../bean/equipType";
 
 @Component({
   selector:'business-add',
@@ -21,7 +22,7 @@ import {Operation} from "../../../../bean/operation";
 })
 
 export class BusinessContentAddComponent implements OnInit{
-  private types:Position[]=[];
+  private types:EquipType[]=[];
   private operations:Operation[]=[];
   private oneChecked:boolean=this.operations[0]&&this.operations[0].checked
     ||this.operations[1]&&this.operations[1].checked
@@ -47,30 +48,38 @@ export class BusinessContentAddComponent implements OnInit{
   }
 
   private initTypes(){
-    let pNET=new Position('网络','NET');
-    let pHW=new Position('硬件','HARDWARE');
-    let pSW=new Position('软件','SOFTWARE');
-    let pSYS=new Position('系统','SYSTEM');
-    let pOT=new Position('其他','OTHER');
-    this.types.push(pHW);
-    this.types.push(pSW);
-    this.types.push(pNET);
-    this.types.push(pSYS);
-    this.types.push(pOT);
-    this.business.type=this.types[0].value;
+    this.businessContentService.getType().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result.status==0){
+          for(let d of result.data){
+            let type=new EquipType(null,d.name,d.code);
+            this.types.push(type);
+          }
+          this.business.type=this.types[0]?this.types[0].code:null;
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
   }
 
   private initOperations(){
-    let oSET=new Operation('SETUP',false,'安装',5,null,null);
-    let oDE=new Operation('DEBUG',false,'调试',5,null,null);
-    let oFIX=new Operation('FIX',false,'修复',5,null,null);
-    let oADV=new Operation('ADVICE',false,'咨询',5,null,null);
-    let oSUP=new Operation('SUPPORT',false,'现场技术支持',5,null,null);
-    this.operations.push(oSET);
-    this.operations.push(oDE);
-    this.operations.push(oFIX);
-    this.operations.push(oADV);
-    this.operations.push(oSUP);
+    this.businessContentService.getOp().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result.status==0){
+          for(let d of result.data){
+            let op=new Operation(d.code,false,d.name,5,null,null);
+            this.operations.push(op);
+          }
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
   }
 
   private onSubmit(){
