@@ -5,6 +5,8 @@ export class CorpBuilding {
     public buildingId: string,
     public floor: number,
     public position:string,
-    public status:number
+    public status:number,
+    public buildingName:string,
+    public union:string
   ) {  }
 }

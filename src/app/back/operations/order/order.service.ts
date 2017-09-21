@@ -20,7 +20,7 @@ export class OrderService{
   private listurl=new OptConfig().serverPath+'/api/order/list';
   private saveurl=new OptConfig().serverPath+'/api/order/save';
   private geturl=new OptConfig().serverPath+'/api/order/';
-  private getorderno=new OptConfig().serverPath+'/api/order/getorderno/get';
+  private getorderno=new OptConfig().serverPath+'/api/order/getorderno/get/';
   private deleteurl=new OptConfig().serverPath+'/api/order/delete'
 
   constructor(private http:Http,private cookieService:CookieService){}
@@ -69,11 +69,11 @@ export class OrderService{
   }
 
 
-  getOrderNo(type:string):Promise<ResponseData>{
+  getOrderNo(year:number,month:number,day:number):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-
+    console.log(this.getorderno+'?token='+token);
     return this.http
-      .get(this.getorderno+'/'+type+'?token='+token)
+      .get(this.getorderno+year+'/'+month+'/'+day+'?token='+token)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

@@ -4,24 +4,14 @@
       <div class="card-block">
         <form class="k-form"  (ngSubmit)="onSubmit()" #orderForm="ngForm">
           <label class="k-form-field">
-            <span for="no">订单序号<span class="k-required">*</span></span>
-            <input id="no" class="k-textbox" placeholder="订单序号" required [(ngModel)]="order.no" name="no" />
-          </label>
-          <label class="k-form-field">
-            <span for="custom_name">客户名称</span>
-            <input id="custom_name" class="k-textbox" placeholder="设备名称" required [(ngModel)]="order.custom_name" name="custom_name" />
-          </label>
-          <label class="k-form-field">
-            <span for="custom_phone">来电号码<span class="k-required">*</span></span>
-            <input id="custom_phone" class="k-textbox" placeholder="来电号码" required [(ngModel)]="order.custom_phone" name="custom_phone" />
-          </label>
-          <label class="k-form-field">
             <div class="row">
               <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <p>
                   来电时间<span class="k-required">*</span>
                 </p>
-                <kendo-datepicker [value]="value" [format]="'yyyy年MM月dd日'">
+                <kendo-datepicker [value]="today" name="incoming_date" [format]="'yyyy年MM月dd日'"
+                (valueChange)="dateChange($event)"
+                >
                   <kendo-datepicker-messages
                     today="今天"
                     toggle="选择日期"
@@ -55,6 +45,20 @@
 
           </label>
           <label class="k-form-field">
+            <span for="no">订单序号<span class="k-required">*</span></span>
+            <input id="no" class="k-textbox" placeholder="订单序号" style="width: 300px;float:left;" required [(ngModel)]="order.no" name="no" />
+            <span class="k-icon k-i-loading loading" *ngIf="noLoading" style="float:left;margin:5px 0px 0px 10px"></span>
+            <div style="clear:both"></div>
+          </label>
+          <label class="k-form-field">
+            <span for="custom_name">客户名称<span class="k-required">*</span></span>
+            <input id="custom_name" class="k-textbox" placeholder="客户名称" required [(ngModel)]="order.custom_name" name="custom_name" />
+          </label>
+          <label class="k-form-field">
+            <span for="custom_phone">来电号码<span class="k-required">*</span></span>
+            <input id="custom_phone" class="k-textbox" placeholder="来电号码" required [(ngModel)]="order.custom_phone" name="custom_phone" />
+          </label>
+          <label class="k-form-field">
             <div class="ddl-float">
               <label>组织:<span class="k-required">*</span> </label>
               <kendo-dropdownlist
@@ -67,6 +71,7 @@
                 (valueChange)="initCorporation($event)"
               >
               </kendo-dropdownlist>
+              <span class="k-icon k-i-loading loading loading-position" *ngIf="groupLoading"></span>
             </div>
             <div class="ddl-float">
               <label>公司：<span class="k-required">*</span></label>
@@ -77,18 +82,23 @@
                 [valueField]="'id'"
                 [valuePrimitive]="true"
                 [(ngModel)]="order.corporation"
+                (valueChange)="initCorpBuilding($event)"
               >
               </kendo-dropdownlist>
+              <span class="k-icon k-i-loading loading loading-position" *ngIf="corporationLoading"></span>
             </div>
             <div class="ddl-float">
-              <label>楼层位置：<span class="k-required">*</span></label>
+              <label>公司所在楼层位置：<span class="k-required">*</span></label>
               <kendo-dropdownlist
                 name="position"
-                [data]="positions"
-                [textField]="'name'"
+                [data]="corpBuildings"
+                [textField]="'union'"
                 [valueField]="'id'"
-                [valuePrimitive]="true">
+                [valuePrimitive]="true"
+                [(ngModel)]="order.custom_position"
+              >
               </kendo-dropdownlist>
+              <span class="k-icon k-i-loading loading loading-position" *ngIf="corpBuildingLoading"></span>
             </div>
             <div style="clear:both;">
 

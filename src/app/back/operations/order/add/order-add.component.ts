@@ -19,6 +19,8 @@ import {Operation} from "../../../../bean/operation";
 import {Group} from "../../../../bean/group";
 import {CorporationService} from "../../../basicSettings/corporation/corporation.service";
 import {Corporation} from "../../../../bean/corporation";
+import {CorpBuilding} from "../../../../bean/corpBuilding";
+import {CorpBuildingService} from "../../../basicSettings/corporation/corpBuilding.service";
 
 @Component({
   selector:'order-add',
@@ -30,7 +32,7 @@ export class OrderAddComponent implements OnInit{
 
   order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null);
   groups:Group[]=[];
-  public value: Date = new Date(2000, 2, 10, 10, 30, 0);
+  public today: Date = new Date();
 
   constructor(
     private orderService:OrderService,
@@ -39,17 +41,23 @@ export class OrderAddComponent implements OnInit{
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
-    private corporationService:CorporationService
+    private corporationService:CorporationService,
+    private corpBuildingService:CorpBuildingService
   ){
   };
 
   ngOnInit(){
+    this.order.incoming_date=this.today.toDateString();
     this.initGroup();
+    this.initNo();
   }
 
+  private groupLoading:boolean=false;
   private initGroup(){
+    this.groupLoading=true;
     this.groupService.getGroupList(null).then(
       data=>{
+        this.groupLoading=false;
         let result=this.apiResultService.result(data);
         if(result.status==0){
           //console.log(result);
@@ -63,15 +71,19 @@ export class OrderAddComponent implements OnInit{
         }
       },
       error=>{
+        this.groupLoading=false;
         this.ajaxExceptionService.simpleOp(error);
       }
     );
   }
   private corporations:Corporation[]=[];
+  private corporationLoading:boolean=false;
   private initCorporation(){
+    this.corporationLoading=true;
     this.corporations.splice(0,this.corporations.length);
     this.corporationService.getCorporationList(null,this.order.group).then(
       data=>{
+        this.corporationLoading=false;
         let result=this.apiResultService.result(data);
         if(result.status==0){
           for(let data of result.data){
@@ -80,17 +92,91 @@ export class OrderAddComponent implements OnInit{
           }
           this.order.corporation=this.corporations[0]?this.corporations[0].id:''
           console.log(this.order)
+          this.initCorpBuilding();
         }
       },
       error=>{
+        this.corporationLoading=false;
         this.ajaxExceptionService.simpleOp(error);
       }
     )
   }
 
+  private corpBuildings:CorpBuilding[]=[];
+  private corpBuildingLoading:boolean=false;
+  private initCorpBuilding(){
+    this.corpBuildingLoading=true;
+    this.corpBuildings.splice(0,this.corpBuildings.length);
+    this.corpBuildingService.getCorporationList(this.order.corporation).then(
+      data=>{
+        this.corpBuildingLoading=false;
+        let result=this.apiResultService.result(data);
+        if(result.status==0){
+          for(let d of result.data){
+            switch(d.position){
+              case 'E':
+                d.position='东';
+                break;
+              case 'W':
+                d.position='西';
+                break;
+              case 'S':
+                d.position='南';
+                break;
+              case 'N':
+                d.position='北';
+                break;
+              case 'A':
+                d.position='全部';
+                break;
+              default:
+                d.position='不明确'
+            }
+
+            let corpBuild=new CorpBuilding(d.id,d.corporationId,d.buildingId,d.floor,d.position,d.status,d.building?d.building.name:null,(d.building?d.building.name:null)+d.floor+'层'+d.position);
+            this.corpBuildings.push(corpBuild);
+          }
+          console.log(this.corpBuildings);
+          this.order.custom_position=this.corpBuildings[0]?this.corpBuildings[0].id:'';
+          console.log(this.order);
+        }
+      },
+      error=>{
+        this.corpBuildingLoading=false;
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
+
+  private noLoading:boolean=false;
+  private initNo(){
+    this.noLoading=true;
+    let date=new Date(this.today);
+    this.orderService.getOrderNo(date.getFullYear(),date.getMonth()+1,date.getDate()).then(
+      data=>{
+        this.noLoading=false;
+        let result=this.apiResultService.result(data);
+        if(result.status==0){
+          this.order.no=result.data;
+        }
+      },
+      error=>{
+        this.noLoading=false;
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+  }
+  private dateChange($event){
+    this.today=$event;
+    this.order.incoming_date=$event;
+    this.initNo();
+  }
+
+  private
+
   private onSubmit(){
     console.log(this.order);
-    this.orderService.create(this.order).then(
+/*    this.orderService.create(this.order).then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
@@ -100,6 +186,6 @@ export class OrderAddComponent implements OnInit{
     error=>{
       this.ajaxExceptionService.simpleOp(error);
     }
-    )
+    )*/
   }
 }
