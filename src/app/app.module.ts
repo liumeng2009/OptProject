@@ -17,6 +17,7 @@ import { DropDownsModule,DropDownListModule } from '@progress/kendo-angular-drop
 import { PopupModule }  from '@progress/kendo-angular-popup';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { IntlModule } from '@progress/kendo-angular-intl';
+import { LabelModule } from '@progress/kendo-angular-label';
 //验证组件
 import{CustomFormsModule} from 'ng2-validation';
 //toast组件
@@ -180,6 +181,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     DropDownListModule,
     PopupModule,
     DateInputsModule,
+    LabelModule,
 
     ToastModule.forRoot(),
 

@@ -9,7 +9,7 @@
                 <p>
                   来电时间<span class="k-required">*</span>
                 </p>
-                <kendo-datepicker [value]="today" name="incoming_date" [format]="'yyyy年MM月dd日'"
+                <kendo-datepicker #incoming_date [value]="today" name="incoming_date" [format]="'yyyy年MM月dd日'"
                 (valueChange)="dateChange($event)"
                 >
                   <kendo-datepicker-messages
@@ -18,31 +18,38 @@
                   ></kendo-datepicker-messages>
                 </kendo-datepicker>
               </div>
-              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pos-r">
                 <p>
-                  时<span class="k-required">*</span>
+                  &nbsp;
                 </p>
-                <kendo-numerictextbox id="hour" [(ngModel)]="days" style="width: 80px;" name="hour">
+                <kendo-numerictextbox id="hour" [format]="'n0'" [(ngModel)]="order.hour" style="width: 80px;" name="hour" (focus)="timeFocus($event)">
                 </kendo-numerictextbox>
+                <span style="position: absolute;left:100px;bottom:5px;">时<span class="k-required">*</span></span>
               </div>
-              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pos-r">
                 <p>
-                  分<span class="k-required">*</span>
+                  &nbsp;
                 </p>
-                <kendo-numerictextbox id="minute" [(ngModel)]="days" style="width: 80px;" name="minute">
+                <kendo-numerictextbox id="minute" [format]="'n0'" [(ngModel)]="order.minute" style="width: 80px;" name="minute" (focus)="timeFocus($event)">
                 </kendo-numerictextbox>
+                <span style="position: absolute;left:100px;bottom:5px;">分<span class="k-required">*</span></span>
               </div>
-              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pos-r">
                 <p>
-                  秒<span class="k-required">*</span>
+                  &nbsp;
                 </p>
-                <kendo-numerictextbox id="second" [(ngModel)]="second" style="width: 80px;" name="second">
+                <kendo-numerictextbox id="second" [format]="'n0'" [(ngModel)]="order.second" style="width: 80px;" name="second" (focus)="timeFocus($event)">
                 </kendo-numerictextbox>
+                <span style="position: absolute;left:100px;bottom:5px;">秒<span class="k-required">*</span></span>
               </div>
-
+              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pos-r">
+                <p>
+                  &nbsp;
+                </p>
+                <span class="k-icon k-i-lock" (click)="lockClick($event)" *ngIf="timeLock" style="color:#ff6b58;font-size:25px;height:30px;line-height: 30px;cursor: pointer;"></span>
+                <span class="k-icon k-i-unlock" (click)="lockClick($event)" *ngIf="!timeLock" style="color:#ff6b58;font-size:25px;height:30px;line-height: 30px;cursor: pointer;"></span>
+              </div>
             </div>
-
-
           </label>
           <label class="k-form-field">
             <span for="no">订单序号<span class="k-required">*</span></span>
@@ -103,6 +110,102 @@
             <div style="clear:both;">
 
             </div>
+          </label>
+
+          <label class="k-form-field">
+            <label>客户需求描述:</label>
+            <kendo-grid
+              [data]="needs"
+              (edit)="editHandler($event)" (cancel)="cancelHandler($event)"
+              (save)="saveHandler($event)" (remove)="removeHandler($event)"
+              (add)="addHandler($event)"
+              #kendoGridInstance="kendoGrid"
+            >
+
+              <ng-template kendoGridToolbarTemplate>
+                <button kendoGridAddCommand type="button" >新增</button>
+              </ng-template>
+
+              <kendo-grid-column field="type" title="类型">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.building?.name}}
+                </ng-template>
+                <ng-template kendoGridEditTemplate
+                             let-dataItem="dataItem"
+                             let-formGroup="formGroup"
+                >
+                  <kendo-dropdownlist
+                    [data]="equiptypes"
+                    textField="name"
+                    valueField="code"
+                    [(ngModel)]="dataItem.need"
+                    name="equiptype"
+                    (selectionChange)="buildingChange($event)"
+                    [formControl]="formGroup.get('buildingId')"
+                  >
+
+                  </kendo-dropdownlist>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column field="floor" title="楼层">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.floor==0?'全部':dataItem.floor}}
+                </ng-template>
+                <ng-template kendoGridEditTemplate
+                             let-dataItem="dataItem"
+                             let-formGroup="formGroup"
+                >
+                  <kendo-dropdownlist
+                    [data]="floors"
+                    [(ngModel)]="dataItem.floor"
+                    textField="name"
+                    valueField="value"
+                    name="floor"
+                    [formControl]="formGroup.get('floor')"
+                  >
+                  </kendo-dropdownlist>
+                  <span *ngIf="isBuildingLoading" class="k-icon k-i-loading" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:14px;margin-left: 5px;"></span>
+                  <div style="clear: both"></div>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column field="position" title="所在楼层区域">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <span *ngIf="dataItem.position=='A'">全部区域</span>
+                  <span *ngIf="dataItem.position=='E'">东区</span>
+                  <span *ngIf="dataItem.position=='S'">南区</span>
+                  <span *ngIf="dataItem.position=='W'">西区</span>
+                  <span *ngIf="dataItem.position=='N'">北区</span>
+                </ng-template>
+                <ng-template kendoGridEditTemplate
+                             let-dataItem="dataItem"
+                             let-formGroup="formGroup"
+                >
+                  <kendo-dropdownlist
+                    [data]="positions"
+                    textField="name"
+                    valueField="value"
+                    [(ngModel)]="dataItem.position"
+                    name="position"
+                    [formControl]="formGroup.get('position')"
+                  >
+                  </kendo-dropdownlist>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-command-column title="操作" width="220">
+                <ng-template kendoGridCellTemplate let-isNew="isNew">
+                  <button type="button" kendoGridEditCommand class="k-primary">编辑</button>
+                  <button type="button" kendoGridRemoveCommand>删除</button>
+                  <button type="button" class="k-primary" kendoGridSaveCommand [disabled]="formGroup?.invalid">{{ isNew ? '保存' : '更新' }}</button>
+                  <button type="button" kendoGridCancelCommand>{{ isNew ? '取消' : '取消' }}</button>
+                </ng-template>
+              </kendo-grid-command-column>
+              <ng-template kendoGridNoRecordsTemplate>
+                <div>暂时还没有记录 <a href="javascript:;" (click)="refreshBuilding()">点击刷新</a>.</div>
+              </ng-template>
+            </kendo-grid>
           </label>
 
 

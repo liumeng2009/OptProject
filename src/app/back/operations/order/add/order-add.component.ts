@@ -1,6 +1,8 @@
 import {Component,OnInit,ViewContainerRef} from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router';
 
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
 import {MissionService} from '../../../main/mission.service';
 
 import {OrderService} from '../order.service';
@@ -21,12 +23,22 @@ import {CorporationService} from "../../../basicSettings/corporation/corporation
 import {Corporation} from "../../../../bean/corporation";
 import {CorpBuilding} from "../../../../bean/corpBuilding";
 import {CorpBuildingService} from "../../../basicSettings/corporation/corpBuilding.service";
+import {EquipType} from "../../../../bean/equipType";
+import {BusinessContentService} from "../../businessContents/businessContent.service";
 
 @Component({
   selector:'order-add',
   templateUrl:'./order-add.component.html',
   styleUrls:['./order-add.component.scss']
 })
+
+const formGroup = dataItem => new FormGroup({
+  'type':new FormControl(dataItem.type),
+  'equipment': new FormControl(dataItem.equipment),
+  'op': new FormControl(dataItem.op),
+  'number': new FormControl(dataItem.number)
+});
+
 
 export class OrderAddComponent implements OnInit{
 
@@ -37,12 +49,11 @@ export class OrderAddComponent implements OnInit{
   constructor(
     private orderService:OrderService,
     private groupService:GroupService,
-    private router:Router,
-    private route:ActivatedRoute,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
     private corporationService:CorporationService,
-    private corpBuildingService:CorpBuildingService
+    private corpBuildingService:CorpBuildingService,
+    private businessContentService:BusinessContentService
   ){
   };
 
@@ -50,6 +61,10 @@ export class OrderAddComponent implements OnInit{
     this.order.incoming_date=this.today.toDateString();
     this.initGroup();
     this.initNo();
+    this.initTime();
+
+    this.initGroup();
+
   }
 
   private groupLoading:boolean=false;
@@ -172,7 +187,36 @@ export class OrderAddComponent implements OnInit{
     this.initNo();
   }
 
-  private
+  private timeLock:boolean=true;
+  private timeInterval;
+  private initTime(){
+    this.timeInterval=setInterval(()=>{
+      let date=new Date();
+      this.order.hour=date.getHours();
+      this.order.minute=date.getMinutes();
+      this.order.second=date.getSeconds();
+    },1000);
+  }
+  private timeFocus($event){
+    clearInterval(this.timeInterval);
+    this.timeLock=false;
+  }
+  private lockClick($event){
+    if(this.timeLock){
+      clearInterval(this.timeInterval);
+      this.timeLock=false;
+    }
+    else{
+      this.timeLock=true;
+      this.timeInterval=setInterval(()=>{
+        let date=new Date();
+        this.order.hour=date.getHours();
+        this.order.minute=date.getMinutes();
+        this.order.second=date.getSeconds();
+      },1000);
+    }
+    return false;
+  }
 
   private onSubmit(){
     console.log(this.order);
@@ -188,4 +232,33 @@ export class OrderAddComponent implements OnInit{
     }
     )*/
   }
+
+  private equipTypeLoading:boolean=false;
+  private initEquipType(){
+    this.equipTypeLoading=true;
+    this.businessContentService.getType().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result.status==0){
+          
+        }
+      },
+      error=>{
+
+      }
+    )
+  }
+
+  private formGroup: FormGroup;
+  private myAddRow(grid){
+    this.formGroup =formGroup({
+      'type':new EquipType('','',''),
+      'floor': new Floor('全部',0),
+      'position': new Position('全部区域','A'),
+      'id':''
+    });
+    console.log(this.formGroup);
+    grid.addRow(this.formGroup);
+  }
+
 }

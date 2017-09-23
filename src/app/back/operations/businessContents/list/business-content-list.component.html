@@ -76,7 +76,7 @@
     </ng-template>
   </kendo-grid-column>
 
-  <kendo-grid-column field="equipopsname" title="操作项">
+  <kendo-grid-column field="equipopsname" title="故障名">
     <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
       {{column.title}}
       <span #anchorOp class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configOpToggle()"></span>
@@ -93,14 +93,14 @@
               </table>
             </fieldset>
             <fieldset>
-              <legend>新增操作</legend>
+              <legend>新增故障</legend>
               <label class="k-form-field">
-                <span>操作名称：<span class="k-required">*</span></span>
-                <input class="k-textbox" placeholder="类型名称" [(ngModel)]="equipop.name" name="name" required />
+                <span>故障名称：<span class="k-required">*</span></span>
+                <input class="k-textbox" placeholder="故障名称" [(ngModel)]="equipop.name" name="name" required />
               </label>
               <label class="k-form-field">
-                <span>操作代码：<span class="k-required">*</span></span>
-                <input class="k-textbox" placeholder="类型代码" [(ngModel)]="equipop.code" name="code"  required />
+                <span>故障代码：<span class="k-required">*</span></span>
+                <input class="k-textbox" placeholder="故障代码" [(ngModel)]="equipop.code" name="code"  required />
               </label>
               <div class="text-right">
                 <button type="button" class="k-button" (click)="clearopform()">置空</button>
