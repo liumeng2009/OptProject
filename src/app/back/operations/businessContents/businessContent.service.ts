@@ -49,6 +49,7 @@ export class BusinessContentService{
     if(equipment&&equipment!=''){
       url=url+'&equipment='+equipment
     }
+    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
@@ -76,6 +77,7 @@ export class BusinessContentService{
 
   getEquipment(type:string):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
+    console.log(this.getequipment+'/'+type+'?token='+token);
     if(type&&type!=''){
       return this.http
         .get(this.getequipment+'/'+type+'?token='+token)

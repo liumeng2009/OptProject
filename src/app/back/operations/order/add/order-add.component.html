@@ -112,8 +112,8 @@
             </div>
           </label>
 
-          <label class="k-form-field">
-            <label>客户需求描述:</label>
+          <div class="k-form-field">
+            <label style="font-weight: 700;">客户需求描述:</label>
             <kendo-grid
               [data]="needs"
               (edit)="editHandler($event)" (cancel)="cancelHandler($event)"
@@ -128,7 +128,7 @@
 
               <kendo-grid-column field="type" title="类型">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  {{dataItem.building?.name}}
+                  {{dataItem.type?.name}}
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
@@ -138,61 +138,71 @@
                     [data]="equiptypes"
                     textField="name"
                     valueField="code"
-                    [(ngModel)]="dataItem.need"
+                    [(ngModel)]="dataItem.type"
                     name="equiptype"
-                    (selectionChange)="buildingChange($event)"
-                    [formControl]="formGroup.get('buildingId')"
+                    (selectionChange)="equipTypeChange($event)"
+                    [formControl]="formGroup.get('type')"
                   >
 
                   </kendo-dropdownlist>
                 </ng-template>
               </kendo-grid-column>
 
-              <kendo-grid-column field="floor" title="楼层">
+              <kendo-grid-column field="equipment" title="设备">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  {{dataItem.floor==0?'全部':dataItem.floor}}
+                  {{dataItem.equipment}}
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
                              let-formGroup="formGroup"
                 >
                   <kendo-dropdownlist
-                    [data]="floors"
-                    [(ngModel)]="dataItem.floor"
+                    [data]="equipments"
+                    [(ngModel)]="dataItem.equipment"
                     textField="name"
                     valueField="value"
-                    name="floor"
-                    [formControl]="formGroup.get('floor')"
+                    name="equipments"
+                    [formControl]="formGroup.get('equipment')"
                   >
                   </kendo-dropdownlist>
-                  <span *ngIf="isBuildingLoading" class="k-icon k-i-loading" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:14px;margin-left: 5px;"></span>
+                  <span *ngIf="equipmentLoading" class="k-icon k-i-loading" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:14px;margin-left: 5px;"></span>
                   <div style="clear: both"></div>
                 </ng-template>
               </kendo-grid-column>
 
-              <kendo-grid-column field="position" title="所在楼层区域">
+              <kendo-grid-column field="op" title="故障名">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  <span *ngIf="dataItem.position=='A'">全部区域</span>
-                  <span *ngIf="dataItem.position=='E'">东区</span>
-                  <span *ngIf="dataItem.position=='S'">南区</span>
-                  <span *ngIf="dataItem.position=='W'">西区</span>
-                  <span *ngIf="dataItem.position=='N'">北区</span>
+                  <span>{{dataItem.op}}</span>
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
                              let-formGroup="formGroup"
                 >
                   <kendo-dropdownlist
-                    [data]="positions"
+                    [data]="equipOps"
                     textField="name"
-                    valueField="value"
-                    [(ngModel)]="dataItem.position"
-                    name="position"
-                    [formControl]="formGroup.get('position')"
+                    valueField="id"
+                    [(ngModel)]="dataItem.op"
+                    name="op"
+                    [formControl]="formGroup.get('op')"
                   >
                   </kendo-dropdownlist>
                 </ng-template>
               </kendo-grid-column>
+
+              <kendo-grid-column field="no" title="数量">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <span>{{dataItem.no}}</span>
+                </ng-template>
+                <ng-template kendoGridEditTemplate
+                             let-dataItem="dataItem"
+                             let-formGroup="formGroup"
+                >
+                  <kendo-numerictextbox id="no" [format]="'n0'"  name="no" [formControl]="formGroup.get('no')">
+                  </kendo-numerictextbox>
+                </ng-template>
+              </kendo-grid-column>
+
 
               <kendo-grid-command-column title="操作" width="220">
                 <ng-template kendoGridCellTemplate let-isNew="isNew">
@@ -206,7 +216,7 @@
                 <div>暂时还没有记录 <a href="javascript:;" (click)="refreshBuilding()">点击刷新</a>.</div>
               </ng-template>
             </kendo-grid>
-          </label>
+          </div>
 
 
 
@@ -220,3 +230,4 @@
     </div>
   </div>
 </div>
+<div kendoDialogContainer></div>

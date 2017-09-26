@@ -8,6 +8,8 @@ import {MissionService} from '../../../main/mission.service';
 import {OrderService} from '../order.service';
 import {GroupService} from '../../../basicSettings/group/group.service'
 
+import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
+
 
 import {AlertData} from "../../../../bean/alertData";
 
@@ -25,20 +27,22 @@ import {CorpBuilding} from "../../../../bean/corpBuilding";
 import {CorpBuildingService} from "../../../basicSettings/corporation/corpBuilding.service";
 import {EquipType} from "../../../../bean/equipType";
 import {BusinessContentService} from "../../businessContents/businessContent.service";
+import {Need} from "../../../../bean/need";
+import {Equipment} from "../../../../bean/equipment";
+import {EquipOp} from "../../../../bean/equipOp";
+
+const formGroup = dataItem => new FormGroup({
+  'type':new FormControl(dataItem.type),
+  'equipment': new FormControl(dataItem.equipment),
+  'op': new FormControl(dataItem.op),
+  'no': new FormControl(dataItem.no)
+});
 
 @Component({
   selector:'order-add',
   templateUrl:'./order-add.component.html',
   styleUrls:['./order-add.component.scss']
 })
-
-const formGroup = dataItem => new FormGroup({
-  'type':new FormControl(dataItem.type),
-  'equipment': new FormControl(dataItem.equipment),
-  'op': new FormControl(dataItem.op),
-  'number': new FormControl(dataItem.number)
-});
-
 
 export class OrderAddComponent implements OnInit{
 
@@ -53,6 +57,7 @@ export class OrderAddComponent implements OnInit{
     private ajaxExceptionService:AjaxExceptionService,
     private corporationService:CorporationService,
     private corpBuildingService:CorpBuildingService,
+    private dialogService:DialogService,
     private businessContentService:BusinessContentService
   ){
   };
@@ -64,6 +69,10 @@ export class OrderAddComponent implements OnInit{
     this.initTime();
 
     this.initGroup();
+
+    this.initEquipType();
+    this.initEquipment(null);
+    this.initEquipOp(null,null);
 
   }
 
@@ -234,31 +243,164 @@ export class OrderAddComponent implements OnInit{
   }
 
   private equipTypeLoading:boolean=false;
+  private equiptypes:EquipType[]=[];
+  private equipTypeAdd:EquipType=new EquipType(null,null,null);
   private initEquipType(){
+    this.equiptypes.splice(0,this.equiptypes.length);
     this.equipTypeLoading=true;
     this.businessContentService.getType().then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result.status==0){
-          
+          for(let d of result.data){
+            let equiptype=new EquipType(d.id,d.name,d.code);
+            this.equiptypes.push(equiptype);
+          }
+          this.initEquipment(null);
         }
       },
       error=>{
-
+        this.ajaxExceptionService.simpleOp(error)
       }
     )
   }
+  private equipmentLoading:boolean=false;
+  private equipments:Equipment[]=[];
+  private initEquipment(type:string){
+    this.equipments.splice(0,this.equipments.length);
+    this.equipmentLoading=true;
+    if(this.equiptypes.length>0) {
+      let typeSelect = type ? type : this.equiptypes[0].code;
+      this.businessContentService.getEquipment(typeSelect).then(
+        data=>{
+          console.log(data);
+          this.equipmentLoading=false;;
+          let result=this.apiResultService.result(data);
+          if(result&&result.status==0){
+            for(let d of result.data){
+              let equipment=new Equipment(d.equipment,d.equipment);
+              this.equipments.push(equipment);
+            }
+            if(this.equipments.length>0){
+              this.initEquipOp(typeSelect,this.equipments[0].value);
+            }
+
+          }
+        },
+        error=>{
+          this.equipmentLoading=false;
+          this.ajaxExceptionService.simpleOp(error);
+        }
+      );
+    }
+  }
+
+
+  private equipOpLoading:boolean=false;
+  private equipOps:EquipOp[]=[];
+  private initEquipOp(type:string,equipment:string){
+    this.equipOps.splice(0,this.equipOps.length);
+    let typeSelect=type?type:(this.equiptypes[0]?this.equiptypes[0].code:'');
+    let equipmentSelect=equipment?equipment:(this.equipments[0]?this.equipments[0].value:'');
+    this.businessContentService.getBusinessContentList(null,typeSelect,equipmentSelect).then(
+      data=>{
+        console.log(data);
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          for(let d of result.data){
+            let equipOp=new EquipOp(d.id,d.equipopsname,d.operation);
+            this.equipOps.push(equipOp);
+          }
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
+
+  private equipTypeChange($event){
+
+  }
+
 
   private formGroup: FormGroup;
+  private editedRowIndex:number;
+  private needs:Need[]=[];
+
   private myAddRow(grid){
-    this.formGroup =formGroup({
+/*    this.formGroup =formGroup({
       'type':new EquipType('','',''),
-      'floor': new Floor('全部',0),
+      'equipment': '',
       'position': new Position('全部区域','A'),
       'id':''
-    });
+    });*/
     console.log(this.formGroup);
     grid.addRow(this.formGroup);
+  }
+  protected addHandler({sender}) {
+    this.closeEditor(sender);
+    this.formGroup =formGroup({
+      'type':this.equiptypes[0]?this.equiptypes[0]:'',
+      'equipment': this.equipments[0]?this.equipments[0]:'',
+      'op': this.equipOps[0]?this.equipOps[0]:'',
+      'no':1
+    });
+    sender.addRow(this.formGroup);
+  }
+
+  protected editHandler({sender, rowIndex, dataItem}) {
+
+    this.closeEditor(sender);
+
+    this.formGroup = formGroup({
+      'type':this.equiptypes[0]?this.equiptypes[0].code:'',
+      'equipment': '',
+      'op': '',
+      'no':1
+    });
+    console.log(this.formGroup);
+    this.editedRowIndex = rowIndex;
+    sender.editRow(rowIndex,this.formGroup);
+  }
+
+  protected cancelHandler({sender, rowIndex}) {
+    this.closeEditor(sender, rowIndex);
+  }
+
+  private closeEditor(grid, rowIndex = this.editedRowIndex) {
+    grid.closeRow(rowIndex);
+    this.editedRowIndex = undefined;
+    this.formGroup = undefined;
+  }
+
+  protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+    const product = formGroup.value;
+    console.log(product);
+  }
+  private result;
+  protected removeHandler({dataItem}) {
+
+    const dialog: DialogRef = this.dialogService.open({
+      title: "确认删除？",
+      content: "确定删除吗？",
+      actions: [
+        { text: "否" },
+        { text: "是", primary: true }
+      ]
+    });
+
+    dialog.result.subscribe((result) => {
+      if (result instanceof DialogCloseResult) {
+        console.log("close");
+      } else {
+
+      }
+      this.result = result;
+      if(this.result.text=='是'){
+
+      }
+    });
   }
 
 }
