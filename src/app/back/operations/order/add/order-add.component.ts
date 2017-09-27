@@ -273,7 +273,6 @@ export class OrderAddComponent implements OnInit{
       let typeSelect = type ? type : this.equiptypes[0].code;
       this.businessContentService.getEquipment(typeSelect).then(
         data=>{
-          console.log(data);
           this.equipmentLoading=false;;
           let result=this.apiResultService.result(data);
           if(result&&result.status==0){
@@ -284,7 +283,6 @@ export class OrderAddComponent implements OnInit{
             if(this.equipments.length>0){
               this.initEquipOp(typeSelect,this.equipments[0].value);
             }
-
           }
         },
         error=>{
@@ -320,7 +318,15 @@ export class OrderAddComponent implements OnInit{
   }
 
   private equipTypeChange($event){
+    alert(123);
+    let typeSelect=$event.code;
+    //console.log($event);
+    this.initEquipment(typeSelect);
+  }
 
+  private equipChange($event){
+    console.log($event);
+    this.initEquipOp(null,null)
   }
 
 
@@ -346,6 +352,7 @@ export class OrderAddComponent implements OnInit{
       'op': this.equipOps[0]?this.equipOps[0]:'',
       'no':1
     });
+    console.log(this.formGroup);
     sender.addRow(this.formGroup);
   }
 

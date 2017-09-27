@@ -1,10 +1,11 @@
+import {Equipment} from "./equipment";
+import {EquipType} from "./equipType";
+import {EquipOp} from "./equipOp";
 export class Need {
   constructor(
-    public type:string,
-    public typename:string,
-    public equipment: string,
-    public op: string,
-    public opname:string,
-    public no:number
+    public equipment:Equipment,
+    public type:EquipType,
+    public op: EquipOp,
+    public no: number
   ) {  }
 }
