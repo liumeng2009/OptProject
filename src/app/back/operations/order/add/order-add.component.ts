@@ -282,6 +282,9 @@ export class OrderAddComponent implements OnInit{
             }
             if(this.equipments.length>0){
               this.initEquipOp(typeSelect,this.equipments[0].value);
+              if(this.formGroup){
+                this.formGroup.patchValue({'equipment':this.equipments[0]});
+              }
             }
           }
         },
@@ -309,6 +312,12 @@ export class OrderAddComponent implements OnInit{
             let equipOp=new EquipOp(d.id,d.equipopsname,d.operation);
             this.equipOps.push(equipOp);
           }
+          if(this.equipOps.length>0){
+            //this.initEquipOp(typeSelect,this.equipments[0].value);
+            if(this.formGroup){
+              this.formGroup.patchValue({'op':this.equipOps[0]});
+            }
+          }
         }
       },
       error=>{
@@ -318,9 +327,8 @@ export class OrderAddComponent implements OnInit{
   }
 
   private equipTypeChange($event){
-    alert(123);
     let typeSelect=$event.code;
-    //console.log($event);
+    //console.log(this.formGroup);
     this.initEquipment(typeSelect);
   }
 

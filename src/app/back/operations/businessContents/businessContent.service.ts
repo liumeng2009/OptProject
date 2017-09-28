@@ -49,7 +49,6 @@ export class BusinessContentService{
     if(equipment&&equipment!=''){
       url=url+'&equipment='+equipment
     }
-    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
