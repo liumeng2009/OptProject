@@ -46,7 +46,7 @@ const formGroup = dataItem => new FormGroup({
 
 export class OrderAddComponent implements OnInit{
 
-  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null);
+  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,false);
   groups:Group[]=[];
   public today: Date = new Date();
 
@@ -180,7 +180,7 @@ export class OrderAddComponent implements OnInit{
       data=>{
         this.noLoading=false;
         let result=this.apiResultService.result(data);
-        if(result.status==0){
+        if(result&&result.status==0){
           this.order.no=result.data;
         }
       },
@@ -228,6 +228,7 @@ export class OrderAddComponent implements OnInit{
   }
 
   private onSubmit(){
+    this.order.needs=this.needs;
     console.log(this.order);
 /*    this.orderService.create(this.order).then(
       data=>{
@@ -250,6 +251,7 @@ export class OrderAddComponent implements OnInit{
     this.equipTypeLoading=true;
     this.businessContentService.getType().then(
       data=>{
+        this.equipTypeLoading=false;
         let result=this.apiResultService.result(data);
         if(result.status==0){
           for(let d of result.data){
@@ -260,6 +262,7 @@ export class OrderAddComponent implements OnInit{
         }
       },
       error=>{
+        this.equipTypeLoading=false;
         this.ajaxExceptionService.simpleOp(error)
       }
     )
@@ -300,12 +303,13 @@ export class OrderAddComponent implements OnInit{
   private equipOpLoading:boolean=false;
   private equipOps:EquipOp[]=[];
   private initEquipOp(type:string,equipment:string){
+    this.equipOpLoading=true;
     this.equipOps.splice(0,this.equipOps.length);
     let typeSelect=type?type:(this.equiptypes[0]?this.equiptypes[0].code:'');
     let equipmentSelect=equipment?equipment:(this.equipments[0]?this.equipments[0].value:'');
     this.businessContentService.getBusinessContentList(null,typeSelect,equipmentSelect).then(
       data=>{
-        console.log(data);
+        this.equipOpLoading=false;
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
           for(let d of result.data){
@@ -321,6 +325,7 @@ export class OrderAddComponent implements OnInit{
         }
       },
       error=>{
+        this.equipOpLoading=false;
         this.ajaxExceptionService.simpleOp(error);
       }
     );
@@ -328,13 +333,12 @@ export class OrderAddComponent implements OnInit{
 
   private equipTypeChange($event){
     let typeSelect=$event.code;
-    //console.log(this.formGroup);
+    //alert(typeSelect);
     this.initEquipment(typeSelect);
   }
 
   private equipChange($event){
-    console.log($event);
-    this.initEquipOp(null,null)
+    this.initEquipOp(this.formGroup.value.type.code,$event.value);
   }
 
 
@@ -368,6 +372,8 @@ export class OrderAddComponent implements OnInit{
 
     this.closeEditor(sender);
 
+    console.log(dataItem);
+
     this.formGroup = formGroup({
       'type':this.equiptypes[0]?this.equiptypes[0].code:'',
       'equipment': '',
@@ -391,7 +397,16 @@ export class OrderAddComponent implements OnInit{
 
   protected saveHandler({sender, rowIndex, formGroup, isNew}) {
     const product = formGroup.value;
-    console.log(product);
+    console.log(product+isNew);
+    if(isNew){
+      this.needs.push(product);
+    }
+    else{
+      this.needs.splice(rowIndex,1);
+      this.needs.push(product);
+    }
+
+    this.closeEditor(sender,rowIndex);
   }
   private result;
   protected removeHandler({dataItem}) {

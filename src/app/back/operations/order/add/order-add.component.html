@@ -53,9 +53,13 @@
           </label>
           <label class="k-form-field">
             <span for="no">订单序号<span class="k-required">*</span></span>
-            <input id="no" class="k-textbox" placeholder="订单序号" style="width: 300px;float:left;" required [(ngModel)]="order.no" name="no" />
+            <input id="no" class="k-textbox" placeholder="订单序号" style="width: 300px;float:left;" required [(ngModel)]="order.no" name="no" disabled />
             <span class="k-icon k-i-loading loading" *ngIf="noLoading" style="float:left;margin:5px 0px 0px 10px"></span>
             <div style="clear:both"></div>
+          </label>
+          <label class="k-form-field">
+            <span for="no">加急</span>
+            <kendo-switch [(ngModel)]="order.important" name="important" [onLabel]="'是'" [offLabel]="'否'"></kendo-switch>
           </label>
           <label class="k-form-field">
             <span for="custom_name">客户名称<span class="k-required">*</span></span>
@@ -134,60 +138,68 @@
                              let-dataItem="dataItem"
                              let-formGroup="formGroup"
                 >
-                  <kendo-dropdownlist
-                    [data]="equiptypes"
-                    textField="name"
-                    valueField="code"
-                    [(ngModel)]="dataItem.type"
-                    name="equiptype"
-                    (selectionChange)="equipTypeChange($event)"
-                    [formControl]="formGroup.get('type')"
-                  >
+                  <div class="ddl-float-2">
+                    <kendo-dropdownlist
+                      [data]="equiptypes"
+                      textField="name"
+                      valueField="code"
+                      [(ngModel)]="dataItem.type"
+                      name="equiptype"
+                      (selectionChange)="equipTypeChange($event)"
+                      [formControl]="formGroup.get('type')"
+                    >
+                    </kendo-dropdownlist>
+                    <span *ngIf="equipTypeLoading" class="k-icon k-i-loading loading loading-position-2"></span>
+                  </div>
 
-                  </kendo-dropdownlist>
                 </ng-template>
               </kendo-grid-column>
 
               <kendo-grid-column field="equipment" title="设备">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  {{dataItem.equipment}}
+                  {{dataItem.equipment.name}}
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
                              let-formGroup="formGroup"
                 >
-                  <kendo-dropdownlist
-                    [data]="equipments"
-                    [(ngModel)]="dataItem.equipment"
-                    textField="name"
-                    valueField="value"
-                    name="equipments"
-                    [formControl]="formGroup.get('equipment')"
-                    (selectionChange)="equipChange($event)"
-                  >
-                  </kendo-dropdownlist>
-                  <span *ngIf="equipmentLoading" class="k-icon k-i-loading" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:14px;margin-left: 5px;"></span>
-                  <div style="clear: both"></div>
+                  <div class="ddl-float-2">
+                    <kendo-dropdownlist
+                      [data]="equipments"
+                      [(ngModel)]="dataItem.equipment"
+                      textField="name"
+                      valueField="value"
+                      name="equipments"
+                      [formControl]="formGroup.get('equipment')"
+                      (selectionChange)="equipChange($event)"
+                    >
+                    </kendo-dropdownlist>
+                    <span *ngIf="equipmentLoading" class="k-icon k-i-loading loading loading-position-2"></span>
+                  </div>
                 </ng-template>
               </kendo-grid-column>
 
               <kendo-grid-column field="op" title="故障名">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  <span>{{dataItem.op}}</span>
+                  <span>{{dataItem.op.name}}</span>
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
                              let-formGroup="formGroup"
                 >
-                  <kendo-dropdownlist
-                    [data]="equipOps"
-                    textField="name"
-                    valueField="id"
-                    [(ngModel)]="dataItem.op"
-                    name="op"
-                    [formControl]="formGroup.get('op')"
-                  >
-                  </kendo-dropdownlist>
+                  <div class="ddl-float-2">
+                    <kendo-dropdownlist
+                      [data]="equipOps"
+                      textField="name"
+                      valueField="id"
+                      [(ngModel)]="dataItem.op"
+                      name="op"
+                      [formControl]="formGroup.get('op')"
+                    >
+                    </kendo-dropdownlist>
+                    <span *ngIf="equipOpLoading" class="k-icon k-i-loading loading loading-position-2"></span>
+                  </div>
+
                 </ng-template>
               </kendo-grid-column>
 
@@ -199,7 +211,7 @@
                              let-dataItem="dataItem"
                              let-formGroup="formGroup"
                 >
-                  <kendo-numerictextbox id="no" [format]="'n0'"  name="no" [formControl]="formGroup.get('no')">
+                  <kendo-numerictextbox id="no" [format]="'n0'"  name="no" [(ngModel)]="dataItem.no" [formControl]="formGroup.get('no')">
                   </kendo-numerictextbox>
                 </ng-template>
               </kendo-grid-column>

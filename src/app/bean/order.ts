@@ -12,6 +12,8 @@ export class Order {
     public business_description:string,
     public remark:string,
     public group:string,
-    public corporation:string
+    public corporation:string,
+    public needs:any,
+    public important:boolean
   ) {  }
 }
