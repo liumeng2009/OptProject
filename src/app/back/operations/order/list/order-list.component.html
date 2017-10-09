@@ -11,18 +11,33 @@
 
 
   <kendo-grid-column field="no" title="序号">
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{dataItem.no}}
+    </ng-template>
   </kendo-grid-column>
 
   <kendo-grid-column field="equipment" title="地点" [width]="190">
     <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.corporationname}} {{dataItem.buildingname}} {{dataItem.floor}} {{dataItem.corpostion}}
+      {{dataItem.corporationname}} {{dataItem.buildingname}} {{dataItem.floor}}层
+      <span *ngIf="dataItem.corpostion=='E'">东</span>
+      <span *ngIf="dataItem.corpostion=='W'">西</span>
+      <span *ngIf="dataItem.corpostion=='S'" >南</span>
+      <span *ngIf="dataItem.corpostion=='N'" >北</span>
+      <span *ngIf="dataItem.corpostion=='A'" >全部区域</span>
     </ng-template>
   </kendo-grid-column>
 
   <kendo-grid-column field="custom_phone" title="来电">
-
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{dataItem.custom_phone}}
+    </ng-template>
   </kendo-grid-column>
 
+  <kendo-grid-column field="custom_phone" title="是否加急">
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{dataItem.important}}
+    </ng-template>
+  </kendo-grid-column>
 
   <kendo-grid-column field="id" title="操作"  [width]="130">
     <ng-template kendoGridFilterCellTemplate>

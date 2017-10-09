@@ -46,11 +46,13 @@ const formGroup = dataItem => new FormGroup({
 
 export class OrderAddComponent implements OnInit{
 
-  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,false);
+  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,false);
   groups:Group[]=[];
   public today: Date = new Date();
 
   constructor(
+    private router:Router,
+    private route:ActivatedRoute,
     private orderService:OrderService,
     private groupService:GroupService,
     private apiResultService:ApiResultService,
@@ -229,10 +231,15 @@ export class OrderAddComponent implements OnInit{
 
   private onSubmit(){
     this.order.needs=this.needs;
-    console.log(this.order);
-/*    this.orderService.create(this.order).then(
+    let date=new Date(this.order.incoming_date);
+
+    date.setHours(this.order.hour,this.order.minute,this.order.second,0);
+    this.order.incoming_date_timestamp=Date.parse(date.toString());
+
+    this.orderService.create(this.order).then(
       data=>{
         let result=this.apiResultService.result(data);
+        console.log(result);
         if(result&&result.status==0){
           this.router.navigate(['../'],{relativeTo:this.route});
         }
@@ -240,7 +247,7 @@ export class OrderAddComponent implements OnInit{
     error=>{
       this.ajaxExceptionService.simpleOp(error);
     }
-    )*/
+    )
   }
 
   private equipTypeLoading:boolean=false;

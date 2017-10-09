@@ -22,7 +22,7 @@ import {Operation} from "../../../../bean/operation";
 
 export class OrderEditComponent implements OnInit{
 
-  business=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,false);
+  business=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,false);
 
   constructor(
     private orderService:OrderService,
