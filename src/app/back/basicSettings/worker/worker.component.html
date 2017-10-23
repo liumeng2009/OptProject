@@ -6,7 +6,7 @@
     </button>
   </ng-template>
 
-  <kendo-grid-column field="id" title="工作人员">
+  <kendo-grid-column field="id" title="选取成为工作人员">
     <ng-template kendoGridCellTemplate let-dataItem>
       <input type="checkbox" id="{{dataItem.id}}" [(ngModel)]="dataItem.userId" (change)="clickChange($event)" >
     </ng-template>

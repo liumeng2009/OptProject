@@ -24,7 +24,7 @@ import {SwitchService} from '../../../main/switchService';
 
 export class CorporationAddComponent implements OnInit{
 
-  corporation=new Corporation('','','','',1);
+  corporation=new Corporation('','','',null,1);
   groups:Group[];
   isLoading:boolean=false;
 
@@ -54,7 +54,7 @@ export class CorporationAddComponent implements OnInit{
           if(this.apiResultService.result(data)) {
             this.groups= this.apiResultService.result(data).data;
             if(this.groups.length>0){
-              this.corporation.groupId=this.groups[0].id;
+              this.corporation.group=this.groups[0];
             }
           }
           this.isLoading=false;
@@ -68,6 +68,7 @@ export class CorporationAddComponent implements OnInit{
 
   private onSubmit(){
     //alert(this.building);
+    console.log(this.corporation);
     this.corporationService.create(this.corporation).then(
       data=>{
         console.log(data);
@@ -90,7 +91,7 @@ export class CorporationAddComponent implements OnInit{
   }
 
   private addBuilding(){
-    if(this.corporation.name!=''&&this.corporation.description!=''&&this.corporation.groupId!=''){
+    if(this.corporation.name!=''&&this.corporation.description!=''&&this.corporation.group){
       //自动新增，然后跳转到edit页面
       this.corporationService.create(this.corporation).then(
         data=>{

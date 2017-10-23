@@ -35,7 +35,7 @@
 
   <kendo-grid-column field="custom_phone" title="是否加急">
     <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.important}}
+      {{dataItem.important?'是':'否'}}
     </ng-template>
   </kendo-grid-column>
 

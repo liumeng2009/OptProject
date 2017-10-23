@@ -13,7 +13,7 @@
   </ng-template>
 
 
-  <kendo-grid-column field="equiptypesname" title="类型" [width]="190">
+  <kendo-grid-column field="equipType" title="类型" [width]="190">
     <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
       {{column.title}}
       <span #anchor class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configTypeToggle()"></span>
@@ -59,7 +59,7 @@
       </kendo-dropdownlist>
     </ng-template>
     <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.equiptypesname}}
+      {{dataItem.equipType.name}}
     </ng-template>
   </kendo-grid-column>
 
@@ -76,7 +76,7 @@
     </ng-template>
   </kendo-grid-column>
 
-  <kendo-grid-column field="equipopsname" title="故障名">
+  <kendo-grid-column field="equipOp" title="故障名">
     <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
       {{column.title}}
       <span #anchorOp class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configOpToggle()"></span>
@@ -115,7 +115,7 @@
 
     </ng-template>
     <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.equipopsname}}
+      {{dataItem.equipOp.name}}
     </ng-template>
   </kendo-grid-column>
 

@@ -64,6 +64,7 @@ export class CorporationService{
   getCorporation(id:string):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url=this.geturl+id+'?token='+token;
+    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)

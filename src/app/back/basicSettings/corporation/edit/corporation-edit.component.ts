@@ -42,7 +42,7 @@ const formGroup = dataItem => new FormGroup({
 })
 
 export class CorporationEditComponent implements OnInit,AfterViewInit{
-  corporation=new Corporation('','','','',1);
+  corporation=new Corporation('','','',null,1);
 
   corpBuildings:CorpBuilding[];
   groups:Group[];
@@ -213,7 +213,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
         if(corporationobj){
           this.corporation.name=corporationobj.data.name;
           this.corporation.description=corporationobj.data.description;
-          this.corporation.groupId=corporationobj.data.groupId;
+          this.corporation.group=corporationobj.data.group;
           this.corporation.id=corporationobj.data.id;
         }
         else{

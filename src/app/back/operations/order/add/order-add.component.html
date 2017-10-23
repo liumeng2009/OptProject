@@ -22,7 +22,7 @@
                 <p>
                   &nbsp;
                 </p>
-                <kendo-numerictextbox id="hour" [format]="'n0'" [(ngModel)]="order.hour" style="width: 80px;" name="hour" (focus)="timeFocus($event)">
+                <kendo-numerictextbox id="hour" min="0" max="23" [format]="'n0'" [(ngModel)]="order.hour" style="width: 80px;" name="hour" (focus)="timeFocus($event)">
                 </kendo-numerictextbox>
                 <span style="position: absolute;left:100px;bottom:5px;">时<span class="k-required">*</span></span>
               </div>
@@ -30,7 +30,7 @@
                 <p>
                   &nbsp;
                 </p>
-                <kendo-numerictextbox id="minute" [format]="'n0'" [(ngModel)]="order.minute" style="width: 80px;" name="minute" (focus)="timeFocus($event)">
+                <kendo-numerictextbox id="minute"  min="0" max="59" [format]="'n0'" [(ngModel)]="order.minute" style="width: 80px;" name="minute" (focus)="timeFocus($event)">
                 </kendo-numerictextbox>
                 <span style="position: absolute;left:100px;bottom:5px;">分<span class="k-required">*</span></span>
               </div>
@@ -38,7 +38,7 @@
                 <p>
                   &nbsp;
                 </p>
-                <kendo-numerictextbox id="second" [format]="'n0'" [(ngModel)]="order.second" style="width: 80px;" name="second" (focus)="timeFocus($event)">
+                <kendo-numerictextbox id="second" min="0" max="59" [format]="'n0'" [(ngModel)]="order.second" style="width: 80px;" name="second" (focus)="timeFocus($event)">
                 </kendo-numerictextbox>
                 <span style="position: absolute;left:100px;bottom:5px;">秒<span class="k-required">*</span></span>
               </div>
@@ -91,7 +91,6 @@
                 [data]="corporations"
                 [textField]="'name'"
                 [valueField]="'id'"
-                [valuePrimitive]="true"
                 [(ngModel)]="order.corporation"
                 (valueChange)="initCorpBuilding($event)"
               >
@@ -117,7 +116,7 @@
           </label>
 
           <div class="k-form-field">
-            <label style="font-weight: 700;">客户需求描述:</label>
+            <label style="font-weight: 700;">客户需求描述(方便新增时快速生成工单，与实际工单数据并不保持关联)</label>
             <kendo-grid
               [data]="needs"
               (edit)="editHandler($event)" (cancel)="cancelHandler($event)"
@@ -127,7 +126,8 @@
             >
 
               <ng-template kendoGridToolbarTemplate>
-                <button kendoGridAddCommand type="button" >新增</button>
+                <button kendoGridAddCommand type="button" class="k-primary" >新增</button>
+                <button type="button" class="k-button" (click)="clearTmpCookie()" >清空</button>
               </ng-template>
 
               <kendo-grid-column field="type" title="类型">
@@ -244,3 +244,23 @@
   </div>
 </div>
 <div kendoDialogContainer></div>
+<ng-template #itemListRef>
+  <kendo-grid [data]="workerOrders">
+    <kendo-grid-column title="选择">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <input type="checkbox" id="auth-2fa" class="k-checkbox" checked="dataItem.checked">
+        <label class="k-checkbox-label" for="auth-2fa"></label>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="公司" field="corporation" >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.corporation.name}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="所在位置" field="custom_position" >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.custom_position.union}}
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+</ng-template>

@@ -1,22 +1,32 @@
 import {Corporation} from "./corporation";
 import {CorpBuilding} from "./corpBuilding";
-export class Order {
+export class WorkOrder {
   constructor(
     public id:string,
-    public no:boolean,
+
+    public no:string,
+
     public custom_name:string,
+
     public custom_phone: string,
-    public incoming_date:string,
+
     public incoming_date_timestamp:number,
-    public hour:number,
-    public minute:number,
-    public second:number,
+
     public custom_position:CorpBuilding,
-    public business_description:string,
-    public remark:string,
-    public group:string,
+
     public corporation:Corporation,
-    public needs:any,
-    public important:boolean
+
+    public important:boolean,
+
+    public arriveTime:number,
+
+    public finishTime:number,
+
+    public worker:string,
+
+    public equipOp:string,
+
+    public checked:boolean
+
   ) {  }
 }

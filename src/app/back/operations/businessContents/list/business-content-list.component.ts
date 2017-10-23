@@ -1,5 +1,5 @@
 import {Component,OnInit,ElementRef,HostListener,ViewEncapsulation,ViewChild } from '@angular/core';
-import {Router,ActivatedRoute} from '@angular/router';
+import {Router,ActivatedRoute,Params,NavigationEnd } from '@angular/router';
 
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
@@ -38,7 +38,7 @@ export class BusinessContentListComponent implements OnInit{
   private firstRecord:number=0;
   private lastRecord:number=0;
   private result;
-  private isLoading:boolean=true;
+  private isLoading:boolean=false;
 
   private searchTypeName:EquipType[]=[];
   private searchEquipment:Position[]=[];
@@ -61,18 +61,67 @@ export class BusinessContentListComponent implements OnInit{
 
   };
 
+  private subs;
   ngOnInit(){
-    this.height=(window.document.body.clientHeight-70-56-50-20-20);
-    this.getData(1,this.searchObj.type.code,this.searchObj.equipment.value);
-    this.getSearchEquipment(this.searchObj.type.code);
-    this.getEquipTypeList();
+    this.height=(window.document.body.clientHeight-70-56-50-20-27);
+
+    //获取参数
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
+    let page=1;
+    try{
+      page=parseInt(queryParams.page?queryParams.page:'1')
+    }
+    catch(e){
+
+    }
+    let type=queryParams.type;
+    let equipment=queryParams.equipment;
+
+    this.getSearchEquipment(type);
+    this.getEquipTypeList(type);
     this.getEquipOpList();
+
+    console.log('init');
+    this.getData(page,type,equipment);
+    this.skip=(page-1)*this.pageSize;
+
+    this.subs=this.router.events
+      .subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          this.initQueryParams();
+        }
+      });
+
+  }
+
+  ngOnDestroy(){
+    this.subs.unsubscribe();
+  }
+
+  private initQueryParams(){
+    //获取参数
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
+    let page=1;
+    try{
+      page=parseInt(queryParams.page?queryParams.page:'1')
+    }
+    catch(e){
+
+    }
+    let type=queryParams.type?queryParams.type:'';
+    let equipment=queryParams.equipment?queryParams.equipment:'';
+    this.getData(page,type,equipment);
+    this.skip=(page-1)*this.pageSize;
   }
 
   private getData(pageid,type,equipment){
+    this.isLoading=true;
     this.businessContentService.getBusinessContentList(pageid,type,equipment)
       .then(
         data=>{
+          console.log(data);
           if(this.apiResultService.result(data)) {
             this.gridData.data = this.apiResultService.result(data).data;
             this.total = this.gridData.total = this.apiResultService.result(data).total;
@@ -100,8 +149,13 @@ export class BusinessContentListComponent implements OnInit{
   private pageChange(event,PageChangeEvent){
     this.skip=event.skip;
     this.isLoading=true;
-    this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.value);
+    //this.router.navigate(['list/'+(this.skip/this.pageSize+1).toString()],{relativeTo:this.route.parent})
+    //this.router.navigate([{'page':(this.skip/this.pageSize+1).toString()}],{relativeTo:this.route})
+    //this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.value);
+    this.router.navigate(['list'],{queryParams:{page:(this.skip/this.pageSize+1).toString()},relativeTo:this.route.parent});
   }
+
+
 
   private editRow(id){
     this.router.navigate([id],{relativeTo:this.route.parent});
@@ -145,10 +199,15 @@ export class BusinessContentListComponent implements OnInit{
 
 
   private handleTypeChange(e){
-    this.getSearchEquipment(this.searchObj.type.code);
-    this.searchObj.equipment=this.searchEquipment[0]?this.searchEquipment[0]:null;
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
+    queryParams.type=e.code;
+    this.getSearchEquipment(e.code);
+    //this.searchObj.equipment=this.searchEquipment[0]?this.searchEquipment[0]:null;
+    queryParams.equipment=this.searchEquipment[0]?this.searchEquipment[0].value:null;
+    this.router.navigate(['list'],{queryParams:queryParams,relativeTo:this.route.parent});
 
-    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(
+/*    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(
       data=>{
         if(this.apiResultService.result(data)) {
           this.gridData.data = this.apiResultService.result(data).data;
@@ -163,11 +222,17 @@ export class BusinessContentListComponent implements OnInit{
         this.ajaxExceptionService.simpleOp(error);
         this.isLoading=false;
       }
-    );
+    );*/
   }
 
   private handleEquimentChange(e){
-    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(
+
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
+    queryParams.equipment=e.value;
+    this.router.navigate(['list'],{queryParams:queryParams,relativeTo:this.route.parent});
+
+/*    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(
       data=>{
         if(this.apiResultService.result(data)) {
           this.gridData.data = this.apiResultService.result(data).data;
@@ -182,7 +247,7 @@ export class BusinessContentListComponent implements OnInit{
         this.ajaxExceptionService.simpleOp(error);
         this.isLoading=false;
       }
-    );
+    );*/
   }
 
   private getSearchEquipment(type:string){
@@ -190,11 +255,16 @@ export class BusinessContentListComponent implements OnInit{
     this.searchEquipment.push(new Position('全部设备',''));
     this.businessContentService.getEquipment(type).then(
       data=>{
-        if(this.apiResultService.result(data).status==0){
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
           for(let d of this.apiResultService.result(data).data){
             this.searchEquipment.push(new Position(d.equipment,d.equipment));
           }
         }
+        if(this.searchEquipment.length>0){
+          this.searchObj.equipment=this.searchEquipment[0];
+        }
+        //console.log(this.searchEquipment);
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
@@ -262,14 +332,16 @@ export class BusinessContentListComponent implements OnInit{
   private equiptypesFilter:EquipType[]=[];
 
   private savetype(){
-    console.log(this.equiptype);
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
     this.businessContentService.createType(this.equiptype).then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result.status==0){
-          this.getEquipTypeList();
+          this.getEquipTypeList(queryParams.type);
           this.equiptype.name=null;
           this.equiptype.code=null;
+          this.configTypeToggle(false);
         }
       },
       error=>{
@@ -295,7 +367,7 @@ export class BusinessContentListComponent implements OnInit{
       }
     );
   }
-  private getEquipTypeList(){
+  private getEquipTypeList(type){
     this.equiptypes.splice(0,this.equiptypes.length);
     this.businessContentService.getType().then(
       data=>{
@@ -303,8 +375,13 @@ export class BusinessContentListComponent implements OnInit{
         if(result.status==0&&result.data.length>0){
           for(let d of result.data){
             let et=new EquipType(d.id,d.name,d.code);
+            if(d.code==type){
+              this.searchObj.type=et;
+            }
             this.equiptypes.push(et);
           }
+
+
         }
         let spAll=new EquipType('','全部类型','');
         this.equiptypesFilter=this.equiptypes.slice(0);
@@ -345,7 +422,8 @@ export class BusinessContentListComponent implements OnInit{
     });
 
     this.dialogShow=true;
-
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
     dialog.result.subscribe((result) => {
       setTimeout(()=>{this.dialogShow=false},1000);
       if (result instanceof DialogCloseResult) {
@@ -359,7 +437,7 @@ export class BusinessContentListComponent implements OnInit{
           data=>{
             let result=this.apiResultService.result(data);
             if(result.status==0){
-              this.getEquipTypeList();
+              this.getEquipTypeList(queryParams.type);
             }
           },
           error=>{

@@ -43,6 +43,9 @@ export class LoginComponent implements OnInit{
   onSubmit():void{
     this.isDisabled=true;
     this.iconClass='k-icon k-i-loading';
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
+    let rememberUrl=queryParams.redirectTo;
     this.loginService.login(this.user.username,this.user.password)
       .then(
         data=>{
@@ -51,10 +54,15 @@ export class LoginComponent implements OnInit{
             setTimeout(()=>{
               this.isDisabled=false;
               this.iconClass='k-icon k-i-lock';
-              this.router.navigate(['/admin']);
               let date=new Date();
               date.setDate(date.getDate()+999);
               this.cookieService.put('optToken',data.data.token,{expires:date});
+              if(rememberUrl&&rememberUrl!=''){
+                this.router.navigate([rememberUrl]);
+              }
+              else{
+                this.router.navigate(['/admin']);
+              }
             },2000);
           }
           else{

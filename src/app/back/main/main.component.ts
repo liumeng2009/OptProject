@@ -273,7 +273,8 @@ export class MainComponent implements OnInit{
     //}
 
     this.router.navigate(["/" +intoOtherUrl]).then(function(){
-      t.checkLogin();
+      //alert('检查登录1');
+      //t.checkLogin();
       t.createBreadCrumb();
     });
 

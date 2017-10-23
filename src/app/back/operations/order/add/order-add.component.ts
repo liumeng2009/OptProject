@@ -1,7 +1,9 @@
-import {Component,OnInit,ViewContainerRef} from '@angular/core';
+import {Component,OnInit,ViewContainerRef,TemplateRef,ViewChild} from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import {CookieService} from 'angular2-cookie/core';
 
 import {MissionService} from '../../../main/mission.service';
 
@@ -30,6 +32,7 @@ import {BusinessContentService} from "../../businessContents/businessContent.ser
 import {Need} from "../../../../bean/need";
 import {Equipment} from "../../../../bean/equipment";
 import {EquipOp} from "../../../../bean/equipOp";
+import {WorkOrder} from "../../../../bean/workOrder";
 
 const formGroup = dataItem => new FormGroup({
   'type':new FormControl(dataItem.type),
@@ -46,7 +49,7 @@ const formGroup = dataItem => new FormGroup({
 
 export class OrderAddComponent implements OnInit{
 
-  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,false);
+  order=new Order(null,null,'刘孟','15822927208',null,null,null,null,null,null,null,null,null,null,null,false);
   groups:Group[]=[];
   public today: Date = new Date();
 
@@ -60,7 +63,8 @@ export class OrderAddComponent implements OnInit{
     private corporationService:CorporationService,
     private corpBuildingService:CorpBuildingService,
     private dialogService:DialogService,
-    private businessContentService:BusinessContentService
+    private businessContentService:BusinessContentService,
+    private cookieService:CookieService
   ){
   };
 
@@ -69,13 +73,7 @@ export class OrderAddComponent implements OnInit{
     this.initGroup();
     this.initNo();
     this.initTime();
-
-    this.initGroup();
-
-    this.initEquipType();
-    this.initEquipment(null);
-    this.initEquipOp(null,null);
-
+    this.initTmpNeed();
   }
 
   private groupLoading:boolean=false;
@@ -85,7 +83,7 @@ export class OrderAddComponent implements OnInit{
       data=>{
         this.groupLoading=false;
         let result=this.apiResultService.result(data);
-        if(result.status==0){
+        if(result&&result.status==0){
           //console.log(result);
           for(let data of result.data){
             let group=new Group(data.id,data.name,null,data.status);
@@ -111,14 +109,17 @@ export class OrderAddComponent implements OnInit{
       data=>{
         this.corporationLoading=false;
         let result=this.apiResultService.result(data);
+        console.log(result);
         if(result.status==0){
           for(let data of result.data){
-            let corp=new Corporation(data.id,data.name,data.description,data.groupId,data.status);
+            let corp=new Corporation(data.id,data.name,data.description,data.group,data.status);
             this.corporations.push(corp);
           }
-          this.order.corporation=this.corporations[0]?this.corporations[0].id:''
-          console.log(this.order)
-          this.initCorpBuilding();
+          if(this.corporations.length>0){
+            this.order.corporation=new Corporation(this.corporations[0].id,this.corporations[0].name,this.corporations[0].description,this.corporations[0].group,this.corporations[0].status);
+            console.log(this.order);
+            this.initCorpBuilding();
+          }
         }
       },
       error=>{
@@ -133,10 +134,11 @@ export class OrderAddComponent implements OnInit{
   private initCorpBuilding(){
     this.corpBuildingLoading=true;
     this.corpBuildings.splice(0,this.corpBuildings.length);
-    this.corpBuildingService.getCorporationList(this.order.corporation).then(
+    this.corpBuildingService.getCorporationList(this.order.corporation.id).then(
       data=>{
         this.corpBuildingLoading=false;
         let result=this.apiResultService.result(data);
+        console.log(result);
         if(result.status==0){
           for(let d of result.data){
             switch(d.position){
@@ -159,11 +161,13 @@ export class OrderAddComponent implements OnInit{
                 d.position='不明确'
             }
 
-            let corpBuild=new CorpBuilding(d.id,d.corporationId,d.buildingId,d.floor,d.position,d.status,d.building?d.building.name:null,(d.building?d.building.name:null)+d.floor+'层'+d.position);
+            let corpBuild=new CorpBuilding(d.id,d.corporationId,d.building,d.floor,d.position,d.status,(d.building?d.building.name:null)+d.floor+'层'+d.position);
             this.corpBuildings.push(corpBuild);
           }
           console.log(this.corpBuildings);
-          this.order.custom_position=this.corpBuildings[0]?this.corpBuildings[0].id:'';
+          if(this.corpBuildings.length>0){
+            this.order.custom_position=this.corpBuildings[0];
+          }
           console.log(this.order);
         }
       },
@@ -229,25 +233,62 @@ export class OrderAddComponent implements OnInit{
     return false;
   }
 
+  @ViewChild('itemListRef')
+  tpl: TemplateRef<any>;
+
+  private workerOrders:WorkOrder[]=[];
   private onSubmit(){
+    this.workerOrders.splice(0,this.workerOrders.length);
     this.order.needs=this.needs;
     let date=new Date(this.order.incoming_date);
-
     date.setHours(this.order.hour,this.order.minute,this.order.second,0);
     this.order.incoming_date_timestamp=Date.parse(date.toString());
 
-    this.orderService.create(this.order).then(
+    for(let need of this.needs){
+      for(let i=0;i<need.no;i++){
+        let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_date_timestamp,
+          this.order.custom_position,this.order.corporation,this.order.important,0,0,'',need.op.code,true);
+        this.workerOrders.push(workOrder);
+      }
+    }
+    console.log(this.workerOrders);
+
+    let dialog=this.dialogService.open({
+      title: "快速添加工单",
+      content: this.tpl,
+      actions: [
+        { text: "取消" },
+        { text: "保存", primary: true }
+      ]
+    });
+
+    dialog.result.subscribe((result) => {
+      if (result instanceof DialogCloseResult) {
+        console.log("close");
+      } else {
+        console.log("action", result);
+      }
+    });
+
+/*    this.orderService.create(this.order).then(
       data=>{
         let result=this.apiResultService.result(data);
         console.log(result);
+        //保存成功之后，就把needs的缓存删除掉
+        this.cookieService.remove('tmpneed');
         if(result&&result.status==0){
           this.router.navigate(['../'],{relativeTo:this.route});
         }
       },
-    error=>{
-      this.ajaxExceptionService.simpleOp(error);
-    }
-    )
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )*/
+  }
+
+  private clearTmpCookie(){
+    this.needs.splice(0,this.needs.length);
+    this.cookieService.remove('tmpneed');
   }
 
   private equipTypeLoading:boolean=false;
@@ -265,7 +306,13 @@ export class OrderAddComponent implements OnInit{
             let equiptype=new EquipType(d.id,d.name,d.code);
             this.equiptypes.push(equiptype);
           }
-          this.initEquipment(null);
+          if(this.equiptypes.length>0){
+            if(this.formGroup){
+              this.formGroup.patchValue({'type':this.equiptypes[0]});
+            }
+            this.initEquipment(this.equiptypes[0].code);
+          }
+
         }
       },
       error=>{
@@ -340,7 +387,6 @@ export class OrderAddComponent implements OnInit{
 
   private equipTypeChange($event){
     let typeSelect=$event.code;
-    //alert(typeSelect);
     this.initEquipment(typeSelect);
   }
 
@@ -365,6 +411,10 @@ export class OrderAddComponent implements OnInit{
   }
   protected addHandler({sender}) {
     this.closeEditor(sender);
+    //初始化三个下拉菜单
+    this.initEquipType();
+
+
     this.formGroup =formGroup({
       'type':this.equiptypes[0]?this.equiptypes[0]:'',
       'equipment': this.equipments[0]?this.equipments[0]:'',
@@ -406,15 +456,49 @@ export class OrderAddComponent implements OnInit{
     const product = formGroup.value;
     console.log(product+isNew);
     if(isNew){
-      this.needs.push(product);
+      if(this.needs.length==0){
+        this.needs.push(product);
+      }
+      else{
+        //重复的需求，数量相加
+        let i=0;
+        for(let n of this.needs){
+          if(n.op.id==product.op.id){
+            n.no=n.no+product.no;
+            break;
+          }
+          if(i==this.needs.length-1){
+            this.needs.push(product);
+            break;
+          }
+          i++;
+        }
+      }
+
+
     }
     else{
       this.needs.splice(rowIndex,1);
       this.needs.push(product);
     }
-
     this.closeEditor(sender,rowIndex);
+    this.saveTmpNeed();
   }
+  //将最近的一次
+  protected saveTmpNeed(){
+    let date=new Date();
+    date.setDate(date.getDate()+999);
+    console.log(JSON.stringify(this.needs));
+    this.cookieService.put('tmpneed',''+JSON.stringify(this.needs)+'',{expires:date});
+  }
+
+  protected initTmpNeed(){
+    //console.log(this.cookieService.get('tmpneed'));
+    let tmp=this.cookieService.get('tmpneed');
+    if(tmp&&tmp!='')
+      this.needs=JSON.parse(this.cookieService.get('tmpneed'));
+  }
+
   private result;
   protected removeHandler({dataItem}) {
 

@@ -46,7 +46,7 @@ export class WorkerComponent implements OnInit{
   ){};
 
   ngOnInit(){
-    this.height=(window.document.body.clientHeight-70-56-50-20);
+    this.height=(window.document.body.clientHeight-70-56-50-20-27);
     this.getData();
   }
   getData(){
