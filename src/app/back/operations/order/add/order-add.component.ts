@@ -33,6 +33,8 @@ import {Need} from "../../../../bean/need";
 import {Equipment} from "../../../../bean/equipment";
 import {EquipOp} from "../../../../bean/equipOp";
 import {WorkOrder} from "../../../../bean/workOrder";
+import {LmTime} from "../../../components/lmtimepicker/lmtime";
+import {LmTimePicker} from "../../../components/lmtimepicker/lm-timepicker.component";
 
 const formGroup = dataItem => new FormGroup({
   'type':new FormControl(dataItem.type),
@@ -66,15 +68,17 @@ export class OrderAddComponent implements OnInit{
     private businessContentService:BusinessContentService,
     private cookieService:CookieService
   ){
+
   };
 
   ngOnInit(){
     this.order.incoming_date=this.today.toDateString();
     this.initGroup();
     this.initNo();
-    this.initTime();
     this.initTmpNeed();
   }
+
+  private timetest=new LmTime(12,12,12);
 
   private groupLoading:boolean=false;
   private initGroup(){
@@ -202,37 +206,6 @@ export class OrderAddComponent implements OnInit{
     this.initNo();
   }
 
-  private timeLock:boolean=true;
-  private timeInterval;
-  private initTime(){
-    this.timeInterval=setInterval(()=>{
-      let date=new Date();
-      this.order.hour=date.getHours();
-      this.order.minute=date.getMinutes();
-      this.order.second=date.getSeconds();
-    },1000);
-  }
-  private timeFocus($event){
-    clearInterval(this.timeInterval);
-    this.timeLock=false;
-  }
-  private lockClick($event){
-    if(this.timeLock){
-      clearInterval(this.timeInterval);
-      this.timeLock=false;
-    }
-    else{
-      this.timeLock=true;
-      this.timeInterval=setInterval(()=>{
-        let date=new Date();
-        this.order.hour=date.getHours();
-        this.order.minute=date.getMinutes();
-        this.order.second=date.getSeconds();
-      },1000);
-    }
-    return false;
-  }
-
   @ViewChild('itemListRef')
   tpl: TemplateRef<any>;
 
@@ -240,6 +213,7 @@ export class OrderAddComponent implements OnInit{
   private onSubmit(){
     this.workerOrders.splice(0,this.workerOrders.length);
     this.order.needs=this.needs;
+    console.log(this.needs);
     let date=new Date(this.order.incoming_date);
     date.setHours(this.order.hour,this.order.minute,this.order.second,0);
     this.order.incoming_date_timestamp=Date.parse(date.toString());
@@ -247,7 +221,7 @@ export class OrderAddComponent implements OnInit{
     for(let need of this.needs){
       for(let i=0;i<need.no;i++){
         let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_date_timestamp,
-          this.order.custom_position,this.order.corporation,this.order.important,0,0,'',need.op.code,true);
+          this.order.custom_position,this.order.corporation,this.order.important,0,0,'',need.type,need.equipment,need.op,true);
         this.workerOrders.push(workOrder);
       }
     }
@@ -367,7 +341,7 @@ export class OrderAddComponent implements OnInit{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
           for(let d of result.data){
-            let equipOp=new EquipOp(d.id,d.equipopsname,d.operation);
+            let equipOp=new EquipOp(d.id,d.equipOp?d.equipOp.name:'',d.operation);
             this.equipOps.push(equipOp);
           }
           if(this.equipOps.length>0){
@@ -431,11 +405,14 @@ export class OrderAddComponent implements OnInit{
 
     console.log(dataItem);
 
+    //初始化三个下拉菜单
+    this.initEquipType();
+
     this.formGroup = formGroup({
-      'type':this.equiptypes[0]?this.equiptypes[0].code:'',
-      'equipment': '',
-      'op': '',
-      'no':1
+      'type':dataItem.type,
+      'equipment': dataItem.equipment,
+      'op': dataItem.op,
+      'no':dataItem.no
     });
     console.log(this.formGroup);
     this.editedRowIndex = rowIndex;

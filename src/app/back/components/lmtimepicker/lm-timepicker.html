@@ -1,0 +1,15 @@
+<span class="k-widget k-datepicker k-header" style="position:relative">
+  <kendo-maskedtextbox #maskTxt [mask]="'00时00分'" [value]="txtValue"></kendo-maskedtextbox>
+  <span class="k-select" style="position: absolute;right: 0px;top: 0px;text-align: center;height: 30px;line-height: 30px;width: 30px;cursor:pointer;">
+    <span class="k-icon k-i-clock" #anchor (click)="onToggle()" >
+
+    </span>
+  </span>
+</span>
+
+<kendo-popup #popup [popupClass]="'content popup'" [anchor]="anchor" (anchorViewportLeave)="show = false" *ngIf="show">
+  <!-- User-defined content -->
+  Popup content.
+</kendo-popup>
+
+

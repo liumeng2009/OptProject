@@ -98,6 +98,8 @@ import {SwitchService} from "./back/main/switchService";
 
 import {MainPipe} from './back/main/main.pipe';
 
+import { LmTimePicker }   from './back/components/lmtimepicker/lm-timepicker.component';
+
 // Load all required data for the bg locale
 import '@progress/kendo-angular-intl/locales/zh/all';
 
@@ -158,7 +160,10 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
 
     OtherComponent,
 
-    MainPipe
+    MainPipe,
+
+
+    LmTimePicker
   ],
   imports: [
     BrowserModule,

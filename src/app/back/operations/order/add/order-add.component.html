@@ -3,11 +3,11 @@
     <div class="card">
       <div class="card-block">
         <form class="k-form"  (ngSubmit)="onSubmit()" #orderForm="ngForm">
-          <label class="k-form-field">
+          <div class="k-form-field">
             <div class="row">
-              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                <p>
-                  来电时间<span class="k-required">*</span>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p style="font-weight: 700;">
+                  来电日期<span class="k-required">*</span>
                 </p>
                 <kendo-datepicker #incoming_date [value]="today" name="incoming_date" [format]="'yyyy年MM月dd日'"
                 (valueChange)="dateChange($event)"
@@ -18,39 +18,14 @@
                   ></kendo-datepicker-messages>
                 </kendo-datepicker>
               </div>
-              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pos-r">
-                <p>
-                  &nbsp;
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p style="font-weight: 700;">
+                  时刻<span class="k-required">*</span>
                 </p>
-                <kendo-numerictextbox id="hour" min="0" max="23" [format]="'n0'" [(ngModel)]="order.hour" style="width: 80px;" name="hour" (focus)="timeFocus($event)">
-                </kendo-numerictextbox>
-                <span style="position: absolute;left:100px;bottom:5px;">时<span class="k-required">*</span></span>
-              </div>
-              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pos-r">
-                <p>
-                  &nbsp;
-                </p>
-                <kendo-numerictextbox id="minute"  min="0" max="59" [format]="'n0'" [(ngModel)]="order.minute" style="width: 80px;" name="minute" (focus)="timeFocus($event)">
-                </kendo-numerictextbox>
-                <span style="position: absolute;left:100px;bottom:5px;">分<span class="k-required">*</span></span>
-              </div>
-              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pos-r">
-                <p>
-                  &nbsp;
-                </p>
-                <kendo-numerictextbox id="second" min="0" max="59" [format]="'n0'" [(ngModel)]="order.second" style="width: 80px;" name="second" (focus)="timeFocus($event)">
-                </kendo-numerictextbox>
-                <span style="position: absolute;left:100px;bottom:5px;">秒<span class="k-required">*</span></span>
-              </div>
-              <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pos-r">
-                <p>
-                  &nbsp;
-                </p>
-                <span class="k-icon k-i-lock" (click)="lockClick($event)" *ngIf="timeLock" style="color:#ff6b58;font-size:25px;height:30px;line-height: 30px;cursor: pointer;"></span>
-                <span class="k-icon k-i-unlock" (click)="lockClick($event)" *ngIf="!timeLock" style="color:#ff6b58;font-size:25px;height:30px;line-height: 30px;cursor: pointer;"></span>
+                <lmtimepicker [timeNow]="timetest" id="timetest" name="timetest" ></lmtimepicker>
               </div>
             </div>
-          </label>
+          </div>
           <label class="k-form-field">
             <span for="no">订单序号<span class="k-required">*</span></span>
             <input id="no" class="k-textbox" placeholder="订单序号" style="width: 300px;float:left;" required [(ngModel)]="order.no" name="no" disabled />
@@ -260,6 +235,21 @@
     <kendo-grid-column title="所在位置" field="custom_position" >
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.custom_position.union}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="工作内容描述" >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.equipment.name}}{{dataItem.op.name}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="工单建立时间" >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.equipment.name}}{{dataItem.op.name}}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column title="工单响应时间" >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.equipment.name}}{{dataItem.op.name}}
       </ng-template>
     </kendo-grid-column>
   </kendo-grid>

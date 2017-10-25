@@ -372,7 +372,7 @@ export class BusinessContentListComponent implements OnInit{
     this.businessContentService.getType().then(
       data=>{
         let result=this.apiResultService.result(data);
-        if(result.status==0&&result.data.length>0){
+        if(result&&result.status==0&&result.data.length>0){
           for(let d of result.data){
             let et=new EquipType(d.id,d.name,d.code);
             if(d.code==type){
@@ -398,7 +398,7 @@ export class BusinessContentListComponent implements OnInit{
     this.businessContentService.getOp().then(
       data=>{
         let result=this.apiResultService.result(data);
-        if(result.status==0&&result.data.length>0){
+        if(result&&result.status==0&&result.data.length>0){
           for(let d of result.data){
             let eo=new EquipOp(d.id,d.name,d.code);
             this.equipops.push(eo);

@@ -1,5 +1,7 @@
 import {Corporation} from "./corporation";
 import {CorpBuilding} from "./corpBuilding";
+import {EquipType} from "./equipType";
+import {Equipment} from "./equipment";
 export class WorkOrder {
   constructor(
     public id:string,
@@ -24,7 +26,11 @@ export class WorkOrder {
 
     public worker:string,
 
-    public equipOp:string,
+    public type:EquipType,
+
+    public equipment:Equipment,
+
+    public op:EquipType,
 
     public checked:boolean
 
