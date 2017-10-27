@@ -1,15 +1,68 @@
-<span class="k-widget k-datepicker k-header" style="position:relative">
-  <kendo-maskedtextbox #maskTxt [mask]="'00时00分'" [value]="txtValue"></kendo-maskedtextbox>
-  <span class="k-select" style="position: absolute;right: 0px;top: 0px;text-align: center;height: 30px;line-height: 30px;width: 30px;cursor:pointer;">
-    <span class="k-icon k-i-clock" #anchor (click)="onToggle()" >
+<span class="k-widget k-datepicker k-header" style="position:relative" #container >
+  <kendo-maskedtextbox #maskTxt [mask]="'00时00分00秒'" [value]="txtValue"></kendo-maskedtextbox>
+  <span #anchor (click)="onToggle()" class="k-select" style="position: absolute;right: 0px;top: 0px;text-align: center;height: 30px;line-height: 30px;width: 30px;cursor:pointer;">
+    <span class="k-icon k-i-clock"  >
 
     </span>
   </span>
 </span>
 
-<kendo-popup #popup [popupClass]="'content popup'" [anchor]="anchor" (anchorViewportLeave)="show = false" *ngIf="show">
+<kendo-popup #popup class="content" [popupClass]="'mpopup'"  [anchor]="container" (anchorViewportLeave)="show = false" *ngIf="show">
   <!-- User-defined content -->
-  Popup content.
+  <div class="row" style="padding-top: 15px;text-align: center;margin: 0px;">
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="text-align: center">
+      <span class="time-1">{{txtValue}}</span>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: center">
+      <button type="button" kendoButton [primary]="true" style="color: #ff6b58;background-color:#f9f9f9;background-image: none;border-color: #f9f9f9;"  >现在</button>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 time-2" style="padding: 15px 0px 15px 0px">
+      <p style="margin: 0px">
+        时
+      </p>
+      <div wheel class="hour-container"  (hourChange)="onHourChange($event)" >
+        <ul class="hour" [ngStyle]="hourTop">
+          <li *ngFor="let hour of hours" >
+            <span class="{{selectedHour==hour?'selected':''}}">{{hour}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="right-time">
+
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 time-2" style="padding: 15px 0px 15px 0px">
+      <p style="margin: 0px">
+        分
+      </p>
+      <div wheel class="hour-container">
+        <ul class="hour" #minute [ngStyle]="minuteTop">
+          <li *ngFor="let minute of minutes">
+            <span class="{{selectedMinute==minute?'selected':''}}">{{minute}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 time-2" style="padding: 15px 0px 15px 0px">
+      <p style="margin: 0px">
+        秒
+      </p>
+      <div wheel class="hour-container">
+        <ul class="hour" #second [ngStyle]="secondTop" >
+          <li *ngFor="let second of seconds">
+            <span class="{{selectedSecond==second?'selected':''}}">{{second}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <kendo-buttongroup [width]="'200px'" style="height:40px;">
+    <button kendoButton [togglable]="true" [primary]="false">取消</button>
+    <button kendoButton [togglable]="true" [primary]="true" >确定</button>
+  </kendo-buttongroup>
+
 </kendo-popup>
 
 

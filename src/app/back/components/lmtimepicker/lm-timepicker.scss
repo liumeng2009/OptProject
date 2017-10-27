@@ -1,0 +1,68 @@
+.content{
+  width:200px;
+  .mpopup{
+    height:100%;
+    padding: 15px;
+  }
+}
+.time-1{
+  line-height:30px;
+  height:30px;
+}
+.time-2{
+
+}
+
+.time-2:hover{
+  background-image:linear-gradient( to top,#f9f9f9 0%,#e0e0e0 50%,#f9f9f9 100%);
+}
+.time-2:hover p{
+  font-weight: bolder;
+}
+
+.time-2-selected{
+  background-image:linear-gradient( to top,#f9f9f9 0%,#e0e0e0 50%,#f9f9f9 100%);
+}
+.time-2-selected p{
+  font-weight: bolder;
+}
+
+
+
+.hour-container{
+  height:210px;
+  width:100%;
+  overflow-y: hidden;
+  position:relative;
+}
+.hour{
+  position:absolute;
+  top:0px;
+  left:0px;
+  list-style: none;
+  padding: 0px;
+  width:100%;
+}
+.hour li{
+  height:30px;
+  line-height:28px;
+  cursor: pointer;
+}
+.hour li span{
+  width:100%;
+  height:100%;
+  display: block;
+}
+.hour li:hover{
+  color:#ff6358;
+}
+.hour li span.selected{
+  width:100%;
+  height:100%;
+  display: block;
+  background-color: #ffffff;
+  color:#ff6358;
+  border-top:rgba(0, 0, 0, 0.08) 1px solid;
+  border-bottom:rgba(0, 0, 0, 0.08) 1px solid;
+}
+

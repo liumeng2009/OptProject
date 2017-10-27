@@ -99,6 +99,7 @@ import {SwitchService} from "./back/main/switchService";
 import {MainPipe} from './back/main/main.pipe';
 
 import { LmTimePicker }   from './back/components/lmtimepicker/lm-timepicker.component';
+import { MouseWheel } from './back/components/lmtimepicker/lm-timepicker.directive';
 
 // Load all required data for the bg locale
 import '@progress/kendo-angular-intl/locales/zh/all';
@@ -163,7 +164,8 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     MainPipe,
 
 
-    LmTimePicker
+    LmTimePicker,
+    MouseWheel
   ],
   imports: [
     BrowserModule,
@@ -190,7 +192,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
 
     ToastModule.forRoot(),
 
-    panelbarRouting,
+    panelbarRouting
   ],
   providers: [
     CookieService,
@@ -215,7 +217,8 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     appRoutingProvider,
     {
       provide:LOCALE_ID,useValue:'zh-CN'
-    }
+    },
+    MouseWheel
   ],
   bootstrap: [AppComponent]
 })
