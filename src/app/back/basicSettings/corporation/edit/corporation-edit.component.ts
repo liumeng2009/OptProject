@@ -123,6 +123,8 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
             this.groups= this.apiResultService.result(data).data;
           }
           this.isLoading=false;
+          console.log(this.groups);
+          console.log(this.corporation);
         },
         error=>{
           this.ajaxExceptionService.simpleOp(error);

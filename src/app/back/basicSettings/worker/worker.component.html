@@ -1,42 +1,45 @@
-
-<kendo-grid [data]="workers" [height]="height">
-  <ng-template kendoGridToolbarTemplate>
-    <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
-      <span style="color:green" class="k-icon k-i-refresh"></span>
-    </button>
-  </ng-template>
-
-  <kendo-grid-column field="id" title="选取成为工作人员">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      <input type="checkbox" id="{{dataItem.id}}" [(ngModel)]="dataItem.userId" (change)="clickChange($event)" >
+<div [@pageChanged]="'in'">
+  <kendo-grid [data]="workers" [height]="height">
+    <ng-template kendoGridToolbarTemplate>
+      <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
+        <span style="color:green" class="k-icon k-i-refresh"></span>
+      </button>
     </ng-template>
-  </kendo-grid-column>
 
-  <kendo-grid-column field="name" title="用户名">
-  </kendo-grid-column>
-  <kendo-grid-column field="gender" title="性别">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      <span style="color:#ccc" *ngIf="dataItem.gender==null">未设置</span>
-      <span *ngIf="dataItem.gender!=null">{{dataItem.gender?"女":"男"}}</span>
+    <kendo-grid-column field="id" title="选取成为运维工程师">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <input type="checkbox" class="k-checkbox" id="{{dataItem.id}}" [(ngModel)]="dataItem.worker" (change)="clickChange($event)" >
+        <label class="k-checkbox-label" for="{{dataItem.id}}"></label>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="name" title="用户名">
+    </kendo-grid-column>
+    <kendo-grid-column field="gender" title="性别">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span style="color:#ccc" *ngIf="dataItem.gender==null">未设置</span>
+        <span *ngIf="dataItem.gender!=null">{{dataItem.gender?"女":"男"}}</span>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="phone" title="电话">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span style="color:#ccc" *ngIf="dataItem.phone==null">未设置</span>
+        <span *ngIf="dataItem.phone!=null">{{dataItem.phone}}</span>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="email" title="邮箱">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span style="color:#ccc" *ngIf="dataItem.email==null">未设置</span>
+        <span *ngIf="dataItem.email!=null">{{dataItem.email}}</span>
+      </ng-template>
+    </kendo-grid-column>
+
+    <ng-template kendoGridNoRecordsTemplate>
+      <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
+      <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
     </ng-template>
-  </kendo-grid-column>
-  <kendo-grid-column field="phone" title="电话">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      <span style="color:#ccc" *ngIf="dataItem.phone==null">未设置</span>
-      <span *ngIf="dataItem.phone!=null">{{dataItem.phone}}</span>
-    </ng-template>
-  </kendo-grid-column>
 
-  <kendo-grid-column field="email" title="邮箱">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      <span style="color:#ccc" *ngIf="dataItem.email==null">未设置</span>
-      <span *ngIf="dataItem.email!=null">{{dataItem.email}}</span>
-    </ng-template>
-  </kendo-grid-column>
+  </kendo-grid>
+</div>
 
-  <ng-template kendoGridNoRecordsTemplate>
-    <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
-    <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
-  </ng-template>
-
-</kendo-grid>

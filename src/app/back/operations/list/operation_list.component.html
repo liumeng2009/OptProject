@@ -1,1 +1,73 @@
-<h1>工单列表</h1>
+<div [@pageChanged]="'in'">
+  <kendo-grid
+    [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+
+    <ng-template kendoGridToolbarTemplate>
+      <button kendoButton  (click)="add()" [primary]="true">新增</button>
+
+      <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
+        <span style="color:green" class="k-icon k-i-refresh"></span>
+      </button>
+    </ng-template>
+
+
+    <kendo-grid-column field="no" title="编号">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.no}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column  title="客户信息">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.order.corporation.name}} {{dataItem.order.custom_name}} {{dataItem.order.custom_phone}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column  title="加急" [width]="60">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span>{{dataItem.important?'是':'否'}}</span>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="custom_phone" title="状态">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span style="color:#cccccc" *ngIf="dataItem.complete=='0'">未处理</span>
+        <span style="color:#ffa500" *ngIf="dataItem.complete=='1'">处理中</span>
+        <span style="color:#008000" *ngIf="dataItem.complete=='2'">处理完成</span>
+        <span style="color:#999999" *ngIf="dataItem.complete=='3'">已指派工程师</span>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="custom_phone" title="工程师">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <label *ngFor="let acti of dataItem.actions" >
+          <span>{{acti?.user?.name}}</span>
+        </label>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="id" title="操作"  [width]="130">
+      <ng-template kendoGridFilterCellTemplate>
+
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
+        <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
+      </ng-template>
+    </kendo-grid-column>
+
+    <ng-template kendoGridNoRecordsTemplate>
+      <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
+      <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
+    </ng-template>
+
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-currentPage="currentPage">
+      <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+      <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
+      <kendo-pager-next-buttons></kendo-pager-next-buttons>
+      <div class="k-pager-info k-label">{{firstRecord}}-{{lastRecord}} 共 {{total}}条记录</div>
+    </ng-template>
+  </kendo-grid>
+  <div kendoDialogContainer></div>
+</div>
+

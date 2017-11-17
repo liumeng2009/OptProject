@@ -6,24 +6,25 @@ import 'rxjs/add/operator/toPromise';
 
 import {CookieService} from 'angular2-cookie/core';
 
-import {ResponseData} from '../../../bean/responseData';
+import {ResponseData} from '../../bean/responseData';
 
-import {OptConfig} from '../../../config/config'
+import {OptConfig} from '../../config/config'
 
-import {User} from '../../../bean/user';
+import {User} from '../../bean/user';
 
 
 @Injectable()
-export class WorkerService{
+export class OperationService{
   private headers = new Headers({'Content-Type': 'application/json'});
 
-  private listurl=new OptConfig().serverPath+'/api/workers/list';
-  private saveurl=new OptConfig().serverPath+'/api/workers/add';
-  private deleteurl=new OptConfig().serverPath+'/api/workers/delete';
+  private listurl=new OptConfig().serverPath+'/api/operation/list';
+  private geturl=new OptConfig().serverPath+'/api/operation';
+  private saveurl=new OptConfig().serverPath+'/api/operation/add';
+  private deleteurl=new OptConfig().serverPath+'/api/operation/delete';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
-  getWorkerList(pageid):Promise<ResponseData>{
+  getOperationList(pageid):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
@@ -32,6 +33,18 @@ export class WorkerService{
     else{
       url=this.listurl+'?token='+token
     }
+    console.log(url);
+    return this.http.get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
+  }
+
+  getOperation(id):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+
+    let url=this.geturl+'/'+id+'?token='+token
+
     console.log(url);
     return this.http.get(url)
       .toPromise()

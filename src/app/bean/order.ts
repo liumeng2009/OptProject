@@ -1,5 +1,7 @@
 import {Corporation} from "./corporation";
 import {CorpBuilding} from "./corpBuilding";
+import {WorkOrder} from "./workOrder";
+import {Operation} from "./operation";
 export class Order {
   constructor(
     public id:string,
@@ -17,6 +19,6 @@ export class Order {
     public group:string,
     public corporation:Corporation,
     public needs:any,
-    public important:boolean
+    public workerOrders:WorkOrder[]
   ) {  }
 }

@@ -1,4 +1,5 @@
 import {Component,OnInit} from '@angular/core';
+import {animation,animate,style,state,transition,trigger,keyframes} from '@angular/animations';
 
 import {User} from '../../../bean/user'
 import {WorkerService} from "./worker.service";
@@ -8,7 +9,22 @@ import {ApiResultService} from "../../main/apiResult.service";
 @Component({
   selector:'worker',
   templateUrl:'./worker.component.html',
-  styleUrls:['./worker.component.scss']
+  styleUrls:['./worker.component.scss'],
+  animations: [ // 动画的内容
+    trigger('pageChanged', [
+      // state 控制不同的状态下对应的不同的样式
+      state('in', style({ opacity:1, transform: 'translateX(0%)' })),
+      // transition 控制状态到状态以什么样的方式来进行转换
+      transition('void=>*', animate('600ms ease-in-out',keyframes([
+        style({  opacity: 0, transform: 'translateX(-100%)' }),
+        style({ opacity: 1, transform: 'translateX(0%)' })
+      ]))),
+      transition('*=>void', animate('300ms',keyframes([
+        style({  opacity: 1, transform: 'translateX(-0%)' }),
+        style({ opacity: 0, transform: 'translateX(-100%)' })
+      ]))),
+    ])
+  ]
 })
 
 export class WorkerComponent implements OnInit{

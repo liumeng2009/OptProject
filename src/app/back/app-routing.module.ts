@@ -50,6 +50,7 @@ import {OrderComponent} from "./operations/order/order.component";
 import {OrderListComponent} from "./operations/order/list/order-list.component";
 import {OrderAddComponent} from "./operations/order/add/order-add.component";
 import {OrderEditComponent} from "./operations/order/edit/order-edit.component";
+import {OperationEditComponent} from "./operations/edit/operation_edit.component";
 
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
@@ -73,10 +74,14 @@ export const PanelbarRoutes:Routes=[
         {path:'add',component:CorporationAddComponent,data:{name:'新增'}},
         {path:':id',component:CorporationEditComponent,data:{name:'编辑'}}
       ] },
-      { path: 'worker', component: WorkerComponent,data:{name:'人员设置'} }
+      { path: 'worker', component: WorkerComponent,data:{name:'工程师设置'} }
     ]},
-    {path:'operations',component:OperationsComponent,data:{name:'工单'},children:[
-      { path: 'list', component: OperationListComponent,data:{name:'工单列表'} },
+    {path:'operations',data:{name:'工作管理'},children:[
+      { path: 'op', component: OperationsComponent,data:{name:'工单'},children:[
+        {path:'list',component:OperationListComponent,data:{name:'列表'}},
+        {path:'add',component:OperationEditComponent,data:{name:'新增'}},
+        {path:':id',component:OperationEditComponent,data:{name:'编辑'}}
+      ] },
       { path: 'order', component: OrderComponent,data:{name:'客户需求'},children:[
         {path:'list',component:OrderListComponent,data:{name:'列表'}},
         {path:'add',component:OrderAddComponent,data:{name:'新增'}},

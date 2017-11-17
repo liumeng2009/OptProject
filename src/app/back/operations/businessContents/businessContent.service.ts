@@ -79,6 +79,7 @@ export class BusinessContentService{
     let token=this.cookieService.get('optToken');
     console.log(this.getequipment+'/'+type+'?token='+token);
     if(type&&type!=''){
+      console.log(this.getequipment+'/'+type+'?token='+token);
       return this.http
         .get(this.getequipment+'/'+type+'?token='+token)
         .toPromise()

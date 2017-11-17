@@ -18,6 +18,7 @@ import { PopupModule }  from '@progress/kendo-angular-popup';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { IntlModule } from '@progress/kendo-angular-intl';
 import { LabelModule } from '@progress/kendo-angular-label';
+import { ChartsModule } from '@progress/kendo-angular-charts';
 //验证组件
 import{CustomFormsModule} from 'ng2-validation';
 //toast组件
@@ -53,6 +54,8 @@ import {CorpBuildingService} from './back/basicSettings/corporation/corpBuilding
 //工单组件
 import {OperationsComponent} from './back/operations/operations.component';
 import {OperationListComponent} from './back/operations/list/operation_list.component';
+import {OperationEditComponent} from './back/operations/edit/operation_edit.component';
+import {OperationService} from './back/operations/operations.service';
 //权限组件
 import {AuthComponent} from './back/auth/auth.component';
 
@@ -97,6 +100,7 @@ import {SwitchService} from "./back/main/switchService";
 
 
 import {MainPipe} from './back/main/main.pipe';
+import {TimeShowPipe} from './back/components/pipes/timeShow.pipe';
 
 import { LmTimePicker }   from './back/components/lmtimepicker/lm-timepicker.component';
 import { MouseWheel } from './back/components/lmtimepicker/lm-timepicker.directive';
@@ -139,6 +143,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
 
     OperationsComponent,
     OperationListComponent,
+    OperationEditComponent,
 
     AuthComponent,
 
@@ -162,6 +167,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     OtherComponent,
 
     MainPipe,
+    TimeShowPipe,
 
 
     LmTimePicker,
@@ -189,6 +195,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     PopupModule,
     DateInputsModule,
     LabelModule,
+    ChartsModule,
 
     ToastModule.forRoot(),
 
@@ -208,6 +215,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     WorkerService,
     BusinessContentService,
     OrderService,
+    OperationService,
 
     MissionService,
     ApiResultService,

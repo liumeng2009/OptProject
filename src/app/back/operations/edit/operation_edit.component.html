@@ -1,0 +1,126 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 offset-sm-12">
+    <div class="card">
+      <div class="card-block">
+        <form class="k-form"  (ngSubmit)="onSubmit()" #operationForm="ngForm">
+          <label class="k-form-field">
+            <span>订单序号：<span style="font-weight:lighter">{{operation.order.no}}</span></span>
+
+          </label>
+          <label class="k-form-field">
+            <span>订单来源：<span style="font-weight:lighter">{{operation.order.corporation?.name}} {{operation.order.custom_name}} {{operation.order.custom_phone}}</span></span>
+          </label>
+          <label class="k-form-field">
+            <span *ngIf="operation.order?.corpBuilding?.position=='A'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;全部</span></span>
+            <span *ngIf="operation.order?.corpBuilding?.position=='E'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;东</span></span>
+            <span *ngIf="operation.order?.corpBuilding?.position=='W'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;西</span></span>
+            <span *ngIf="operation.order?.corpBuilding?.position=='S'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;南</span></span>
+            <span *ngIf="operation.order?.corpBuilding?.position=='N'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;北</span></span>
+          </label>
+          <label class="k-form-field">
+
+            <div class="ddl-float">
+              <label>业务类型:<span class="k-required">*</span> </label>
+              <kendo-dropdownlist
+                name="group"
+                [data]="equiptypes"
+                [textField]="'name'"
+                [valueField]="'id'"
+                [(ngModel)]="operation.businessContent.equipType"
+                (selectionChange)="equipTypeChange($event)"
+              >
+              </kendo-dropdownlist>
+              <span class="k-icon k-i-loading loading loading-position" *ngIf="equipTypeLoading"></span>
+            </div>
+
+            <div class="ddl-float">
+              <label>设备名称:<span class="k-required">*</span></label>
+              <kendo-dropdownlist
+                name="equipment"
+                [data]="equipments"
+                [textField]="'equipment'"
+                [valueField]="'equipment'"
+                [(ngModel)]="operation.businessContent.equipment"
+                [valuePrimitive]="true"
+                (selectionChange)="equipChange($event)"
+              >
+              </kendo-dropdownlist>
+              <span class="k-icon k-i-loading loading loading-position" *ngIf="equipmentLoading"></span>
+            </div>
+
+            <div class="ddl-float">
+              <label>操作:<span class="k-required">*</span></label>
+              <kendo-dropdownlist
+                [data]="equipOps"
+                [textField]="'name'"
+                [valueField]="'id'"
+                [(ngModel)]="operation.businessContent"
+                name="op"
+              >
+              </kendo-dropdownlist>
+              <span *ngIf="equipOpLoading" class="k-icon k-i-loading loading loading-position-2"></span>
+            </div>
+
+            <div style="clear:both;">
+
+            </div>
+
+
+          </label>
+          <label class="k-form-field">
+            <span for="remark">备注：</span>
+            <input id="remark" class="k-textbox" placeholder="备注"  name="remark" [(ngModel)]="operation.remark" />
+          </label>
+          <div class="k-form-field">
+            <span style="font-weight:bolder">进程：</span>
+            <kendo-chart>
+              <kendo-chart-area background="#eee"></kendo-chart-area>
+              <kendo-chart-category-axis>
+                <kendo-chart-category-axis-item [categories]="['张赫']">
+                </kendo-chart-category-axis-item>
+              </kendo-chart-category-axis>
+
+              <kendo-chart-value-axis>
+                <kendo-chart-value-axis-item [min]="from" [max]="to" [labels]="valueAxisLabel"  [majorUnit]="perTimeBoxStamp" ></kendo-chart-value-axis-item>
+              </kendo-chart-value-axis>
+
+
+              <kendo-chart-series>
+                <kendo-chart-series-item type="bar" [visibleInLegend]="false" [gap]="5"   [border]="border" [stack]="true" [data]="dateChats" [field]="value" [colorField]="color"  name="整数时间调整">
+                  <kendo-chart-series-item-labels format="{1:N1}指派" [background]="'transparent'" [color]="'#000000'" [content]="jianli" >
+
+                  </kendo-chart-series-item-labels>
+                </kendo-chart-series-item>
+
+                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChats1" [field]="value" [colorField]="color"  name="工单建立">
+                  <kendo-chart-series-item-labels format="{1:N1}指派" [background]="'transparent'" [color]="'#000000'" [content]="zhipai" >
+
+                  </kendo-chart-series-item-labels>
+                </kendo-chart-series-item>
+
+                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChats2"  [field]="value" name="指派">
+                  <kendo-chart-series-item-labels [background]="'transparent'" format="{1:N1}开始处理"  [color]="'#000000'" [content]="gongzuo"  >
+
+                  </kendo-chart-series-item-labels>
+                </kendo-chart-series-item>
+
+                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChats3"  [field]="value"  name="工作">
+
+                </kendo-chart-series-item>
+
+              </kendo-chart-series>
+
+            </kendo-chart>
+          </div>
+
+
+
+          <div class="text-left">
+            <button class="k-button k-primary" [disabled]="!operationForm.form.valid">提交</button>
+            <button class="k-button">重置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

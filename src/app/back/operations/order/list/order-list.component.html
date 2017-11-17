@@ -1,65 +1,72 @@
-<kendo-grid
-  [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+<div [@pageChanged]="'in'">
+  <kendo-grid
+    [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
 
-  <ng-template kendoGridToolbarTemplate>
-    <button kendoButton  (click)="add()" [primary]="true">新增</button>
+    <ng-template kendoGridToolbarTemplate>
+      <button kendoButton  (click)="add()" [primary]="true">新增</button>
 
-    <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
-      <span style="color:green" class="k-icon k-i-refresh"></span>
-    </button>
-  </ng-template>
-
-
-  <kendo-grid-column field="no" title="序号">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.no}}
+      <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
+        <span style="color:green" class="k-icon k-i-refresh"></span>
+      </button>
     </ng-template>
-  </kendo-grid-column>
 
-  <kendo-grid-column field="equipment" title="地点" [width]="190">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.corporationname}} {{dataItem.buildingname}} {{dataItem.floor}}层
-      <span *ngIf="dataItem.corpostion=='E'">东</span>
-      <span *ngIf="dataItem.corpostion=='W'">西</span>
-      <span *ngIf="dataItem.corpostion=='S'" >南</span>
-      <span *ngIf="dataItem.corpostion=='N'" >北</span>
-      <span *ngIf="dataItem.corpostion=='A'" >全部区域</span>
+
+    <kendo-grid-column field="no" title="序号">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.no}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column title="订单日期">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.incoming_time|timeshow}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="equipment" title="地点" [width]="190">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.corporation.name}} {{dataItem.corpBuilding.building.name}} {{dataItem.corpBuilding.floor}}层
+        <span *ngIf="dataItem.corpBuilding.position=='E'">东</span>
+        <span *ngIf="dataItem.corpBuilding.position=='W'">西</span>
+        <span *ngIf="dataItem.corpBuilding.position=='S'" >南</span>
+        <span *ngIf="dataItem.corpBuilding.position=='N'" >北</span>
+        <span *ngIf="dataItem.corpBuilding.position=='A'" >全部区域</span>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="custom_phone" title="客户称谓">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.custom_name}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="custom_phone" title="来电">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.custom_phone}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="id" title="操作"  [width]="130">
+      <ng-template kendoGridFilterCellTemplate>
+
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
+        <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
+      </ng-template>
+    </kendo-grid-column>
+
+    <ng-template kendoGridNoRecordsTemplate>
+      <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
+      <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
     </ng-template>
-  </kendo-grid-column>
 
-  <kendo-grid-column field="custom_phone" title="来电">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.custom_phone}}
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-currentPage="currentPage">
+      <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+      <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
+      <kendo-pager-next-buttons></kendo-pager-next-buttons>
+      <div class="k-pager-info k-label">{{firstRecord}}-{{lastRecord}} 共 {{total}}条记录</div>
     </ng-template>
-  </kendo-grid-column>
-
-  <kendo-grid-column field="custom_phone" title="是否加急">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.important?'是':'否'}}
-    </ng-template>
-  </kendo-grid-column>
-
-  <kendo-grid-column field="id" title="操作"  [width]="130">
-    <ng-template kendoGridFilterCellTemplate>
-
-    </ng-template>
-    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-      <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
-      <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
-    </ng-template>
-  </kendo-grid-column>
-
-  <ng-template kendoGridNoRecordsTemplate>
-    <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
-    <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
-  </ng-template>
-
-  <ng-template kendoPagerTemplate let-totalPages="totalPages" let-currentPage="currentPage">
-    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-    <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
-    <kendo-pager-next-buttons></kendo-pager-next-buttons>
-    <div class="k-pager-info k-label">{{firstRecord}}-{{lastRecord}} 共 {{total}}条记录</div>
-  </ng-template>
-</kendo-grid>
-<div kendoDialogContainer></div>
-
+  </kendo-grid>
+  <div kendoDialogContainer></div>
+</div>

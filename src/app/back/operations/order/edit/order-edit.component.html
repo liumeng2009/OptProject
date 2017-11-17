@@ -2,63 +2,127 @@
   <div class="col-xs-12 col-sm-12 offset-sm-12">
     <div class="card">
       <div class="card-block">
-        <form class="k-form"  (ngSubmit)="onSubmit()" #businessForm="ngForm">
-          <label class="k-form-field">
-            <span for="type">类型<span class="k-required">*</span></span>
-            <kendo-dropdownlist name="type" [data]="types" [(ngModel)]="business.type"
-                                [textField]="'name'"
-                                [valueField]="'value'"
-                                [valuePrimitive]="true"
-            >
-            </kendo-dropdownlist>
-          </label>
-          <label class="k-form-field">
-            <span for="equipment">设备名称<span class="k-required">*</span></span>
-            <input id="equipment" class="k-textbox" placeholder="设备名称" required [(ngModel)]="business.equipment" name="equipment" />
-          </label>
-          <label class="k-form-field">
-            <span for="equipment">操作<span class="k-required">*</span></span>
-          </label>
+        <form class="k-form"  (ngSubmit)="onSubmit()" #orderForm="ngForm">
           <div class="k-form-field">
-            <kendo-grid [data]="operations">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p style="font-weight: 700;">
+                  来电日期<span class="k-required">*</span>
+                </p>
+                <kendo-datepicker #incoming_date name="incoming_date" [format]="'yyyy年MM月dd日'"
+                                  (valueChange)="dateChange($event)" [(ngModel)]="today"
+                >
+                  <kendo-datepicker-messages
+                    today="今天"
+                    toggle="选择日期"
+                  ></kendo-datepicker-messages>
+                </kendo-datepicker>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <p style="font-weight: 700;">
+                  时刻<span class="k-required">*</span>
+                </p>
+                <lmtimepicker [timeNow]="time"  id="timetest" name="timetest" (change)="onTimeChange($event)" ></lmtimepicker>
+              </div>
+            </div>
+          </div>
+          <label class="k-form-field">
+            <span for="custom_name">客户名称<span class="k-required">*</span></span>
+            <input id="custom_name" class="k-textbox" placeholder="客户名称" required [(ngModel)]="order.custom_name" name="custom_name" />
+          </label>
+          <label class="k-form-field">
+            <span for="custom_phone">来电号码<span class="k-required">*</span></span>
+            <input id="custom_phone" class="k-textbox" placeholder="来电号码" required [(ngModel)]="order.custom_phone" name="custom_phone" />
+          </label>
+          <label class="k-form-field">
+            <div class="ddl-float">
+              <label>组织:<span class="k-required">*</span> </label>
+              <kendo-dropdownlist
+                name="group"
+                [data]="groups"
+                [textField]="'name'"
+                [valueField]="'id'"
+                [(ngModel)]="order.group"
+                [valuePrimitive]="true"
+                (valueChange)="initCorporation($event)"
+              >
+              </kendo-dropdownlist>
+              <span class="k-icon k-i-loading loading loading-position" *ngIf="groupLoading"></span>
+            </div>
+            <div class="ddl-float">
+              <label>公司：<span class="k-required">*</span></label>
+              <kendo-dropdownlist
+                name="corporation"
+                [data]="corporations"
+                [textField]="'name'"
+                [valueField]="'id'"
+                [(ngModel)]="order.corporation"
+                (valueChange)="initCorpBuilding($event)"
+              >
+              </kendo-dropdownlist>
+              <span class="k-icon k-i-loading loading loading-position" *ngIf="corporationLoading"></span>
+            </div>
+            <div class="ddl-float">
+              <label>公司所在楼层位置：<span class="k-required">*</span></label>
+              <kendo-dropdownlist
+                name="position"
+                [data]="corpBuildings"
+                [textField]="'union'"
+                [valueField]="'id'"
+                [valuePrimitive]="true"
+                [(ngModel)]="order.custom_position"
+              >
+              </kendo-dropdownlist>
+              <span class="k-icon k-i-loading loading loading-position" *ngIf="corpBuildingLoading"></span>
+            </div>
+            <div style="clear:both;">
 
-              <kendo-grid-column field="op" title="选择" width="150">
-                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                  <input type="checkbox" class="k-checkbox" id="{{dataItem.op}}" name="{{dataItem.op}}" [(ngModel)]="business.operations[rowIndex].checked" value="{{dataItem.op}}" >
-                  <label class="k-checkbox-label" for="{{dataItem.op}}">{{dataItem.name}}</label>
-                  <input type="hidden" name="hfd{{dataItem.op}}" [(ngModel)]="business.operations[rowIndex].id" >
+            </div>
+          </label>
+
+          <label class="k-form-field">
+            <span for="remark">备注</span>
+            <input id="remark" class="k-textbox" placeholder="备注" [(ngModel)]="order.remark" name="remark" />
+          </label>
+
+          <div class="k-form-field">
+            <label style="font-weight: 700;">工单</label>
+
+            <kendo-grid [data]="operations" [scrollable]="virtual">
+
+              <ng-template kendoGridToolbarTemplate>
+                <button kendoButton  (click)="add()" [primary]="true">新增</button>
+
+                <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
+                  <span style="color:green" class="k-icon k-i-refresh"></span>
+                </button>
+              </ng-template>
+
+              <kendo-grid-column field="no" title="编号">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.no}}
                 </ng-template>
               </kendo-grid-column>
 
-              <kendo-grid-column field="weight" title="设置权重值" >
-                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                  <table>
-                    <tr>
-                      <td width="50">
-                        <label>{{business.operations[rowIndex].weight}}</label>
-                      </td>
-                      <td>
-                        <kendo-slider
-                          [min]="1"
-                          [max]="10"
-                          [smallStep]="1"
-                          [(ngModel)] = "business.operations[rowIndex].weight"
-                          id="Slide{{dataItem.name}}"
-                          name="weight{{dataItem.name}}"
-                          disabled="{{!business.operations[rowIndex].checked}}"
-                        ></kendo-slider>
-                      </td>
-                    </tr>
-                  </table>
+              <kendo-grid-column field="no" title="工单内容">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.businessContent.equipOp.name}}  {{dataItem.businessContent.equipment}}
                 </ng-template>
               </kendo-grid-column>
 
-              <kendo-grid-column field="remark" title="备注" width="205">
-                <ng-template  kendoGridCellTemplate let-dataItem  let-rowIndex="rowIndex">
-                  <input type="text" class="k-textbox" id="txt{{dataItem.op}}" name="remark{{dataItem.op}}" [(ngModel)]="business.operations[rowIndex].remark" disabled="{{!business.operations[rowIndex].checked}}" >
+              <kendo-grid-column field="no" title="处理进度">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <span style="color:#cccccc" *ngIf="dataItem.complete=='0'">未处理</span>
+                  <span style="color:#ffa500" *ngIf="dataItem.complete=='1'">处理中</span>
+                  <span style="color:#008000" *ngIf="dataItem.complete=='2'">处理完成</span>
+                  <span style="color:#999999" *ngIf="dataItem.complete=='3'">已指派工程师</span>
                 </ng-template>
-
               </kendo-grid-column>
+
+              <ng-template kendoGridNoRecordsTemplate>
+                <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
+                <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
+              </ng-template>
 
             </kendo-grid>
 
@@ -66,8 +130,9 @@
 
 
 
+
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!businessForm.form.valid||oneChecked">提交</button>
+            <button class="k-button k-primary" [disabled]="!orderForm.form.valid">提交</button>
             <button class="k-button">重置</button>
           </div>
         </form>
@@ -75,3 +140,4 @@
     </div>
   </div>
 </div>
+<div kendoDialogContainer></div>

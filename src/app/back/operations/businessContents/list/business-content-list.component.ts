@@ -1,4 +1,5 @@
 import {Component,OnInit,ElementRef,HostListener,ViewEncapsulation,ViewChild } from '@angular/core';
+import {animation,animate,style,state,transition,trigger,keyframes} from '@angular/animations';
 import {Router,ActivatedRoute,Params,NavigationEnd } from '@angular/router';
 
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
@@ -21,7 +22,22 @@ import {EquipOp} from "../../../../bean/equipOp";
   selector:'business-list',
   templateUrl:'./business-content-list.component.html',
   styleUrls:['./business-content-list.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [ // 动画的内容
+    trigger('pageChanged', [
+      // state 控制不同的状态下对应的不同的样式
+      state('in', style({ opacity:1, transform: 'translateX(0%)' })),
+      // transition 控制状态到状态以什么样的方式来进行转换
+      transition('void=>*', animate('600ms ease-in-out',keyframes([
+        style({  opacity: 0, transform: 'translateX(-100%)' }),
+        style({ opacity: 1, transform: 'translateX(0%)' })
+      ]))),
+      transition('*=>void', animate('300ms',keyframes([
+        style({  opacity: 1, transform: 'translateX(-0%)' }),
+        style({ opacity: 0, transform: 'translateX(-100%)' })
+      ]))),
+    ])
+  ]
 })
 
 export class BusinessContentListComponent implements OnInit{
@@ -30,7 +46,6 @@ export class BusinessContentListComponent implements OnInit{
     data:[],
     total:0
   };
-
   private height:number=0;
   private pageSize:number=new OptConfig().pageSize;
   private skip:number=0;
@@ -63,6 +78,7 @@ export class BusinessContentListComponent implements OnInit{
 
   private subs;
   ngOnInit(){
+
     this.height=(window.document.body.clientHeight-70-56-50-20-27);
 
     //获取参数

@@ -48,7 +48,7 @@ export class UserEditComponent implements OnInit{
       data=>{
         let userObj=this.apiResultService.result(data);
         if(userObj){
-          this.user.username=userObj.data.name;
+          this.user.name=userObj.data.name;
           this.user.password=userObj.data.password;
           this.user.canLogin=userObj.data.canLogin;
           this.user.gender=userObj.data.gender.toString();

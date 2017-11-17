@@ -11,6 +11,7 @@ import { ToastsManager,ToastOptions } from 'ng2-toastr/ng2-toastr';
 import {LoginService} from './login.service'
 import {OptConfig} from "../../config/config";
 import {environment} from "../../../environments/environment";
+import {MissionService} from "../main/mission.service";
 
 @Component({
   selector:'login-area',
@@ -29,13 +30,16 @@ export class LoginComponent implements OnInit{
     private router:Router,
     private title:Title,
     private toastr:ToastsManager,
-    private vcr:ViewContainerRef
+    private vcr:ViewContainerRef,
+    private missionService:MissionService
   ){
     this.toastr.setRootViewContainerRef(vcr);
   };
   user=new User(null,null,null,null,null,null,null);
 
   ngOnInit(){
+    //告诉main组件，不要显示toast了
+    this.missionService.remove.emit('remove');
     this.title.setTitle('登录');
   }
 
@@ -46,7 +50,7 @@ export class LoginComponent implements OnInit{
     let urlTree=this.router.parseUrl(this.router.url);
     let queryParams=urlTree.queryParams;
     let rememberUrl=queryParams.redirectTo;
-    this.loginService.login(this.user.username,this.user.password)
+    this.loginService.login(this.user.name,this.user.password)
       .then(
         data=>{
           if(data.status==0){

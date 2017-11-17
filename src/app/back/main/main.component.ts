@@ -35,6 +35,8 @@ export class MainComponent implements OnInit{
 
   private mySubscription;
 
+  private showPage='hidden';
+
   constructor(
     private router:Router,
     private mainService:MainService,
@@ -70,7 +72,13 @@ export class MainComponent implements OnInit{
         this.toastr.warning(alertData.info,'',toastrOption);
       }
 
-    })
+    });
+
+    missionService.remove.subscribe((str:string)=>{
+      if(str=='remove'){
+        this.mySubscription.unsubscribe();
+      }
+    });
 
 
   }
@@ -108,6 +116,9 @@ export class MainComponent implements OnInit{
     if(url=='admin/operations/order'){
       this.router.navigateByUrl('/admin/operations/order/list');
     }
+    if(url=='admin/operations/op'){
+      this.router.navigateByUrl('/admin/operations/op/list');
+    }
 
     //路由监视，导航到某些特殊路由时，需要做的一些特殊处理.
     this.router.events
@@ -137,6 +148,10 @@ export class MainComponent implements OnInit{
           if(event.url=='/admin/operations/order'){
             this.router.navigateByUrl('/admin/operations/order/list');
           }
+          if(event.url=='/admin/operations/op'){
+            this.router.navigateByUrl('/admin/operations/op/list');
+          }
+
           //导航到首页，直接跳转到数据综述
           if(event.url=='/admin'){
             this.router.navigateByUrl('/admin/total');
@@ -144,6 +159,7 @@ export class MainComponent implements OnInit{
 
           //当到达login界面时，取消toast的消息订阅
           if(event.url=='/login'){
+            alert('解除解除解除解除');
             this.mySubscription.unsubscribe();
           }
 
@@ -167,6 +183,9 @@ export class MainComponent implements OnInit{
           }
           else if(event.url.indexOf('/admin/operations/order/')>-1){
             this.selectedId='admin/operations/order';
+          }
+          else if(event.url.indexOf('/admin/operations/op/')>-1){
+            this.selectedId='admin/operations/op';
           }
           else{
             this.selectedId=urlNow;
@@ -258,7 +277,6 @@ export class MainComponent implements OnInit{
 
   public stateChange(data:Array<PanelBarItemModel>):boolean{
     let focusedEvent: PanelBarItemModel = data.filter(item => item.focused === true)[0];
-
     this.createBreadCrumb();
 
     this.selectedId = focusedEvent.id;
@@ -280,6 +298,8 @@ export class MainComponent implements OnInit{
 
     //路由的data属性中，有selected属性，这个属性是为了载入时，正确显示菜单选中状态的。当路由发生改变，需要把这个属性删除。只有笨办法，遍历路由树。
     this.searchAndDeleteNodePropertySelected(this.router.config);
+
+    console.log(data);
 
     return false;
   }

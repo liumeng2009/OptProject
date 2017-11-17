@@ -2,6 +2,11 @@ import {Corporation} from "./corporation";
 import {CorpBuilding} from "./corpBuilding";
 import {EquipType} from "./equipType";
 import {Equipment} from "./equipment";
+import {LmTime} from "../back/components/lmtimepicker/lmtime";
+import {Order} from "./order";
+import {BusinessContent} from "./businessContent";
+
+//工单模型
 export class WorkOrder {
   constructor(
     public id:string,
@@ -12,7 +17,10 @@ export class WorkOrder {
 
     public custom_phone: string,
 
+    //建立时间
     public incoming_date_timestamp:number,
+
+    public incomig_date:Date,
 
     public custom_position:CorpBuilding,
 
@@ -20,9 +28,19 @@ export class WorkOrder {
 
     public important:boolean,
 
-    public arriveTime:number,
+    //响应时间
+    public arrive_date_timestamp:number,
 
-    public finishTime:number,
+    public arrive_date:Date,
+
+    public arrive_date_time:LmTime,
+
+    //完成时间
+    public finish_date_timestamp:number,
+
+    public finish_date:Date,
+
+    public finish_date_time:LmTime,
 
     public worker:string,
 
@@ -32,7 +50,26 @@ export class WorkOrder {
 
     public op:EquipType,
 
-    public checked:boolean
+    public checked:boolean,
+
+    public showArriveDate:boolean,
+
+    public showFinishDate:boolean,
+
+    public showWorker:boolean,
+
+    public remark:string,
+
+    //指派工程师时间
+    public call_date_timestamp:number,
+
+    public call_date:Date,
+
+    public call_date_time:LmTime,
+
+    public order:Order,
+
+    public businessContent:BusinessContent
 
   ) {  }
 }

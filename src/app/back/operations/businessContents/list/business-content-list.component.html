@@ -1,151 +1,154 @@
-<kendo-grid
-  [filter]="filter"
-  [filterable]="true"
+<div  [@pageChanged]="'in'">
+  <kendo-grid
+    [filter]="filter"
+    [filterable]="true"
 
-  [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+    [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
 
-  <ng-template kendoGridToolbarTemplate>
-    <button kendoButton  (click)="add()" [primary]="true">新增</button>
+    <ng-template kendoGridToolbarTemplate>
+      <button kendoButton  (click)="add()" [primary]="true">新增</button>
 
-    <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
-      <span style="color:green" class="k-icon k-i-refresh"></span>
-    </button>
-  </ng-template>
-
-
-  <kendo-grid-column field="equipType" title="类型" [width]="190">
-    <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
-      {{column.title}}
-      <span #anchor class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configTypeToggle()"></span>
-      <kendo-popup #popup [anchor]="anchor" popupClass="content" *ngIf="show">
-        <div style="width: 200px;">
-          <form class="k-form" #typeForm="ngForm">
-            <fieldset>
-              <legend>类型列表</legend>
-              <table class="table table-hover">
-                <tr *ngFor="let et of equiptypes">
-                  <td>{{et.name}}</td>
-                  <td><button type="button" class="k-button" (click)="deletetype(et.id)">删除</button></td>
-                </tr>
-              </table>
-            </fieldset>
-            <fieldset>
-              <legend>新增类型</legend>
-              <label class="k-form-field">
-                <span>类型名称：<span class="k-required">*</span></span>
-                <input class="k-textbox" placeholder="类型名称" [(ngModel)]="equiptype.name" name="name" required />
-              </label>
-              <label class="k-form-field">
-                <span>类型代码：<span class="k-required">*</span></span>
-                <input class="k-textbox" placeholder="类型代码" [(ngModel)]="equiptype.code" name="code"  required />
-              </label>
-              <div class="text-right">
-                <button type="button" class="k-button" (click)="cleartypeform()">置空</button>
-                <button type="button" class="k-button k-primary" (click)="savetype()" [disabled]="!typeForm.form.valid">提交</button>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </kendo-popup>
+      <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
+        <span style="color:green" class="k-icon k-i-refresh"></span>
+      </button>
     </ng-template>
-    <ng-template kendoGridFilterCellTemplate>
-      <kendo-dropdownlist
-        [data]="equiptypesFilter"
-        [textField]="'name'"
-        [valueField]="'code'"
-        (valueChange)="handleTypeChange($event)"
-        [(ngModel)]="searchObj.type"
-      >
-      </kendo-dropdownlist>
-    </ng-template>
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.equipType.name}}
-    </ng-template>
-  </kendo-grid-column>
 
-  <kendo-grid-column field="equipment" title="设备名" [width]="190">
-    <ng-template kendoGridFilterCellTemplate>
-      <kendo-dropdownlist
-        [data]="searchEquipment"
-        [textField]="'name'"
-        [valueField]="'value'"
-        (valueChange)="handleEquimentChange($event)"
-        [(ngModel)]="searchObj.equipment"
-      >
-      </kendo-dropdownlist>
+
+    <kendo-grid-column field="equipType" title="类型" [width]="190">
+      <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
+        {{column.title}}
+        <span #anchor class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configTypeToggle()"></span>
+        <kendo-popup #popup [anchor]="anchor" popupClass="content" *ngIf="show">
+          <div style="width: 200px;">
+            <form class="k-form" #typeForm="ngForm">
+              <fieldset>
+                <legend>类型列表</legend>
+                <table class="table table-hover">
+                  <tr *ngFor="let et of equiptypes">
+                    <td>{{et.name}}</td>
+                    <td><button type="button" class="k-button" (click)="deletetype(et.id)">删除</button></td>
+                  </tr>
+                </table>
+              </fieldset>
+              <fieldset>
+                <legend>新增类型</legend>
+                <label class="k-form-field">
+                  <span>类型名称：<span class="k-required">*</span></span>
+                  <input class="k-textbox" placeholder="类型名称" [(ngModel)]="equiptype.name" name="name" required />
+                </label>
+                <label class="k-form-field">
+                  <span>类型代码：<span class="k-required">*</span></span>
+                  <input class="k-textbox" placeholder="类型代码" [(ngModel)]="equiptype.code" name="code"  required />
+                </label>
+                <div class="text-right">
+                  <button type="button" class="k-button" (click)="cleartypeform()">置空</button>
+                  <button type="button" class="k-button k-primary" (click)="savetype()" [disabled]="!typeForm.form.valid">提交</button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </kendo-popup>
+      </ng-template>
+      <ng-template kendoGridFilterCellTemplate>
+        <kendo-dropdownlist
+          [data]="equiptypesFilter"
+          [textField]="'name'"
+          [valueField]="'code'"
+          (valueChange)="handleTypeChange($event)"
+          [(ngModel)]="searchObj.type"
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.equipType.name}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="equipment" title="设备名" [width]="190">
+      <ng-template kendoGridFilterCellTemplate>
+        <kendo-dropdownlist
+          [data]="searchEquipment"
+          [textField]="'name'"
+          [valueField]="'value'"
+          (valueChange)="handleEquimentChange($event)"
+          [(ngModel)]="searchObj.equipment"
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="equipOp" title="故障名">
+      <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
+        {{column.title}}
+        <span #anchorOp class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configOpToggle()"></span>
+        <kendo-popup #popupOp [anchor]="anchorOp" popupClass="content" *ngIf="showOp">
+          <div style="width: 200px;">
+            <form class="k-form" #opForm="ngForm">
+              <fieldset>
+                <legend>操作列表</legend>
+                <table class="table table-hover">
+                  <tr *ngFor="let eo of equipops">
+                    <td>{{eo.name}}</td>
+                    <td><button type="button" class="k-button" (click)="deleteop(eo.id)">删除</button></td>
+                  </tr>
+                </table>
+              </fieldset>
+              <fieldset>
+                <legend>新增故障</legend>
+                <label class="k-form-field">
+                  <span>故障名称：<span class="k-required">*</span></span>
+                  <input class="k-textbox" placeholder="故障名称" [(ngModel)]="equipop.name" name="name" required />
+                </label>
+                <label class="k-form-field">
+                  <span>故障代码：<span class="k-required">*</span></span>
+                  <input class="k-textbox" placeholder="故障代码" [(ngModel)]="equipop.code" name="code"  required />
+                </label>
+                <div class="text-right">
+                  <button type="button" class="k-button" (click)="clearopform()">置空</button>
+                  <button type="button" class="k-button k-primary" (click)="saveop()" [disabled]="!opForm.form.valid">提交</button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </kendo-popup>
+      </ng-template>
+      <ng-template kendoGridFilterCellTemplate>
+
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.equipOp.name}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="weight" title="权重">
+      <ng-template kendoGridFilterCellTemplate>
+
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="id" title="操作"  [width]="130">
+      <ng-template kendoGridFilterCellTemplate>
+
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
+        <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
+      </ng-template>
+    </kendo-grid-column>
+
+    <ng-template kendoGridNoRecordsTemplate>
+      <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
+      <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
     </ng-template>
-  </kendo-grid-column>
 
-  <kendo-grid-column field="equipOp" title="故障名">
-    <ng-template kendoGridHeaderTemplate let-column let-columnIndex="columnIndex">
-      {{column.title}}
-      <span #anchorOp class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configOpToggle()"></span>
-      <kendo-popup #popupOp [anchor]="anchorOp" popupClass="content" *ngIf="showOp">
-        <div style="width: 200px;">
-          <form class="k-form" #opForm="ngForm">
-            <fieldset>
-              <legend>操作列表</legend>
-              <table class="table table-hover">
-                <tr *ngFor="let eo of equipops">
-                  <td>{{eo.name}}</td>
-                  <td><button type="button" class="k-button" (click)="deleteop(eo.id)">删除</button></td>
-                </tr>
-              </table>
-            </fieldset>
-            <fieldset>
-              <legend>新增故障</legend>
-              <label class="k-form-field">
-                <span>故障名称：<span class="k-required">*</span></span>
-                <input class="k-textbox" placeholder="故障名称" [(ngModel)]="equipop.name" name="name" required />
-              </label>
-              <label class="k-form-field">
-                <span>故障代码：<span class="k-required">*</span></span>
-                <input class="k-textbox" placeholder="故障代码" [(ngModel)]="equipop.code" name="code"  required />
-              </label>
-              <div class="text-right">
-                <button type="button" class="k-button" (click)="clearopform()">置空</button>
-                <button type="button" class="k-button k-primary" (click)="saveop()" [disabled]="!opForm.form.valid">提交</button>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </kendo-popup>
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-currentPage="currentPage">
+      <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+      <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
+      <kendo-pager-next-buttons></kendo-pager-next-buttons>
+      <div class="k-pager-info k-label">{{firstRecord}}-{{lastRecord}} 共 {{total}}条记录</div>
     </ng-template>
-    <ng-template kendoGridFilterCellTemplate>
+  </kendo-grid>
+  <div kendoDialogContainer #dialog></div>
+</div>
 
-    </ng-template>
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.equipOp.name}}
-    </ng-template>
-  </kendo-grid-column>
-
-  <kendo-grid-column field="weight" title="权重">
-    <ng-template kendoGridFilterCellTemplate>
-
-    </ng-template>
-  </kendo-grid-column>
-
-  <kendo-grid-column field="id" title="操作"  [width]="130">
-    <ng-template kendoGridFilterCellTemplate>
-
-    </ng-template>
-    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-      <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
-      <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
-    </ng-template>
-  </kendo-grid-column>
-
-  <ng-template kendoGridNoRecordsTemplate>
-    <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
-    <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
-  </ng-template>
-
-  <ng-template kendoPagerTemplate let-totalPages="totalPages" let-currentPage="currentPage">
-    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-    <kendo-pager-numeric-buttons [buttonCount]="10"></kendo-pager-numeric-buttons>
-    <kendo-pager-next-buttons></kendo-pager-next-buttons>
-    <div class="k-pager-info k-label">{{firstRecord}}-{{lastRecord}} 共 {{total}}条记录</div>
-  </ng-template>
-</kendo-grid>
-<div kendoDialogContainer #dialog></div>
 

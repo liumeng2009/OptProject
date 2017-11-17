@@ -22,20 +22,10 @@
                 <p style="font-weight: 700;">
                   时刻<span class="k-required">*</span>
                 </p>
-                <lmtimepicker [timeNow]="timetest" id="timetest" name="timetest" ></lmtimepicker>
+                <lmtimepicker [timeNow]="time"  id="timetest" name="timetest" (change)="onTimeChange($event)" ></lmtimepicker>
               </div>
             </div>
           </div>
-          <label class="k-form-field">
-            <span for="no">订单序号<span class="k-required">*</span></span>
-            <input id="no" class="k-textbox" placeholder="订单序号" style="width: 300px;float:left;" required [(ngModel)]="order.no" name="no" disabled />
-            <span class="k-icon k-i-loading loading" *ngIf="noLoading" style="float:left;margin:5px 0px 0px 10px"></span>
-            <div style="clear:both"></div>
-          </label>
-          <label class="k-form-field">
-            <span for="no">加急</span>
-            <kendo-switch [(ngModel)]="order.important" name="important" [onLabel]="'是'" [offLabel]="'否'"></kendo-switch>
-          </label>
           <label class="k-form-field">
             <span for="custom_name">客户名称<span class="k-required">*</span></span>
             <input id="custom_name" class="k-textbox" placeholder="客户名称" required [(ngModel)]="order.custom_name" name="custom_name" />
@@ -88,6 +78,11 @@
             <div style="clear:both;">
 
             </div>
+          </label>
+
+          <label class="k-form-field">
+            <span for="remark">备注</span>
+            <input id="remark" class="k-textbox" placeholder="备注" [(ngModel)]="order.remark" name="remark" />
           </label>
 
           <div class="k-form-field">
@@ -210,7 +205,7 @@
 
 
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!orderForm.form.valid">提交</button>
+            <button class="k-button k-primary" type="button" [disabled]="!orderForm.form.valid" (click)="onOrderSubmit(actionTemplate)">提交</button>
             <button class="k-button">重置</button>
           </div>
         </form>
@@ -220,37 +215,117 @@
 </div>
 <div kendoDialogContainer></div>
 <ng-template #itemListRef>
-  <kendo-grid [data]="workerOrders">
-    <kendo-grid-column title="选择">
+  <kendo-grid #gridWorkerOrder [data]="workerOrders">
+    <kendo-grid-column title="选择" width="70">
       <ng-template kendoGridCellTemplate let-dataItem>
         <input type="checkbox" id="auth-2fa" class="k-checkbox" checked="dataItem.checked">
         <label class="k-checkbox-label" for="auth-2fa"></label>
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column title="公司" field="corporation" >
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.corporation.name}}
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column title="所在位置" field="custom_position" >
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.custom_position.union}}
       </ng-template>
     </kendo-grid-column>
+
     <kendo-grid-column title="工作内容描述" >
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.equipment.name}}{{dataItem.op.name}}
       </ng-template>
     </kendo-grid-column>
+
+    <kendo-grid-column title="加急" >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <kendo-switch [(ngModel)]="dataItem.important" name="important" [onLabel]="'是'" [offLabel]="'否'"></kendo-switch>
+      </ng-template>
+    </kendo-grid-column>
+
+
     <kendo-grid-column title="工单建立时间" >
       <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.equipment.name}}{{dataItem.op.name}}
+        {{dataItem.incoming_date_timestamp|timeshow}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column title="工单响应时间" >
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.equipment.name}}{{dataItem.op.name}}
-      </ng-template>
-    </kendo-grid-column>
+
+    <ng-template kendoGridDetailTemplate let-dataItem let-rowIndex="rowIndex">
+      <section>
+        <p style="margin-left: 92px;">
+          <strong for="operation_remark">备注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+          <input id="operation_remark" class="k-textbox" placeholder="备注" [(ngModel)]="dataItem.remark" name="operation_remark" />
+        </p>
+        <p style="margin-left: 70px;">
+          <input type="checkbox" id="auth-2fd{{rowIndex}}" class="k-checkbox"  [(ngModel)]="dataItem.showWorker" (change)="workerCheckChanged($event,dataItem)" >
+          <label class="k-checkbox-label" for="auth-2fd{{rowIndex}}">设置工程师&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <kendo-dropdownlist
+            [data]="workers"
+            textField="name"
+            valueField="id"
+            [(ngModel)]="dataItem.worker"
+            name="worker"
+            (selectionChange)="workerChange($event)"
+            [disabled]="!dataItem.showWorker"
+          >
+          </kendo-dropdownlist>
+
+          <input type="checkbox" id="auth-2fe{{rowIndex}}" class="k-checkbox"  [(ngModel)]="dataItem.showWorker" >
+          <label class="k-checkbox-label" for="auth-2fe{{rowIndex}}">设置指派时间</label>
+          <kendo-datepicker #call_date [value]="dataItem.call_date" name="call_date" [format]="'yyyy年MM月dd日'"
+                            [(ngModel)]="dataItem.call_date" [disabled]="!dataItem.showWorker"
+          >
+            <kendo-datepicker-messages
+              today="今天"
+              toggle="选择日期"
+            ></kendo-datepicker-messages>
+          </kendo-datepicker>
+          <lmtimepicker [timeNow]="dataItem.call_date_time" [disabled]="dataItem.showWorker"  name="call_date_time" (change)="onCallDateTimeChange($event)"  ></lmtimepicker>
+
+        </p>
+
+        <p style="margin-left: 70px;">
+          <input type="checkbox" id="auth-2fb{{rowIndex}}" class="k-checkbox"  [(ngModel)]="dataItem.showArriveDate" (click)="arriveCheckChanged($event,dataItem)" >
+          <label class="k-checkbox-label" for="auth-2fb{{rowIndex}}">设置工单开始处理时间</label>
+
+          <kendo-datepicker #incoming_date [value]="dataItem.arrive_date" name="arrive_date" [format]="'yyyy年MM月dd日'"
+                            [(ngModel)]="dataItem.arrive_date" [disabled]="!dataItem.showArriveDate"
+          >
+            <kendo-datepicker-messages
+              today="今天"
+              toggle="选择日期"
+            ></kendo-datepicker-messages>
+          </kendo-datepicker>
+          <lmtimepicker [timeNow]="dataItem.arrive_date_time" [disabled]="dataItem.showArriveDate"  name="arrive_date_time" (change)="onArriveDateTimeChange($event)"  ></lmtimepicker>
+
+        </p>
+
+        <p style="margin-left: 70px;">
+          <input type="checkbox" id="auth-2fc{{rowIndex}}" class="k-checkbox"  [(ngModel)]="dataItem.showFinishDate" (click)="finishCheckChanged($event,dataItem)" >
+          <label class="k-checkbox-label" for="auth-2fc{{rowIndex}}">设置工单完成时间</label>
+          <kendo-datepicker #incoming_date [value]="dataItem.finish_date" name="finish_date" [format]="'yyyy年MM月dd日'"
+                            [(ngModel)]="dataItem.finish_date" [disabled]="!dataItem.showFinishDate"
+          >
+            <kendo-datepicker-messages
+              today="今天"
+              toggle="选择日期"
+            ></kendo-datepicker-messages>
+          </kendo-datepicker>
+          <lmtimepicker [timeNow]="dataItem.finish_date_time" [disabled]="dataItem.showFinishDate" name="finish_date_time" (change)="onFinishDateTimeChange($event)" ></lmtimepicker>
+        </p>
+      </section>
+    </ng-template>
   </kendo-grid>
+</ng-template>
+
+<ng-template #actionTemplate>
+  <button kendoButton (click)="cancel()">取消</button>
+  <button kendoButton (click)="no()" [primary]="true" [icon]="SaveOrderLoading" [disabled]="isHiddenSaveOrderButton" >否，我自己来建立工单</button>
+  <button kendoButton [primary]="true" (click)="yes()" [icon]="SaveOrderAllLoading" [disabled]="isHiddenSaveOrderAllButton">
+    保存，根据用户需求快速建立工单
+  </button>
 </ng-template>

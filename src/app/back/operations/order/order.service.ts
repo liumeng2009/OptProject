@@ -19,6 +19,7 @@ export class OrderService{
 
   private listurl=new OptConfig().serverPath+'/api/order/list';
   private saveurl=new OptConfig().serverPath+'/api/order/save';
+  private saveorderurl=new OptConfig().serverPath+'/api/order/saveOrder';
   private geturl=new OptConfig().serverPath+'/api/order/';
   private getorderno=new OptConfig().serverPath+'/api/order/getorderno/get/';
   private deleteurl=new OptConfig().serverPath+'/api/order/delete'
@@ -43,7 +44,7 @@ export class OrderService{
       url=url+'&equipment='+equipment
     }
 */
-
+    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
@@ -59,25 +60,24 @@ export class OrderService{
       .catch(this.handleError);
   }
 
-  getOrder(id:string):Promise<ResponseData>{
+  //建立订单和工单
+  createOperation(order:Order): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.geturl+id+'?token='+token)
+      .post(this.saveorderurl+'?token='+token, order, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
-
-  getOrderNo(year:number,month:number,day:number):Promise<ResponseData>{
+  getOrder(id:string):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-    console.log(this.getorderno+'?token='+token);
+    console.log(this.geturl+id+'?token='+token);
     return this.http
-      .get(this.getorderno+year+'/'+month+'/'+day+'?token='+token)
+      .get(this.geturl+id+'?token='+token)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
-
   }
 
   delete(id:string):Promise<ResponseData> {

@@ -30,7 +30,7 @@ export class BusinessContentEditComponent implements OnInit{
     ||this.operations[3]&&this.operations[3].checked
     ||this.operations[4]&&this.operations[4].checked;
 
-  business=new BusinessContent(null,null,this.operations);
+  business=new BusinessContent(null,null,this.operations,null,null);
 
   constructor(
     private businessContentService:BusinessContentService,

@@ -10,6 +10,7 @@ import {MissionService} from '../../../main/mission.service';
 import {OrderService} from '../order.service';
 import {GroupService} from '../../../basicSettings/group/group.service'
 
+import {GridComponent} from '@progress/kendo-angular-grid';
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
 
 
@@ -35,6 +36,8 @@ import {EquipOp} from "../../../../bean/equipOp";
 import {WorkOrder} from "../../../../bean/workOrder";
 import {LmTime} from "../../../components/lmtimepicker/lmtime";
 import {LmTimePicker} from "../../../components/lmtimepicker/lm-timepicker.component";
+import {User} from "../../../../bean/user";
+import {WorkerService} from "../../../basicSettings/worker/worker.service";
 
 const formGroup = dataItem => new FormGroup({
   'type':new FormControl(dataItem.type),
@@ -51,7 +54,7 @@ const formGroup = dataItem => new FormGroup({
 
 export class OrderAddComponent implements OnInit{
 
-  order=new Order(null,null,'刘孟','15822927208',null,null,null,null,null,null,null,null,null,null,null,false);
+  order=new Order(null,null,'刘孟','15822927208',null,null,null,null,null,null,null,null,null,null,null,null);
   groups:Group[]=[];
   public today: Date = new Date();
 
@@ -62,8 +65,10 @@ export class OrderAddComponent implements OnInit{
     private groupService:GroupService,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
+    private missionService:MissionService,
     private corporationService:CorporationService,
     private corpBuildingService:CorpBuildingService,
+    private workerService:WorkerService,
     private dialogService:DialogService,
     private businessContentService:BusinessContentService,
     private cookieService:CookieService
@@ -71,14 +76,20 @@ export class OrderAddComponent implements OnInit{
 
   };
 
+  private time=new LmTime(0,0,0);
+
   ngOnInit(){
     this.order.incoming_date=this.today.toDateString();
     this.initGroup();
-    this.initNo();
     this.initTmpNeed();
-  }
+    this.initWorkers();
 
-  private timetest=new LmTime(12,12,12);
+    let date=new Date();
+    this.time.hour=date.getHours();
+    this.time.minute=date.getMinutes();
+    this.time.second=date.getSeconds();
+
+  }
 
   private groupLoading:boolean=false;
   private initGroup(){
@@ -182,87 +193,200 @@ export class OrderAddComponent implements OnInit{
     );
   }
 
-  private noLoading:boolean=false;
-  private initNo(){
-    this.noLoading=true;
-    let date=new Date(this.today);
-    this.orderService.getOrderNo(date.getFullYear(),date.getMonth()+1,date.getDate()).then(
+  private dateChange($event){
+    this.today=$event;
+    this.order.incoming_date=$event;
+  }
+
+  private workers:User[]=[];
+  private initWorkers(){
+    this.workers.splice(0,this.workers.length);
+    this.workerService.getWorkerList(null).then(
       data=>{
-        this.noLoading=false;
+        console.log(data);
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
-          this.order.no=result.data;
+          for(let i=0;i<result.data.length;i++){
+            if(result.data[0].worker){
+              let user=result.data[0];
+              this.workers.push(user);
+            }
+          }
+          console.log(this.workers);
         }
       },
       error=>{
-        this.noLoading=false;
         this.ajaxExceptionService.simpleOp(error);
       }
     )
   }
-  private dateChange($event){
-    this.today=$event;
-    this.order.incoming_date=$event;
-    this.initNo();
+
+  private workerChange($event){
+
   }
 
-  @ViewChild('itemListRef')
-  tpl: TemplateRef<any>;
+  private ArriveDateShowChange($event){
+
+  }
+
+  @ViewChild('itemListRef')tpl: TemplateRef<any>;
+
+  @ViewChild('gridWorkerOrder') grid: GridComponent;
 
   private workerOrders:WorkOrder[]=[];
-  private onSubmit(){
+  private dialog;
+  private onOrderSubmit(actionTemplate: TemplateRef<any>){
     this.workerOrders.splice(0,this.workerOrders.length);
     this.order.needs=this.needs;
     console.log(this.needs);
     let date=new Date(this.order.incoming_date);
-    date.setHours(this.order.hour,this.order.minute,this.order.second,0);
+    date.setHours(this.time.hour,this.time.minute,this.time.second,0);
     this.order.incoming_date_timestamp=Date.parse(date.toString());
 
     for(let need of this.needs){
       for(let i=0;i<need.no;i++){
-        let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_date_timestamp,
-          this.order.custom_position,this.order.corporation,this.order.important,0,0,'',need.type,need.equipment,need.op,true);
+        let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_date_timestamp,date,
+          this.order.custom_position,this.order.corporation,false,0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
+          0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,false,false,false,'',0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
+          null,null
+        );
         this.workerOrders.push(workOrder);
       }
     }
     console.log(this.workerOrders);
 
-    let dialog=this.dialogService.open({
-      title: "快速添加工单",
+
+    this.dialog=this.dialogService.open({
+      title: "需要快速添加工单吗？",
       content: this.tpl,
-      actions: [
-        { text: "取消" },
-        { text: "保存", primary: true }
-      ]
+      actions:actionTemplate
     });
 
-    dialog.result.subscribe((result) => {
-      if (result instanceof DialogCloseResult) {
-        console.log("close");
-      } else {
-        console.log("action", result);
-      }
-    });
+    setTimeout(()=>{
+      for(let i=0;i<this.workerOrders.length;i++)
+        this.grid.expandRow(i);
+    },0);
 
-/*    this.orderService.create(this.order).then(
+  }
+
+  private cancel(){
+    this.dialog.close();
+  }
+
+  private no(){
+    this.saveOrder();
+  }
+  private SaveOrderAllLoading:string='';
+  private isHiddenSaveOrderAllButton:boolean=false;
+  private SaveOrderLoading:string='';
+  private isHiddenSaveOrderButton:boolean=false;
+  private yes(){
+    this.saveOrderAll();
+  }
+
+  private saveOrder(){
+    this.SaveOrderLoading='k-icon k-i-loading';
+    this.isHiddenSaveOrderButton=true;
+    this.isHiddenSaveOrderAllButton=true;
+    this.orderService.create(this.order).then(
+       data=>{
+         this.SaveOrderLoading='';
+         this.isHiddenSaveOrderButton=false;
+         this.isHiddenSaveOrderAllButton=false;
+         let result=this.apiResultService.result(data);
+         console.log(result);
+         //保存成功之后，就把needs的缓存删除掉
+         this.cookieService.remove('tmpneed');
+         if(result&&result.status==0){
+           this.dialog.close();
+           this.router.navigate(['../'],{relativeTo:this.route});
+         }
+       },
+       error=>{
+       this.SaveOrderLoading='';
+       this.isHiddenSaveOrderButton=false;
+       this.isHiddenSaveOrderAllButton=false;
+        this.ajaxExceptionService.simpleOp(error);
+       }
+    )
+
+    setTimeout(()=>{
+      this.SaveOrderLoading='';
+      this.isHiddenSaveOrderButton=false;
+      this.isHiddenSaveOrderAllButton=false;
+    },10000);
+
+  }
+  private saveOrderAll(){
+    console.log(this.order);
+    console.log(this.workerOrders);
+    this.SaveOrderAllLoading='k-icon k-i-loading';
+    this.isHiddenSaveOrderAllButton=true;
+    this.isHiddenSaveOrderButton=true;
+    //规整对象数组
+    for(let workerOrder of this.workerOrders){
+      let _call=workerOrder.call_date;
+      _call.setHours(workerOrder.call_date_time.hour,workerOrder.call_date_time.minute,workerOrder.call_date_time.second);
+      workerOrder.call_date_timestamp=Date.parse(_call.toString());
+
+      let _arrive=workerOrder.arrive_date;
+      _arrive.setHours(workerOrder.arrive_date_time.hour,workerOrder.arrive_date_time.minute,workerOrder.arrive_date_time.second);
+      workerOrder.arrive_date_timestamp=Date.parse(_arrive.toString());
+
+      let _finish=workerOrder.finish_date;
+      _finish.setHours(workerOrder.finish_date_time.hour,workerOrder.finish_date_time.minute,workerOrder.finish_date_time.second);
+      workerOrder.finish_date_timestamp=Date.parse(_finish.toString());
+    }
+
+    this.order.workerOrders=this.workerOrders;
+
+    this.orderService.createOperation(this.order).then(
       data=>{
+        this.SaveOrderAllLoading='';
+        this.isHiddenSaveOrderAllButton=false;
+        this.isHiddenSaveOrderButton=false;
+        if(data.status==80001){
+          this.initWorkers();
+        }
         let result=this.apiResultService.result(data);
-        console.log(result);
-        //保存成功之后，就把needs的缓存删除掉
-        this.cookieService.remove('tmpneed');
         if(result&&result.status==0){
           this.router.navigate(['../'],{relativeTo:this.route});
+          this.dialog.close();
         }
       },
       error=>{
+        this.SaveOrderAllLoading='';
+        this.isHiddenSaveOrderAllButton=false;
+        this.isHiddenSaveOrderButton=false;
         this.ajaxExceptionService.simpleOp(error);
       }
-    )*/
+    )
   }
 
   private clearTmpCookie(){
-    this.needs.splice(0,this.needs.length);
-    this.cookieService.remove('tmpneed');
+
+    let dialogTmp=this.dialogService.open({
+      title: "请确认？",
+      content: '确定要删除建立好的客户需求内容吗？',
+      actions:[
+        { text: "否" },
+        { text: "是", primary: true }
+      ]
+    });
+
+    dialogTmp.result.subscribe((result) => {
+
+      if (result instanceof DialogCloseResult) {
+
+      } else {
+
+      }
+      this.result = result;
+      if(this.result.text=='是'){
+        this.needs.splice(0,this.needs.length);
+        this.cookieService.remove('tmpneed');
+      }
+    });
   }
 
   private equipTypeLoading:boolean=false;
@@ -501,4 +625,76 @@ export class OrderAddComponent implements OnInit{
     });
   }
 
+  private onTimeChange($event){
+    console.log($event);
+    this.time=$event;
+
+  }
+
+  private onArriveDateTimeChange($event){
+
+  }
+
+  private onFinishDateTimeChange($event){
+
+  }
+  private onCallDateTimeChange($event){
+
+  }
+
+  private finishCheckChanged($event,rowData){
+    if($event.target.checked){
+      //说明没有工程师，就不能点选。
+      if(this.workers.length==0){
+        this.missionService.change.emit(new AlertData('danger','没有设置工程师信息'));
+        rowData.showArriveDate=false;
+        rowData.showFinishDate=false;
+        rowData.showWorker=false;
+        $event.target.checked=false;
+      }
+      else{
+        rowData.showArriveDate=true;
+        rowData.showWorker=true;
+      }
+
+    }
+  }
+  private arriveCheckChanged($event,rowData){
+    if($event.target.checked){
+      if(this.workers.length==0){
+        this.missionService.change.emit(new AlertData('danger','没有设置工程师信息'));
+        rowData.showArriveDate=false;
+        rowData.showFinishDate=false;
+        rowData.showWorker=false;
+        $event.target.checked=false;
+      }
+      else{
+        rowData.showWorker=true;
+      }
+
+    }
+    else{
+      rowData.showFinishDate=false;
+      rowData.showWorker=false;
+    }
+  }
+  private workerCheckChanged($event,rowData){
+    if($event.target.checked){
+      if(this.workers.length==0){
+        this.missionService.change.emit(new AlertData('danger','没有设置工程师信息'));
+        rowData.showArriveDate=false;
+        rowData.showFinishDate=false;
+        rowData.showWorker=false;
+        $event.target.checked=false;
+      }
+      else{
+        //rowData.showArriveDate=true;
+      }
+
+    }
+    else{
+      rowData.showArriveDate=false;
+      rowData.showFinishDate=false;
+    }
+  }
 }

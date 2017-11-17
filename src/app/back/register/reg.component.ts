@@ -44,7 +44,7 @@ export class RegComponent implements OnInit{
   onSubmit():void{
     this.isDisabled=true;
     this.iconClass='k-icon k-i-loading';
-    this.regService.reg(this.user.username,this.user.password)
+    this.regService.reg(this.user.name,this.user.password)
       .then(
         data=>{
           if(data.status==0){
