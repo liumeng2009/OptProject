@@ -1,10 +1,10 @@
-import {Component,OnInit} from '@angular/core'
+import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,OnDestroy} from '@angular/core'
+
 import {animation,animate,style,state,transition,trigger,keyframes} from '@angular/animations';
 import {Router,ActivatedRoute,Params} from '@angular/router';
 
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
-import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
-import { PlotBand,Border,DashType,ValueAxisLabels,LegendLabels } from '@progress/kendo-angular-charts';
+import { Surface } from '@progress/kendo-drawing';
 
 import {User} from '../../../bean/user'
 import {OperationService} from "../operations.service";
@@ -18,6 +18,8 @@ import {Order} from "../../../bean/order";
 import {Position} from "../../../bean/position";
 import {BusinessContent} from "../../../bean/businessContent";
 import {EquipOp} from "../../../bean/equipOp";
+
+import { drawProcess } from './drawProcess';
 
 @Component({
   selector:'operation_edit',
@@ -40,7 +42,7 @@ import {EquipOp} from "../../../bean/equipOp";
   ]
 })
 
-export class OperationEditComponent  implements OnInit {
+export class OperationEditComponent  implements OnInit,AfterViewInit {
   private operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)));
   constructor(
@@ -59,7 +61,7 @@ export class OperationEditComponent  implements OnInit {
     this.getData();
     this.initEquipType();
 
-    this.chart();
+    //this.chart();
   }
 
   private equipTypeLoading:boolean=false;
@@ -207,7 +209,7 @@ export class OperationEditComponent  implements OnInit {
   private perTimeBox=10;
   private perTimeBoxStamp=10*60*1000;
 
-  private chart(){
+/*  private chart(){
     let createTimeCh=new Date(2017,11,16,9,0,0,0);
     let finishTimeCh=new Date(2017,11,16,11,0,0,0);
 
@@ -307,5 +309,43 @@ export class OperationEditComponent  implements OnInit {
     let dt=new Date(this.startTimeStamp+e.stackValue);
     return dt.getHours()+'时'+dt.getMinutes()+'完成工作'
 
+  }*/
+
+  @ViewChild('surface')
+  private surfaceElement: ElementRef;
+  private surface: Surface;
+
+  public ngAfterViewInit(): void {
+    drawProcess(this.createSurface(),[
+      {
+        worker:'张赫',
+        createtime:new Date(2017,11,16,9,5,0,0),
+        zptime:new Date(2017,11,16,9,6,0,0),
+        arriveTime:new Date(2017,11,16,9,12,0,0),
+        finishTime:new Date(2017,11,16,10,50,0,0)
+      },
+      {
+        worker:'刘孟',
+        createtime:new Date(2017,11,16,9,5,0,0),
+        zptime:new Date(2017,11,16,9,6,0,0),
+        arriveTime:new Date(2017,11,16,9,12,0,0),
+        finishTime:new Date(2017,11,16,10,50,0,0)
+      }
+    ]);
   }
+
+  public ngOnDestroy() {
+    this.surface.destroy();
+  }
+
+  private createSurface(): Surface {
+    // Obtain a reference to the native DOM element of the wrapper
+    const element = this.surfaceElement.nativeElement;
+
+    // Create a drawing surface
+    this.surface = Surface.create(element);
+
+    return this.surface;
+  }
+
 }
