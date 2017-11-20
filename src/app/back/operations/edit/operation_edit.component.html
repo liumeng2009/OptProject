@@ -74,38 +74,43 @@
           <div class="k-form-field">
             <span style="font-weight:bolder">进程：</span>
             <kendo-chart>
-              <kendo-chart-area background="#eee"></kendo-chart-area>
+              <kendo-chart-area></kendo-chart-area>
+
               <kendo-chart-category-axis>
-                <kendo-chart-category-axis-item [categories]="['张赫']">
+                <kendo-chart-category-axis-item [title]="{text:'工程师'}" [categories]="['张赫','刘孟']">
                 </kendo-chart-category-axis-item>
               </kendo-chart-category-axis>
 
               <kendo-chart-value-axis>
-                <kendo-chart-value-axis-item [min]="from" [max]="to" [labels]="valueAxisLabel"  [majorUnit]="perTimeBoxStamp" ></kendo-chart-value-axis-item>
+                <kendo-chart-value-axis-item [title]="{text:'时刻'}" [min]="from" [max]="to" [labels]="valueAxisLabel"  [majorUnit]="perTimeBoxStamp" ></kendo-chart-value-axis-item>
               </kendo-chart-value-axis>
 
-
               <kendo-chart-series>
-                <kendo-chart-series-item type="bar" [visibleInLegend]="false" [gap]="5"   [border]="border" [stack]="true" [data]="dateChats" [field]="value" [colorField]="color"  name="整数时间调整">
-                  <kendo-chart-series-item-labels format="{1:N1}指派" [background]="'transparent'" [color]="'#000000'" [content]="jianli" >
+
+                <kendo-chart-series-item type="bar" [visibleInLegend]="false" [gap]="5"   [border]="border" [stack]="true" [data]="dateChartNone" [field]="value" [colorField]="color"  name="整数时间调整">
+
+                </kendo-chart-series-item>
+
+                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChartCreate" [field]="value" [colorField]="color"  name="工单建立">
+
+                </kendo-chart-series-item>
+
+                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChartZhipai"  [field]="value" name="指派">
+                  <kendo-chart-series-item-labels [position]="'outsideEnd'" [background]="'transparent'"  [color]="'#000000'" [content]="zhipai"  >
 
                   </kendo-chart-series-item-labels>
                 </kendo-chart-series-item>
 
-                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChats1" [field]="value" [colorField]="color"  name="工单建立">
-                  <kendo-chart-series-item-labels format="{1:N1}指派" [background]="'transparent'" [color]="'#000000'" [content]="zhipai" >
+                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChartWork"  [field]="value"  name="工作">
+                  <kendo-chart-series-item-labels [position]="'left'" [background]="'transparent'"  [color]="'#000000'" [content]="gongzuo"  >
 
                   </kendo-chart-series-item-labels>
                 </kendo-chart-series-item>
 
-                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChats2"  [field]="value" name="指派">
-                  <kendo-chart-series-item-labels [background]="'transparent'" format="{1:N1}开始处理"  [color]="'#000000'" [content]="gongzuo"  >
+                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChartFinish"  [field]="value"  name="完成">
+                  <kendo-chart-series-item-labels  [position]="'outsideEnd'" [background]="'transparent'"  [color]="'#000000'" [content]="wancheng"  >
 
                   </kendo-chart-series-item-labels>
-                </kendo-chart-series-item>
-
-                <kendo-chart-series-item type="bar" [border]="border" [visibleInLegend]="false" [data]="dateChats3"  [field]="value"  name="工作">
-
                 </kendo-chart-series-item>
 
               </kendo-chart-series>

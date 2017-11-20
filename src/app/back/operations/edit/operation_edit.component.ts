@@ -159,6 +159,7 @@ export class OperationEditComponent  implements OnInit {
           let result=this.apiResultService.result(data);
           if(result&&result.status==0){
             this.operation=result.data;
+            console.log(this.operation);
           }
         }
       );
@@ -168,31 +169,22 @@ export class OperationEditComponent  implements OnInit {
   private onSubmit(){
     console.log(this.operation);
   }
-  /*
-  private dataChats=[
-    {value:20,color:'transparent'},{value:30,color:'transparent'},{value:40,color:'transparent'}
-  ]
 
-  private dataChats1=[
-    {value:10,color:'#ccc'},{value:20,color:'#ccc'},{value:25,color:'#ccc'}
-  ]
-
-  private dataChats2=[
-    {value:60,color:'red'},{value:60,color:'red'},{value:100,color:'red'}
-  ]*/
-
-  private dateChats=[
+  private dateChartNone=[
 
   ]
 
-  private dateChats1=[
+  private dateChartCreate=[
 
   ]
 
-  private dateChats2=[
+  private dateChartZhipai=[
 
   ]
-  private dateChats3=[
+  private dateChartWork=[
+
+  ]
+  private dateChartFinish=[
 
   ]
 
@@ -200,9 +192,14 @@ export class OperationEditComponent  implements OnInit {
   public to: number =0;
 
   private createTime=new Date(2017,11,16,9,5,0,0);
-  private zpTime=new Date(2017,11,16,9,25,0,0);
-  private arriveTime=new Date(2017,11,16,9,40,0,0);
+  private zpTime=new Date(2017,11,16,9,6,0,0);
+  private arriveTime=new Date(2017,11,16,9,12,0,0);
   private finishTime=new Date(2017,11,16,10,50,0,0);
+
+  private createTimeL=new Date(2017,11,16,9,5,0,0);
+  private zpTimeL=new Date(2017,11,16,10,5,0,0);
+  private arriveTimeL=null;
+  private finishTimeL=null;
 
 
   private startTimeStamp=0;
@@ -226,6 +223,11 @@ export class OperationEditComponent  implements OnInit {
     let arriveTimeStamp=Date.parse(this.arriveTime.toString());
     let finishTimeStamp=Date.parse(this.finishTime.toString());
 
+    let createTimeLStamp=Date.parse(this.createTimeL.toString());
+    let zpTimeLStamp=Date.parse(this.zpTimeL.toString());
+    let arriveTimeLStamp=Date.parse('0');
+    let finishTimeLStamp=Date.parse('0');
+
     console.log(finishTimeChStamp-createTimeChStamp);
 
     let max=finishTimeChStamp-createTimeChStamp;
@@ -240,20 +242,20 @@ export class OperationEditComponent  implements OnInit {
     this.perTimeBoxStamp=this.perTimeBox*60*1000;
 
 
-
     this.to=this.from+finishTimeChStamp-createTimeChStamp;
 
-    this.dateChats.push({color:'transparent',value:createTimeStamp-createTimeChStamp})
-    this.dateChats1.push({color:'#ddd',value:zpTimeStamp-createTimeStamp})
-    this.dateChats2.push({color:'red',value:arriveTimeStamp-zpTimeStamp})
-    this.dateChats3.push({color:'green',value:finishTimeStamp-arriveTimeStamp})
-
-    console.log(this.dateChats);
-    console.log(this.dateChats1);
-    console.log(this.dateChats2);
-    console.log(this.dateChats3);
+    this.dateChartNone.push({color:'transparent',value:createTimeStamp-createTimeChStamp})
+    this.dateChartNone.push({color:'transparent',value:createTimeLStamp-createTimeChStamp})
 
 
+    this.dateChartCreate.push({color:'transparent',value:zpTimeStamp-createTimeStamp})
+    this.dateChartCreate.push({color:'transparent',value:zpTimeLStamp-createTimeStamp})
+
+
+    this.dateChartZhipai.push({color:'#ff6358',value:arriveTimeStamp-zpTimeStamp})
+
+    this.dateChartWork.push({color:'rgb(120, 210, 55)',value:finishTimeStamp-arriveTimeStamp})
+    this.dateChartFinish.push({color:'yellow',value:0})
   }
 
 
@@ -268,7 +270,7 @@ export class OperationEditComponent  implements OnInit {
   private valueAxisLabel:ValueAxisLabels={
     content:(_value)=>
     {
-      console.log(_value);
+      //console.log(_value);
       let dt=new Date(this.startTimeStamp+_value.value);
       return dt.getHours()+':'+dt.getMinutes()
     },
@@ -277,7 +279,7 @@ export class OperationEditComponent  implements OnInit {
   private zhipai=(e)=>{
 
     console.log(e);
-    let dt=new Date(this.startTimeStamp+e.stackValue);
+    let dt=new Date(this.startTimeStamp+e.stackValue-e.value);
     return dt.getHours()+'时'+dt.getMinutes()+'分指派'
 
   }
@@ -285,7 +287,7 @@ export class OperationEditComponent  implements OnInit {
   private gongzuo=(e)=>{
 
     console.log(e);
-    let dt=new Date(this.startTimeStamp+e.stackValue);
+    let dt=new Date(this.startTimeStamp+e.stackValue-e.value);
     return dt.getHours()+'时'+dt.getMinutes()+'分开始工作'
 
   }
@@ -293,11 +295,17 @@ export class OperationEditComponent  implements OnInit {
   private jianli=(e)=>{
 
     console.log(e);
-    let dt=new Date(this.startTimeStamp+e.stackValue);
+    let dt=new Date(this.startTimeStamp+e.stackValue-e.value);
+    console.log(dt.getHours()+'时'+dt.getMinutes()+'分建立工单');
     return dt.getHours()+'时'+dt.getMinutes()+'分建立工单'
 
   }
 
+  private wancheng=(e)=>{
 
+    console.log(e);
+    let dt=new Date(this.startTimeStamp+e.stackValue);
+    return dt.getHours()+'时'+dt.getMinutes()+'完成工作'
 
+  }
 }
