@@ -315,23 +315,27 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
   private surfaceElement: ElementRef;
   private surface: Surface;
 
-  public ngAfterViewInit(): void {
-    drawProcess(this.createSurface(),[
+
+  private processData={
+    createTime:new Date(2017,11,16,9,5,0,0),
+    process:[
       {
         worker:'张赫',
-        createtime:new Date(2017,11,16,9,5,0,0),
-        zptime:new Date(2017,11,16,9,6,0,0),
+        zpTime:new Date(2017,11,16,9,6,0,0),
         arriveTime:new Date(2017,11,16,9,12,0,0),
-        finishTime:new Date(2017,11,16,10,50,0,0)
+        finishTime:new Date(2017,11,16,10,50,0,0),
+        operationFinish:true
       },
       {
         worker:'刘孟',
-        createtime:new Date(2017,11,16,9,5,0,0),
-        zptime:new Date(2017,11,16,9,6,0,0),
-        arriveTime:new Date(2017,11,16,9,12,0,0),
-        finishTime:new Date(2017,11,16,10,50,0,0)
+        zpTime:new Date(2017,11,16,9,20,0,0),
+        arriveTime:new Date(2017,11,16,9,50,0,0),
+        finishTime:null
       }
-    ]);
+    ]}
+
+  public ngAfterViewInit(): void {
+    drawProcess(this.createSurface(),this.processData);
   }
 
   public ngOnDestroy() {
@@ -346,6 +350,12 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
     this.surface = Surface.create(element);
 
     return this.surface;
+  }
+
+  private updateProcess(){
+    console.log('更新图表');
+    //this.processData.createTime=new Date(2017,11,16,8,5,0,0);
+    drawProcess(this.createSurface(),this.processData);
   }
 
 }
