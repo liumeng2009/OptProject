@@ -1,5 +1,9 @@
-import { Surface, Path, Text, Group,LinearGradient,GradientOptions } from '@progress/kendo-drawing';
-import { transform,Point,Size,Rect } from '@progress/kendo-drawing/geometry';
+import {
+  Surface, Path, Text, Group, GradientOptions,
+  GradientStopOptions, GradientStop,LinearGradient
+} from '@progress/kendo-drawing';
+
+import { transform,Point,Size,Rect} from '@progress/kendo-drawing/geometry';
 
 export function drawProcess(surface,data) {
 
@@ -162,24 +166,47 @@ export function drawProcess(surface,data) {
         let finishToYTime=Date.parse(_process.finishTime)-Date.parse(xAxisMinTime.toString());
         let xFinish=(finishToYTime/(scale*60*1000))*scaleWidth+20;
         let rectFinish = new Rect([xArrive, y], [xFinish-xArrive, PROCESS_BAR_WIDTH]);
+
+
+
+        let gstop=new  GradientStop({color:'red',offset:0,opacity:0.5});
+        let gstop1=new  GradientStop({color:'green',offset:1,opacity:0.7});
+
+        //let opt:GradientOptions={name:'123',stops:[{color:'red',offset:0,opacity:0.5},gstop1]}
+
+        let l=new LinearGradient();
+        l.addStop(0,'red',0.5);
+        l.addStop(1,'green',0.5);
+
         const pathFinish=Path.fromRect(rectFinish, {
           stroke: {
             color: '#ffffff',
             width: 1
           },
-          fill: { color: 'green' },
+          fill:l,
           cursor: 'pointer'
         });
         const textEndWork = new Text('工作结束:'+showTimeSimple(new Date(_process.finishTime)), [xFinish, y+20+6], {
 
         });
+
         group.append(pathFinish,textEndWork);
 
       }
       else{
         //说明工作进行中，但是没有完成
 
-        let linear=new LinearGradient()
+        let g:GradientStopOptions={color:'red',offset:10,opacity:1};
+        let g1:GradientStopOptions={color:'green',offset:5,opacity:1};
+
+        let gstop=new  GradientStop(g);
+        let gstop1=new  GradientStop(g1);
+
+        let linear=new LinearGradient({name:'litest',stops:[gstop,gstop1]});
+        //group.append(linear);
+        //linear.start([0,0]);
+
+        //surface.draw(linear);
       }
 
     }
