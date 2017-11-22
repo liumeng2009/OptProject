@@ -3,7 +3,9 @@ import {
   GradientStopOptions, GradientStop,LinearGradient
 } from '@progress/kendo-drawing';
 
-import { transform,Point,Size,Rect} from '@progress/kendo-drawing/geometry';
+import { transform,Point,Size,Rect,Transformation} from '@progress/kendo-drawing/geometry';
+
+import {Animation} from '@progress/kendo-drawing/dist/es/animations'
 
 export function drawProcess(surface,data) {
 
@@ -50,7 +52,10 @@ export function drawProcess(surface,data) {
   let timeSpanArray=[5,10,20,30,60,120,240,480];
   //计算x轴刻度应该是多少
   let timeSpan=Date.parse(xAxisMaxTime.toString())-Date.parse(xAxisMinTime.toString());
+  //最多有多少刻度
   let MAX_SCALE_COUNT=20;
+  //左边预留多少距离
+  let LEFT_MARGIN=100;
   let is=0;
   while(timeSpan/(timeSpanArray[is]*1000*60)>MAX_SCALE_COUNT){
     is++;
@@ -60,22 +65,29 @@ export function drawProcess(surface,data) {
 
   let scaleCount=timeSpan/(scale*1000*60)+1;
 
-  let scaleWidth=width/scaleCount;
+  let scaleWidth=(width-LEFT_MARGIN)/scaleCount;
 
-  const group=new Group();
+  let group=new Group();
 
   for(let i=0;i<scaleCount;i++){
-    const path = new Path({
+    let path = new Path({
       stroke: {
         color: `rgba(0, 0, 0, 0.08)`,
         width: 1
       }
     });
 
-    path.moveTo(scaleWidth*i+20, 50).lineTo(scaleWidth*i+20, height-50+6);
+    path.moveTo(scaleWidth*i+LEFT_MARGIN, 50).lineTo(scaleWidth*i+LEFT_MARGIN, height-50+6);
 
     // Create the text
-    const text = new Text(showTime(xAxisMinTime,i,scale), [scaleWidth*i, height-50+6], {
+
+    if(i==0){
+      let timeText=xAxisMinTime.getFullYear()+'年'+xAxisMinTime.getMonth() +'月'+xAxisMinTime.getDate()+'日';
+      let textDate=new Text(timeText,[scaleWidth*i+LEFT_MARGIN-46, height-50+26],{});
+      group.append(textDate);
+    }
+
+    let text = new Text(showTime(xAxisMinTime,i,scale), [LEFT_MARGIN+scaleWidth*i-17, height-50+6], {
 
     });
 
@@ -83,14 +95,14 @@ export function drawProcess(surface,data) {
 
   }
 
-  const pathRed=new Path({
+  let pathRed=new Path({
     stroke:{
       color:'rgba(0, 0, 0, 0.08)',
       width:1
     }
   })
 
-  pathRed.moveTo(20-3,height-50).lineTo(width,height-50).close();
+  pathRed.moveTo(LEFT_MARGIN-3,height-50).lineTo(width-LEFT_MARGIN+scaleWidth,height-50).close();
 
   group.append(pathRed);
 
@@ -100,93 +112,104 @@ export function drawProcess(surface,data) {
   let personHeight=(height-50-50)/processLength;
 
   for(let i=0;i<processLength;i++){
-    const path = new Path({
+    let path = new Path({
       stroke: {
         color: `rgba(0, 0, 0, 0.08)`,
         width: 1
       }
     });
-    path.moveTo(20-3,50+personHeight*i).lineTo(width,50+personHeight*i);
-    group.append(path);
+    path.moveTo(LEFT_MARGIN-3,50+personHeight*i).lineTo(width-LEFT_MARGIN+scaleWidth,50+personHeight*i);
+
+    let textWorker = new Text(processs[i].worker, [LEFT_MARGIN-3-50, 50+personHeight*i+(personHeight-16)/2], {
+
+    });
+
+    group.append(path,textWorker);
+
   }
 
   //工单建立时间
   let createToYTime=Date.parse(createTime)-Date.parse(xAxisMinTime.toString());
   let createLineX=createToYTime/(scale*60*1000)*scaleWidth;
-  const pathCreateLine = new Path({
+  let pathCreateLine = new Path({
     stroke: {
       color: `green`,
-      width: 1
+      width: 1,
+      dashType:'dot'
     }
   });
-  pathCreateLine.moveTo(20+createLineX,0).lineTo(20+createLineX,height-0);
+  pathCreateLine.moveTo(LEFT_MARGIN+createLineX,0).lineTo(LEFT_MARGIN+createLineX,height-43);
 
-  const textCreateLine = new Text('工单建立:'+showTimeSimple(new Date(createTime)), [20+createLineX+5, 10], {
+  let textCreateLine = new Text('工单建立:'+showTimeSimple(new Date(createTime)), [LEFT_MARGIN+createLineX+5, 10], {
 
   });
 
   group.append(pathCreateLine,textCreateLine);
 
   //绑定进程
-  let PROCESS_BAR_WIDTH=20;
+  let PROCESS_BAR_WIDTH=30;
   for(let i=0;i<processLength;i++){
     let _process=processs[i];
+    let y=50+((personHeight-PROCESS_BAR_WIDTH)/2)+personHeight*i;
     if(_process.arriveTime){
       //说明指派矩形是完整的
-      let y=50+((personHeight-PROCESS_BAR_WIDTH)/2)+personHeight*i;
       let x;
       let zpToYTime= Date.parse(_process.zpTime)-Date.parse(xAxisMinTime.toString());
-      x=(zpToYTime/(scale*60*1000))*scaleWidth+20;
+      x=(zpToYTime/(scale*60*1000))*scaleWidth+LEFT_MARGIN;
 
       let xArrive;
       let arriveToYTime= Date.parse(_process.arriveTime)-Date.parse(xAxisMinTime.toString());
-      xArrive=(arriveToYTime/(scale*60*1000))*scaleWidth+20;
+      xArrive=(arriveToYTime/(scale*60*1000))*scaleWidth+LEFT_MARGIN;
 
-      const textZp = new Text('指派:'+showTimeSimple(new Date(_process.zpTime)), [x, y-20], {
-
-      });
-      const textStartWork = new Text('开始工作:'+showTimeSimple(new Date(_process.arriveTime)), [xArrive, y+20+6], {
+      let textZp = new Text('指派:'+showTimeSimple(new Date(_process.zpTime)), [x+6, y-16-6], {
 
       });
+      let textStartWork = new Text('开始工作:'+showTimeSimple(new Date(_process.arriveTime)), [xArrive+6, y+PROCESS_BAR_WIDTH+6], {
 
-      const rect = new Rect([x, y], [xArrive-x, PROCESS_BAR_WIDTH]);
-      const path = Path.fromRect(rect, {
+      });
+
+      let rect = new Rect([x, y], [xArrive-x, PROCESS_BAR_WIDTH]);
+      let path = Path.fromRect(rect, {
         stroke: {
           color: '#ffffff',
-          width: 1
+          width: 0
         },
-        fill: { color: '#ff0000' },
+        fill: { color: 'rgb(199,206,178)' },
         cursor: 'pointer'
       });
+
+
+
+
+
+/*      setTimeout(()=>{
+        group.transform(transform().scale(1,1));
+        let ac=new Animation(group,{duration:5000});
+        ac.play();
+      },2000)*/
+
+
 
       group.append(path,textZp,textStartWork);
 
       //再看完成时间是否设置了
       if(_process.finishTime){
         let finishToYTime=Date.parse(_process.finishTime)-Date.parse(xAxisMinTime.toString());
-        let xFinish=(finishToYTime/(scale*60*1000))*scaleWidth+20;
+        let xFinish=(finishToYTime/(scale*60*1000))*scaleWidth+LEFT_MARGIN;
         let rectFinish = new Rect([xArrive, y], [xFinish-xArrive, PROCESS_BAR_WIDTH]);
 
 
-
-        let gstop=new  GradientStop({color:'red',offset:0,opacity:0.5});
-        let gstop1=new  GradientStop({color:'green',offset:1,opacity:0.7});
-
-        //let opt:GradientOptions={name:'123',stops:[{color:'red',offset:0,opacity:0.5},gstop1]}
-
-        let l=new LinearGradient();
-        l.addStop(0,'red',0.5);
-        l.addStop(1,'green',0.5);
-
-        const pathFinish=Path.fromRect(rectFinish, {
+        let pathFinish=Path.fromRect(rectFinish, {
           stroke: {
             color: '#ffffff',
-            width: 1
+            width: 0
           },
-          fill:l,
+          fill:{color:'rgb(25,148,177)'},
           cursor: 'pointer'
-        });
-        const textEndWork = new Text('工作结束:'+showTimeSimple(new Date(_process.finishTime)), [xFinish, y+20+6], {
+        })
+
+
+        let textEndWork = new Text('工作结束:'+showTimeSimple(new Date(_process.finishTime)), [xFinish+6, y+(PROCESS_BAR_WIDTH-16)/2], {
 
         });
 
@@ -195,27 +218,92 @@ export function drawProcess(surface,data) {
       }
       else{
         //说明工作进行中，但是没有完成
+        let rectUnFinish = new Rect([xArrive, y], [2*scaleWidth, PROCESS_BAR_WIDTH]);
 
-        let g:GradientStopOptions={color:'red',offset:10,opacity:1};
-        let g1:GradientStopOptions={color:'green',offset:5,opacity:1};
+        let l=new LinearGradient();
+        l.addStop(0,'rgb(25,148,177)',1);
+        l.addStop(1,'rgb(255,255,255)',1);
 
-        let gstop=new  GradientStop(g);
-        let gstop1=new  GradientStop(g1);
+        let pathUnFinish=Path.fromRect(rectUnFinish, {
+          stroke: {
+            color: '#ffffff',
+            width: 0
+          },
+          fill:l,
+          cursor: 'pointer'
+        });
 
-        let linear=new LinearGradient({name:'litest',stops:[gstop,gstop1]});
-        //group.append(linear);
-        //linear.start([0,0]);
+        let textNoEndWork = new Text('工作未结束', [xArrive+2*scaleWidth, y+(PROCESS_BAR_WIDTH-16)/2], {
 
-        //surface.draw(linear);
+        });
+
+        group.append(pathUnFinish,textNoEndWork);
+
       }
 
     }
     else{
       //还在指派中，还没去开始工作
+      let xZp;
+      let zpToYTime= Date.parse(_process.zpTime)-Date.parse(xAxisMinTime.toString());
+      xZp=(zpToYTime/(scale*60*1000))*scaleWidth+LEFT_MARGIN;
+      let rectUnWork = new Rect([xZp, y], [2*scaleWidth, PROCESS_BAR_WIDTH]);
+
+      let l=new LinearGradient();
+      l.addStop(0,'rgb(199,206,178)',1);
+      l.addStop(1,'rgb(255,255,255)',1);
+
+      let pathUnFinish=Path.fromRect(rectUnWork, {
+        stroke: {
+          color: '#ffffff',
+          width: 0
+        },
+        fill:l,
+        cursor: 'pointer'
+      });
+      let textZp = new Text('指派:'+showTimeSimple(new Date(_process.zpTime)), [xZp+6, y-16-6], {
+
+      });
+      let textNoWork = new Text('工作未开始', [xZp+2*scaleWidth, y+(PROCESS_BAR_WIDTH-16)/2], {
+
+      });
+
+      group.append(pathUnFinish,textZp,textNoWork);
     }
 
 
 
+  }
+
+  //工单结束时间
+  for(let i=0;i<processLength;i++){
+    let _process=processs[i];
+    if(_process.operationFinish){
+      //这条信息有工单完成标志位
+      let finishToYTime=Date.parse(_process.finishTime)-Date.parse(xAxisMinTime.toString());
+      let finishLineX=finishToYTime/(scale*60*1000)*scaleWidth;
+      let pathFinishLine = new Path({
+        stroke: {
+          color: `green`,
+          width: 1,
+          dashType:'dot'
+        }
+      });
+
+
+
+
+      pathFinishLine.moveTo(LEFT_MARGIN+finishLineX,0).lineTo(LEFT_MARGIN+finishLineX,height-43);
+
+      let textFinishLine = new Text('工单完成:'+showTimeSimple(new Date(_process.finishTime)), [LEFT_MARGIN+finishLineX+5, 10], {
+
+      });
+
+      group.append(pathFinishLine,textFinishLine);
+
+      break;
+
+    }
   }
 
 

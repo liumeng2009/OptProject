@@ -320,16 +320,22 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
     createTime:new Date(2017,11,16,9,5,0,0),
     process:[
       {
-        worker:'张赫',
+        worker:'袁绍',
         zpTime:new Date(2017,11,16,9,6,0,0),
         arriveTime:new Date(2017,11,16,9,12,0,0),
         finishTime:new Date(2017,11,16,10,50,0,0),
         operationFinish:true
       },
       {
-        worker:'刘孟',
+        worker:'诸葛正我',
         zpTime:new Date(2017,11,16,9,20,0,0),
         arriveTime:new Date(2017,11,16,9,50,0,0),
+        finishTime:null
+      },
+      {
+        worker:'小岑岑',
+        zpTime:new Date(2017,11,16,9,40,0,0),
+        arriveTime:null,
         finishTime:null
       }
     ]}
