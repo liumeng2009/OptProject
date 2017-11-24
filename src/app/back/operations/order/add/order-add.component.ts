@@ -248,7 +248,7 @@ export class OrderAddComponent implements OnInit{
         let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_date_timestamp,date,
           this.order.custom_position,this.order.corporation,false,0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
           0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,false,false,false,'',0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
-          null,null
+          null,null,true
         );
         this.workerOrders.push(workOrder);
       }

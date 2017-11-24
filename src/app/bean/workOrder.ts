@@ -69,7 +69,9 @@ export class WorkOrder {
 
     public order:Order,
 
-    public businessContent:BusinessContent
+    public businessContent:BusinessContent,
+
+    public isCompleteOperation:boolean
 
   ) {  }
 }

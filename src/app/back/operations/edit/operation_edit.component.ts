@@ -1,4 +1,4 @@
-import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,OnDestroy} from '@angular/core'
+import {Component,OnInit,ViewChild,ElementRef,AfterViewInit,OnDestroy,TemplateRef} from '@angular/core'
 
 import {animation,animate,style,state,transition,trigger,keyframes} from '@angular/animations';
 import {Router,ActivatedRoute,Params} from '@angular/router';
@@ -20,6 +20,8 @@ import {BusinessContent} from "../../../bean/businessContent";
 import {EquipOp} from "../../../bean/equipOp";
 
 import { drawProcess } from './drawProcess';
+import {WorkerService} from "../../basicSettings/worker/worker.service";
+import {LmTime} from "../../components/lmtimepicker/lmtime";
 
 @Component({
   selector:'operation_edit',
@@ -44,7 +46,7 @@ import { drawProcess } from './drawProcess';
 
 export class OperationEditComponent  implements OnInit,AfterViewInit {
   private operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-    new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)));
+    new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true);
   constructor(
     private operationService:OperationService,
     private router:Router,
@@ -52,7 +54,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
     private dialogService:DialogService,
-    private businessContentService:BusinessContentService
+    private businessContentService:BusinessContentService,
+    private workerService:WorkerService
   ){
     console.log(this.operation);
   };
@@ -60,6 +63,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
   ngOnInit(){
     this.getData();
     this.initEquipType();
+
+    this.initWorkers();
 
     //this.chart();
   }
@@ -153,19 +158,93 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
       }
     );
   }
-
+  private submitWorkOrder:WorkOrder=new WorkOrder('','',null,null,null,null,
+    null,null,false,0,null,null,
+    0,null,null,null,null,null,null,true,false,false,true,'',0,null,null,
+    null,null,true
+  );
   private getData(){
     this.route.params.subscribe((params: Params) =>{
       this.operationService.getOperation(params.id).then(
         data=>{
           let result=this.apiResultService.result(data);
-          if(result&&result.status==0){
+          if(result&&result.status==0&&result.data){
             this.operation=result.data;
-            console.log(this.operation);
+            console.log(result);
+            //可以初始化submit了
+            this.submitWorkOrder.id=params.id;
+            let operation_create_time=result.data.create_time;
+            let createTime=new Date(operation_create_time);
+            //先把工单建立时间赋值给指派时间
+            this.submitWorkOrder.call_date=createTime;
+            this.submitWorkOrder.call_date_time=new LmTime(createTime.getHours(),createTime.getMinutes(),createTime.getSeconds());
+            //把数据送到图表类，开始画图表
+            let operationCreateTime=new Date(result.data.create_time);
+            this.processData.createTime=operationCreateTime;
+
+            //处理状态
+            let d =result.data;
+            if(d.actions&&d.actions.length>0){
+              d.complete='3'
+              for(let i=0;i<d.actions.length;i++){
+                if(d.actions[i].start_time){
+                  d.complete='1';
+                }
+                if(d.actions[i].operationComplete.toString()=='1'){
+                  d.complete='2';
+                  break;
+                }
+              }
+            }
+            else{
+              d.complete='0'
+            }
+
+
+            if(result.data.actions){
+              for(let i=0;i<result.data.actions.length;i++){
+                let _action=result.data.actions[i];
+                let obj={
+                  worker:_action.user.name,
+                  zpTime:_action.call_time?new Date(_action.call_time):null,
+                  arriveTime:_action.start_time?new Date(_action.start_time):null,
+                  finishTime:_action.end_time?new Date(_action.end_time):null,
+                  operationFinish:_action.operationComplete?_action.operationComplete:false
+                }
+                this.processData.process.push(obj);
+              }
+            }
+
+            drawProcess(this.createSurface(),this.processData);
           }
         }
       );
     })
+  }
+
+  private processData={
+    createTime:new Date(2017,11,16,23,50,50,0),
+    process:[
+      /*      {
+       worker:'袁绍',
+       zpTime:new Date(2017,11,16,9,6,0,0),
+       arriveTime:new Date(2017,11,16,9,12,0,0),
+       finishTime:new Date(2017,11,16,10,50,0,0),
+       operationFinish:true
+       },
+       {
+       worker:'诸葛正我',
+       zpTime:new Date(2017,11,16,9,20,0,0),
+       arriveTime:new Date(2017,11,16,9,50,0,0),
+       finishTime:null
+       },
+       {
+       worker:'小岑岑',
+       zpTime:new Date(2017,11,16,9,40,0,0),
+       arriveTime:null,
+       finishTime:null
+       }*/
+    ]
   }
 
   private onSubmit(){
@@ -204,144 +283,16 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
   private finishTimeL=null;
 
 
-  private startTimeStamp=0;
-  //默认一个x轴的小间隔是10分钟
-  private perTimeBox=10;
-  private perTimeBoxStamp=10*60*1000;
-
-/*  private chart(){
-    let createTimeCh=new Date(2017,11,16,9,0,0,0);
-    let finishTimeCh=new Date(2017,11,16,11,0,0,0);
-
-
-    let createTimeChStamp=Date.parse(createTimeCh.toString());
-    let finishTimeChStamp=Date.parse(finishTimeCh.toString());
-
-    this.startTimeStamp=createTimeChStamp;
-
-
-    let createTimeStamp=Date.parse(this.createTime.toString());
-    let zpTimeStamp=Date.parse(this.zpTime.toString());
-    let arriveTimeStamp=Date.parse(this.arriveTime.toString());
-    let finishTimeStamp=Date.parse(this.finishTime.toString());
-
-    let createTimeLStamp=Date.parse(this.createTimeL.toString());
-    let zpTimeLStamp=Date.parse(this.zpTimeL.toString());
-    let arriveTimeLStamp=Date.parse('0');
-    let finishTimeLStamp=Date.parse('0');
-
-    console.log(finishTimeChStamp-createTimeChStamp);
-
-    let max=finishTimeChStamp-createTimeChStamp;
-    let seconds=max/1000;
-    let minutes=seconds/60;
-
-
-    while(minutes/this.perTimeBox<10){
-      this.perTimeBox=this.perTimeBox*2;
-    }
-
-    this.perTimeBoxStamp=this.perTimeBox*60*1000;
-
-
-    this.to=this.from+finishTimeChStamp-createTimeChStamp;
-
-    this.dateChartNone.push({color:'transparent',value:createTimeStamp-createTimeChStamp})
-    this.dateChartNone.push({color:'transparent',value:createTimeLStamp-createTimeChStamp})
-
-
-    this.dateChartCreate.push({color:'transparent',value:zpTimeStamp-createTimeStamp})
-    this.dateChartCreate.push({color:'transparent',value:zpTimeLStamp-createTimeStamp})
-
-
-    this.dateChartZhipai.push({color:'#ff6358',value:arriveTimeStamp-zpTimeStamp})
-
-    this.dateChartWork.push({color:'rgb(120, 210, 55)',value:finishTimeStamp-arriveTimeStamp})
-    this.dateChartFinish.push({color:'yellow',value:0})
-  }
-
-
-  private dash:DashType;
-
-  private border:Border={
-    color:'transparent',
-    dashType:this.dash,
-    width:0
-  }
-
-  private valueAxisLabel:ValueAxisLabels={
-    content:(_value)=>
-    {
-      //console.log(_value);
-      let dt=new Date(this.startTimeStamp+_value.value);
-      return dt.getHours()+':'+dt.getMinutes()
-    },
-  };
-
-  private zhipai=(e)=>{
-
-    console.log(e);
-    let dt=new Date(this.startTimeStamp+e.stackValue-e.value);
-    return dt.getHours()+'时'+dt.getMinutes()+'分指派'
-
-  }
-
-  private gongzuo=(e)=>{
-
-    console.log(e);
-    let dt=new Date(this.startTimeStamp+e.stackValue-e.value);
-    return dt.getHours()+'时'+dt.getMinutes()+'分开始工作'
-
-  }
-
-  private jianli=(e)=>{
-
-    console.log(e);
-    let dt=new Date(this.startTimeStamp+e.stackValue-e.value);
-    console.log(dt.getHours()+'时'+dt.getMinutes()+'分建立工单');
-    return dt.getHours()+'时'+dt.getMinutes()+'分建立工单'
-
-  }
-
-  private wancheng=(e)=>{
-
-    console.log(e);
-    let dt=new Date(this.startTimeStamp+e.stackValue);
-    return dt.getHours()+'时'+dt.getMinutes()+'完成工作'
-
-  }*/
 
   @ViewChild('surface')
   private surfaceElement: ElementRef;
   private surface: Surface;
 
 
-  private processData={
-    createTime:new Date(2017,11,16,9,5,0,0),
-    process:[
-      {
-        worker:'袁绍',
-        zpTime:new Date(2017,11,16,9,6,0,0),
-        arriveTime:new Date(2017,11,16,9,12,0,0),
-        finishTime:new Date(2017,11,16,10,50,0,0),
-        operationFinish:true
-      },
-      {
-        worker:'诸葛正我',
-        zpTime:new Date(2017,11,16,9,20,0,0),
-        arriveTime:new Date(2017,11,16,9,50,0,0),
-        finishTime:null
-      },
-      {
-        worker:'小岑岑',
-        zpTime:new Date(2017,11,16,9,40,0,0),
-        arriveTime:null,
-        finishTime:null
-      }
-    ]}
+
 
   public ngAfterViewInit(): void {
-    drawProcess(this.createSurface(),this.processData);
+    //drawProcess(this.createSurface(),this.processData);
   }
 
   public ngOnDestroy() {
@@ -360,8 +311,68 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
 
   private updateProcess(){
     console.log('更新图表');
-    //this.processData.createTime=new Date(2017,11,16,8,5,0,0);
     drawProcess(this.createSurface(),this.processData);
+  }
+
+  @ViewChild('itemListRef')tpl: TemplateRef<any>;
+  private dialog;
+  private addProcess(actionTemplate: TemplateRef<any>){
+    this.dialog=this.dialogService.open({
+      title: "添加进度？",
+      content: this.tpl,
+      actions:actionTemplate
+    });
+  }
+
+  private isSavingProcess:boolean=false;
+  private saveProcess(){
+    this.isSavingProcess=true;
+    this.operationService.createAction(this.submitWorkOrder).then(
+      data=>{
+        this.isSavingProcess=false;
+        let result=this.apiResultService.result(data);
+        //成功，更新图表
+      },
+      error=>{
+        this.isSavingProcess=false;
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+  }
+
+  private cancelProcess(){
+    this.dialog.close();
+  }
+
+
+
+  private workers:User[]=[];
+  private isWorkerLoading:boolean=false;
+  private initWorkers(){
+    this.isWorkerLoading=true;
+    this.workers.splice(0,this.workers.length);
+    this.workerService.getWorkerList(null).then(
+      data=>{
+        this.isWorkerLoading=true;
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          for(let i=0;i<result.data.length;i++){
+            if(result.data[0].worker){
+              let user=result.data[0];
+              this.workers.push(user);
+            }
+          }
+          if(this.workers.length>0){
+            this.submitWorkOrder.worker=this.workers[0].id;
+          }
+          console.log(this.workers);
+        }
+      },
+      error=>{
+        this.isWorkerLoading=true;
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
   }
 
 }

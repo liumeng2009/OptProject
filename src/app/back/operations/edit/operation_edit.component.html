@@ -18,6 +18,23 @@
             <span *ngIf="operation.order?.corpBuilding?.position=='N'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;北</span></span>
           </label>
           <label class="k-form-field">
+            <span>工单序号：<span style="font-weight:lighter">{{operation.no}}</span></span>
+          </label>
+          <label class="k-form-field">
+            <span>工单加急：<span style="font-weight:lighter">
+              <span style="color:red" *ngIf="operation.important">是</span>
+              <span style="color:green" *ngIf="!operation.important">否</span>
+            </span></span>
+          </label>
+          <label class="k-form-field">
+            <span>工单处理程度：<span style="font-weight:lighter">
+              <span style="color:#cccccc" *ngIf="operation.complete=='0'">未处理</span>
+              <span style="color:#ffa500" *ngIf="operation.complete=='1'">处理中</span>
+              <span style="color:#008000" *ngIf="operation.complete=='2'">处理完成</span>
+              <span style="color:#999999" *ngIf="operation.complete=='3'">已指派工程师</span>
+            </span></span>
+          </label>
+          <label class="k-form-field">
 
             <div class="ddl-float">
               <label>业务类型:<span class="k-required">*</span> </label>
@@ -30,7 +47,7 @@
                 (selectionChange)="equipTypeChange($event)"
               >
               </kendo-dropdownlist>
-              <span class="k-icon k-i-loading loading loading-position" *ngIf="equipTypeLoading"></span>
+              <span class="k-icon k-i-loading loading loading-position-2" *ngIf="equipTypeLoading"></span>
             </div>
 
             <div class="ddl-float">
@@ -45,7 +62,7 @@
                 (selectionChange)="equipChange($event)"
               >
               </kendo-dropdownlist>
-              <span class="k-icon k-i-loading loading loading-position" *ngIf="equipmentLoading"></span>
+              <span class="k-icon k-i-loading loading loading-position-2" *ngIf="equipmentLoading"></span>
             </div>
 
             <div class="ddl-float">
@@ -74,23 +91,10 @@
           <div class="k-form-field">
             <span style="font-weight:bolder">进程：</span>
 
-            <kendo-chart>
-              <kendo-chart-title text="Units sold"></kendo-chart-title>
-              <kendo-chart-category-axis>
-                <kendo-chart-category-axis-item [categories]="['Q1', 'Q2', 'Q3', 'Q4']">
-                </kendo-chart-category-axis-item>
-              </kendo-chart-category-axis>
-              <kendo-chart-series>
-                <kendo-chart-series-item type="bar" [gap]="2" [spacing]=".25" [data]="[100, 123, 234, 343]">
-                </kendo-chart-series-item>
-                <kendo-chart-series-item type="bar" [data]="[120, 67, 231, 196]">
-                </kendo-chart-series-item>
-                <kendo-chart-series-item type="bar" [data]="[45, 124, 189, 143]">
-                </kendo-chart-series-item>
-                <kendo-chart-series-item type="bar" [data]="[87, 154, 210, 215]">
-                </kendo-chart-series-item>
-              </kendo-chart-series>
-            </kendo-chart>
+            <div>
+              <button class="k-button k-primary " type="button" (click)="addProcess(actionTemplate)" >新增进程</button>
+              <button class="k-button" type="button" (click)="updateProcess()" >刷新</button>
+            </div>
 
             <div #surface style="height:400px">
 
@@ -108,3 +112,89 @@
     </div>
   </div>
 </div>
+<div kendoDialogContainer></div>
+<ng-template #itemListRef>
+  <form class="k-form"  (ngSubmit)="onSubmit()" #orderForm="ngForm">
+    <div class="k-form-field">
+      <p style="display: flex">
+        <input type="checkbox" id="auth-2fa" [disabled]="true" class="k-checkbox" name="auth-2fa"  [(ngModel)]="submitWorkOrder.showWorker" (click)="finishCheckChanged($event,dataItem)" >
+        <label class="k-checkbox-label" style="top:3px" for="auth-2fa" >选择工程师&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <kendo-dropdownlist
+          name="worker"
+          [data]="workers"
+          [textField]="'name'"
+          [valueField]="'id'"
+          [(ngModel)]="submitWorkOrder.worker"
+        >
+        </kendo-dropdownlist>
+      </p>
+      <span class="k-icon k-i-loading loading loading-position" *ngIf="groupLoading"></span>
+    </div>
+    <div class="k-form-field">
+      <p style="display: flex;">
+        <input type="checkbox" id="auth-2fb" [disabled]="true" class="k-checkbox" name="auth-2fb"  [(ngModel)]="submitWorkOrder.showWorker" (click)="finishCheckChanged($event,dataItem)" >
+        <label class="k-checkbox-label" style="top:3px" for="auth-2fb" >设置指派时间&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <kendo-datepicker #incoming_date [value]="submitWorkOrder.call_date" name="call_date" [format]="'yyyy年MM月dd日'"
+                            (valueChange)="dateChange($event)"  [disabled]="!submitWorkOrder.showWorker"
+          >
+            <kendo-datepicker-messages
+              today="今天"
+              toggle="选择日期"
+            ></kendo-datepicker-messages>
+          </kendo-datepicker>
+          <lmtimepicker [timeNow]="submitWorkOrder.call_date_time" [disabled]="submitWorkOrder.showWorker"   id="timetest" name="timetest" (change)="onTimeChange($event)" ></lmtimepicker>
+      </p>
+    </div>
+
+    <div class="k-form-field">
+      <p style="display:flex;">
+          <input type="checkbox" id="auth-2fc" class="k-checkbox" name="auth-2fc"  [(ngModel)]="submitWorkOrder.showArriveDate" (click)="finishCheckChanged($event,dataItem)" >
+          <label class="k-checkbox-label" style="top:3px" for="auth-2fc" >设置开始工作时间</label>
+
+          <kendo-datepicker #incoming_date [value]="submitWorkOrder.call_date" name="call_date" [format]="'yyyy年MM月dd日'"
+                            (valueChange)="dateChange($event)" [disabled]="!submitWorkOrder.showArriveDate"
+          >
+            <kendo-datepicker-messages
+              today="今天"
+              toggle="选择日期"
+            ></kendo-datepicker-messages>
+          </kendo-datepicker>
+
+          <lmtimepicker [timeNow]="submitWorkOrder.call_date_time" [disabled]="submitWorkOrder.showArriveDate"   id="timetest" name="timetest" (change)="onTimeChange($event)" ></lmtimepicker>
+      </p>
+    </div>
+
+    <div class="k-form-field">
+      <p style="display: flex">
+        <input type="checkbox" id="auth-2fd" class="k-checkbox" name="auth-2fd"  [(ngModel)]="submitWorkOrder.showFinishDate" (click)="finishCheckChanged($event,dataItem)" >
+        <label class="k-checkbox-label" style="top:3px" for="auth-2fd" >设置结束工作时间</label>
+          <kendo-datepicker #incoming_date [value]="submitWorkOrder.call_date" name="call_date" [format]="'yyyy年MM月dd日'"
+                            (valueChange)="dateChange($event)" [disabled]="!submitWorkOrder.showFinishDate"
+          >
+            <kendo-datepicker-messages
+              today="今天"
+              toggle="选择日期"
+            ></kendo-datepicker-messages>
+          </kendo-datepicker>
+
+          <lmtimepicker [timeNow]="submitWorkOrder.call_date_time" [disabled]="submitWorkOrder.showFinishDate"  id="timetest" name="timetest" (change)="onTimeChange($event)" ></lmtimepicker>
+
+      </p>
+    </div>
+
+    <div class="k-form-field">
+      <p style="display: flex">
+        <input type="checkbox" id="auth-2fe" class="k-checkbox" name="auth-2fe"  [(ngModel)]="submitWorkOrder.isCompleteOperation" (click)="finishCheckChanged($event,dataItem)" >
+        <label class="k-checkbox-label" style="top:3px" for="auth-2fe" >工单完成了？</label>
+      </p>
+    </div>
+
+  </form>
+
+</ng-template>
+<ng-template #actionTemplate>
+  <button kendoButton (click)="cancelProcess()">取消</button>
+  <button kendoButton [primary]="true" (click)="saveProcess()" [icon]="SaveOrderAllLoading" [disabled]="isHiddenSaveOrderAllButton">
+    保存
+  </button>
+</ng-template>

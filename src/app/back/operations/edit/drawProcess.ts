@@ -1,11 +1,9 @@
 import {
   Surface, Path, Text, Group, GradientOptions,
-  GradientStopOptions, GradientStop,LinearGradient
+  GradientStopOptions, GradientStop,LinearGradient,geometry as geo
 } from '@progress/kendo-drawing';
 
 import { transform,Point,Size,Rect,Transformation} from '@progress/kendo-drawing/geometry';
-
-import {Animation} from '@progress/kendo-drawing/dist/es/animations'
 
 export function drawProcess(surface,data) {
 
@@ -19,30 +17,35 @@ export function drawProcess(surface,data) {
   let xAxisMinTime=new Date(createTime.getFullYear(),createTime.getMonth(),createTime.getDate(),createTime.getHours(),0,0,0);
   //计算x轴的最大时间
   let xAxisMaxTime=new Date(1900,1,1,0,0,0,0);
-  for(let i=0;i<data.process.length;i++){
-    if(data.process[i].operationFinish){
-      //说明这条进程标志着工单结束，那么最大时间就是这个进程的完成时间
-      let finishTime=data.process[0].finishTime;
-      xAxisMaxTime=new Date(finishTime.getFullYear(),finishTime.getMonth(),finishTime.getDate(),finishTime.getHours()+1,0,0,0);
-      break;
-    }
-    else{
-      //没有工单完成的标志位，说明全部的进程都没有完成工单，再找arriveTime的最大值
-      if(data.process[0].arriveTime){
-        let arriveTime=data.process[0].arriveTime;
-        if(Date.parse(arriveTime)>Date.parse(xAxisMaxTime.toDateString()))
-          xAxisMaxTime=new Date(arriveTime.getFullYear(),arriveTime.getMonth(),arriveTime.getDate(),arriveTime.getHours()+1,0,0,0)
+  if(data.process.length>0) {
+    for (let i = 0; i < data.process.length; i++) {
+      if (data.process[i].operationFinish) {
+        //说明这条进程标志着工单结束，那么最大时间就是这个进程的完成时间
+        let finishTime = data.process[0].finishTime;
+        xAxisMaxTime = new Date(finishTime.getFullYear(), finishTime.getMonth(), finishTime.getDate(), finishTime.getHours() + 1, 0, 0, 0);
+        break;
       }
-      else{
-        //连arrivetime都没有，再看zptime
-        let zptime=data.process[0].zpTime;
-        if(zptime){
-          if(Date.parse(zptime)>Date.parse(xAxisMaxTime.toDateString())){
-            xAxisMaxTime=new Date(zptime.getFullYear(),zptime.getMonth(),zptime.getDate(),zptime.getHours()+1,0,0,0)
+      else {
+        //没有工单完成的标志位，说明全部的进程都没有完成工单，再找arriveTime的最大值
+        if (data.process[0].arriveTime) {
+          let arriveTime = data.process[0].arriveTime;
+          if (Date.parse(arriveTime) > Date.parse(xAxisMaxTime.toDateString()))
+            xAxisMaxTime = new Date(arriveTime.getFullYear(), arriveTime.getMonth(), arriveTime.getDate(), arriveTime.getHours() + 1, 0, 0, 0)
+        }
+        else {
+          //连arrivetime都没有，再看zptime
+          let zptime = data.process[0].zpTime;
+          if (zptime) {
+            if (Date.parse(zptime) > Date.parse(xAxisMaxTime.toDateString())) {
+              xAxisMaxTime = new Date(zptime.getFullYear(), zptime.getMonth(), zptime.getDate(), zptime.getHours() + 1, 0, 0, 0)
+            }
           }
         }
       }
     }
+  }
+  else{
+    xAxisMaxTime=new Date(createTime.getFullYear(),createTime.getMonth(),createTime.getDate(),createTime.getHours()+2,0,0,0);
   }
 
   console.log(xAxisMinTime);
@@ -55,7 +58,7 @@ export function drawProcess(surface,data) {
   //最多有多少刻度
   let MAX_SCALE_COUNT=20;
   //左边预留多少距离
-  let LEFT_MARGIN=100;
+  let LEFT_MARGIN=60;
   let is=0;
   while(timeSpan/(timeSpanArray[is]*1000*60)>MAX_SCALE_COUNT){
     is++;
@@ -67,7 +70,11 @@ export function drawProcess(surface,data) {
 
   let scaleWidth=(width-LEFT_MARGIN)/scaleCount;
 
-  let group=new Group();
+  console.log(scaleWidth);
+
+  let groupLine=new Group();
+
+  let dayFirst=xAxisMinTime.getDate();
 
   for(let i=0;i<scaleCount;i++){
     let path = new Path({
@@ -77,21 +84,35 @@ export function drawProcess(surface,data) {
       }
     });
 
+    let timeNowStamp=Date.parse(xAxisMinTime.toString())+scale*60*1000*i;
+
+    let timeNow=new Date(timeNowStamp)
+
+    if(dayFirst==timeNow.getDate()){
+
+    }
+    else{
+      let timeText=timeNow.getFullYear().toString().substring(2,4)+'/'+timeNow.getMonth() +'/'+timeNow.getDate();
+      let textDate=new Text(timeText,[scaleWidth*i+LEFT_MARGIN-33, height-50+26],{});
+      groupLine.append(textDate);
+      dayFirst=timeNow.getDate();
+    }
+
     path.moveTo(scaleWidth*i+LEFT_MARGIN, 50).lineTo(scaleWidth*i+LEFT_MARGIN, height-50+6);
 
     // Create the text
 
     if(i==0){
-      let timeText=xAxisMinTime.getFullYear()+'年'+xAxisMinTime.getMonth() +'月'+xAxisMinTime.getDate()+'日';
-      let textDate=new Text(timeText,[scaleWidth*i+LEFT_MARGIN-46, height-50+26],{});
-      group.append(textDate);
+      let timeText=xAxisMinTime.getFullYear().toString().substring(2,4)+'/'+xAxisMinTime.getMonth() +'/'+xAxisMinTime.getDate();
+      let textDate=new Text(timeText,[scaleWidth*i+LEFT_MARGIN-33, height-50+26],{});
+      groupLine.append(textDate);
     }
 
     let text = new Text(showTime(xAxisMinTime,i,scale), [LEFT_MARGIN+scaleWidth*i-17, height-50+6], {
 
     });
 
-    group.append(path,text);
+    groupLine.append(path,text);
 
   }
 
@@ -104,7 +125,7 @@ export function drawProcess(surface,data) {
 
   pathRed.moveTo(LEFT_MARGIN-3,height-50).lineTo(width-LEFT_MARGIN+scaleWidth,height-50).close();
 
-  group.append(pathRed);
+  groupLine.append(pathRed);
 
   let processLength=processs.length;
 
@@ -124,7 +145,7 @@ export function drawProcess(surface,data) {
 
     });
 
-    group.append(path,textWorker);
+    groupLine.append(path,textWorker);
 
   }
 
@@ -138,15 +159,16 @@ export function drawProcess(surface,data) {
       dashType:'dot'
     }
   });
-  pathCreateLine.moveTo(LEFT_MARGIN+createLineX,0).lineTo(LEFT_MARGIN+createLineX,height-43);
+  pathCreateLine.moveTo(LEFT_MARGIN+createLineX,15).lineTo(LEFT_MARGIN+createLineX,height-23);
 
   let textCreateLine = new Text('工单建立:'+showTimeSimple(new Date(createTime)), [LEFT_MARGIN+createLineX+5, 10], {
 
   });
 
-  group.append(pathCreateLine,textCreateLine);
+  groupLine.append(pathCreateLine,textCreateLine);
 
   //绑定进程
+  let groupBar=new Group();
   let PROCESS_BAR_WIDTH=30;
   for(let i=0;i<processLength;i++){
     let _process=processs[i];
@@ -182,15 +204,11 @@ export function drawProcess(surface,data) {
 
 
 
-/*      setTimeout(()=>{
-        group.transform(transform().scale(1,1));
-        let ac=new Animation(group,{duration:5000});
-        ac.play();
-      },2000)*/
 
 
 
-      group.append(path,textZp,textStartWork);
+      groupBar.append(path);
+      groupLine.append(textZp,textStartWork);
 
       //再看完成时间是否设置了
       if(_process.finishTime){
@@ -213,8 +231,8 @@ export function drawProcess(surface,data) {
 
         });
 
-        group.append(pathFinish,textEndWork);
-
+        groupBar.append(pathFinish);
+        groupLine.append(textEndWork);
       }
       else{
         //说明工作进行中，但是没有完成
@@ -237,7 +255,8 @@ export function drawProcess(surface,data) {
 
         });
 
-        group.append(pathUnFinish,textNoEndWork);
+        groupBar.append(pathUnFinish);
+        groupLine.append(textNoEndWork);
 
       }
 
@@ -268,7 +287,8 @@ export function drawProcess(surface,data) {
 
       });
 
-      group.append(pathUnFinish,textZp,textNoWork);
+      groupBar.append(pathUnFinish);
+      groupLine.append(textZp,textNoWork);
     }
 
 
@@ -293,13 +313,13 @@ export function drawProcess(surface,data) {
 
 
 
-      pathFinishLine.moveTo(LEFT_MARGIN+finishLineX,0).lineTo(LEFT_MARGIN+finishLineX,height-43);
+      pathFinishLine.moveTo(LEFT_MARGIN+finishLineX,15).lineTo(LEFT_MARGIN+finishLineX,height-23);
 
       let textFinishLine = new Text('工单完成:'+showTimeSimple(new Date(_process.finishTime)), [LEFT_MARGIN+finishLineX+5, 10], {
 
       });
 
-      group.append(pathFinishLine,textFinishLine);
+      groupLine.append(pathFinishLine,textFinishLine);
 
       break;
 
@@ -308,7 +328,26 @@ export function drawProcess(surface,data) {
 
 
 
-  surface.draw(group);
+  surface.draw(groupLine);
+  surface.draw(groupBar);
+  //毫秒
+  let animationTime=1000;
+  let intervalTime=10;
+  let than=0;
+  let intervalNow=0;
+
+  let loop=setInterval(()=>{
+    groupBar.transform(transform().scale(than,1));
+    //than=than+intervalTime/animationTime;
+    let newthan=easeInOut(intervalNow,0,1,animationTime);
+    if(newthan<than){
+      clearInterval(loop);
+    }
+    else{
+      than=newthan;
+    }
+    intervalNow=intervalNow+intervalTime;
+  },intervalTime)
 }
 
 export function showTime(startTime:Date,i,scale){
@@ -322,5 +361,10 @@ export function showTime(startTime:Date,i,scale){
 export function showTimeSimple(time:Date){
   let dateNew=time;
   return (dateNew.getHours()<10?'0'+dateNew.getHours():dateNew.getHours())+':'+(dateNew.getMinutes()<10?'0'+dateNew.getMinutes():dateNew.getMinutes())+'';
+}
+
+export function easeInOut(t,b,c,d){
+  if((t /=d/2)<1) return c/2*t*t+b;
+  return -c/2*((--t)*(t-2)-1)+b;
 }
 

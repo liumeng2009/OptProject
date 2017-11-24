@@ -11,6 +11,7 @@ import {ResponseData} from '../../bean/responseData';
 import {OptConfig} from '../../config/config'
 
 import {User} from '../../bean/user';
+import {WorkOrder} from "../../bean/workOrder";
 
 
 @Injectable()
@@ -21,6 +22,8 @@ export class OperationService{
   private geturl=new OptConfig().serverPath+'/api/operation';
   private saveurl=new OptConfig().serverPath+'/api/operation/add';
   private deleteurl=new OptConfig().serverPath+'/api/operation/delete';
+
+  private saveactionurl=new OptConfig().serverPath+'/api/action/add';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
@@ -65,6 +68,15 @@ export class OperationService{
     let token=this.cookieService.get('optToken');
     return this.http
       .get(this.deleteurl+'/'+userId+'?token='+token)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  createAction(workOrder:WorkOrder):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.saveactionurl+'?token='+token, workOrder, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
