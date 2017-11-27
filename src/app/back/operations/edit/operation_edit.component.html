@@ -7,9 +7,11 @@
             <span>订单序号：<span style="font-weight:lighter">{{operation.order.no}}</span></span>
 
           </label>
+
           <label class="k-form-field">
             <span>订单来源：<span style="font-weight:lighter">{{operation.order.corporation?.name}} {{operation.order.custom_name}} {{operation.order.custom_phone}}</span></span>
           </label>
+
           <label class="k-form-field">
             <span *ngIf="operation.order?.corpBuilding?.position=='A'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;全部</span></span>
             <span *ngIf="operation.order?.corpBuilding?.position=='E'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;东</span></span>
@@ -132,27 +134,27 @@
     </div>
     <div class="k-form-field">
       <p style="display: flex;">
-        <input type="checkbox" id="auth-2fb" [disabled]="true" class="k-checkbox" name="auth-2fb"  [(ngModel)]="submitWorkOrder.showWorker" (click)="finishCheckChanged($event,dataItem)" >
+        <input type="checkbox" id="auth-2fb" [disabled]="true" class="k-checkbox" name="auth-2fb"  [(ngModel)]="submitWorkOrder.showWorker" >
         <label class="k-checkbox-label" style="top:3px" for="auth-2fb" >设置指派时间&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
           <kendo-datepicker #incoming_date [value]="submitWorkOrder.call_date" name="call_date" [format]="'yyyy年MM月dd日'"
-                            (valueChange)="dateChange($event)"  [disabled]="!submitWorkOrder.showWorker"
+                            (valueChange)="callDateChange($event)"  [disabled]="!submitWorkOrder.showWorker"
           >
             <kendo-datepicker-messages
               today="今天"
               toggle="选择日期"
             ></kendo-datepicker-messages>
           </kendo-datepicker>
-          <lmtimepicker [timeNow]="submitWorkOrder.call_date_time" [disabled]="submitWorkOrder.showWorker"   id="timetest" name="timetest" (change)="onTimeChange($event)" ></lmtimepicker>
+          <lmtimepicker [timeNow]="submitWorkOrder.call_date_time" [disabled]="submitWorkOrder.showWorker"   id="timetest" name="timetest" (change)="onCallTimeChange($event)" ></lmtimepicker>
       </p>
     </div>
 
     <div class="k-form-field">
       <p style="display:flex;">
-          <input type="checkbox" id="auth-2fc" class="k-checkbox" name="auth-2fc"  [(ngModel)]="submitWorkOrder.showArriveDate" (click)="finishCheckChanged($event,dataItem)" >
+          <input type="checkbox" id="auth-2fc" class="k-checkbox" name="auth-2fc"  [(ngModel)]="submitWorkOrder.showArriveDate" >
           <label class="k-checkbox-label" style="top:3px" for="auth-2fc" >设置开始工作时间</label>
 
-          <kendo-datepicker #incoming_date [value]="submitWorkOrder.call_date" name="call_date" [format]="'yyyy年MM月dd日'"
-                            (valueChange)="dateChange($event)" [disabled]="!submitWorkOrder.showArriveDate"
+          <kendo-datepicker #incoming_date [value]="submitWorkOrder.arrive_date" name="call_date" [format]="'yyyy年MM月dd日'"
+                            (valueChange)="arriveDateChange($event)" [disabled]="!submitWorkOrder.showArriveDate"
           >
             <kendo-datepicker-messages
               today="今天"
@@ -160,16 +162,16 @@
             ></kendo-datepicker-messages>
           </kendo-datepicker>
 
-          <lmtimepicker [timeNow]="submitWorkOrder.call_date_time" [disabled]="submitWorkOrder.showArriveDate"   id="timetest" name="timetest" (change)="onTimeChange($event)" ></lmtimepicker>
+          <lmtimepicker [timeNow]="submitWorkOrder.arrive_date_time" [disabled]="submitWorkOrder.showArriveDate"   id="timetest" name="timetest" (change)="onArriveTimeChange($event)" ></lmtimepicker>
       </p>
     </div>
 
     <div class="k-form-field">
       <p style="display: flex">
-        <input type="checkbox" id="auth-2fd" class="k-checkbox" name="auth-2fd"  [(ngModel)]="submitWorkOrder.showFinishDate" (click)="finishCheckChanged($event,dataItem)" >
+        <input type="checkbox" id="auth-2fd" class="k-checkbox" name="auth-2fd"  [(ngModel)]="submitWorkOrder.showFinishDate" (change)="finishCheckedChange($event)" >
         <label class="k-checkbox-label" style="top:3px" for="auth-2fd" >设置结束工作时间</label>
-          <kendo-datepicker #incoming_date [value]="submitWorkOrder.call_date" name="call_date" [format]="'yyyy年MM月dd日'"
-                            (valueChange)="dateChange($event)" [disabled]="!submitWorkOrder.showFinishDate"
+          <kendo-datepicker #incoming_date [value]="submitWorkOrder.finish_date" name="call_date" [format]="'yyyy年MM月dd日'"
+                            (valueChange)="finishDateChange($event)" [disabled]="!submitWorkOrder.showFinishDate"
           >
             <kendo-datepicker-messages
               today="今天"
@@ -177,7 +179,7 @@
             ></kendo-datepicker-messages>
           </kendo-datepicker>
 
-          <lmtimepicker [timeNow]="submitWorkOrder.call_date_time" [disabled]="submitWorkOrder.showFinishDate"  id="timetest" name="timetest" (change)="onTimeChange($event)" ></lmtimepicker>
+          <lmtimepicker [timeNow]="submitWorkOrder.finish_date_time" [disabled]="submitWorkOrder.showFinishDate"  id="timetest" name="timetest" (change)="onFinishTimeChange($event)" ></lmtimepicker>
 
       </p>
     </div>

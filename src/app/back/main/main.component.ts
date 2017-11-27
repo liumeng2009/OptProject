@@ -1,4 +1,4 @@
-import {Component,OnInit,ViewContainerRef} from '@angular/core';
+import {Component,OnInit,ViewContainerRef,HostListener} from '@angular/core';
 import {Router,ActivatedRoute,NavigationEnd} from '@angular/router'
 import {Location} from '@angular/common';
 import {Title} from '@angular/platform-browser';
@@ -83,7 +83,20 @@ export class MainComponent implements OnInit{
 
   }
 
+  private topNumber={
+    position:'relative',
+    top:'0px;'
+  };
   ngOnInit(){
+    let $t=this;
+    window.onscroll=function(){
+      let topNum=document.body.scrollTop;
+      //alert(topNum);
+      $t.topNumber.top=topNum+'px';
+    }
+
+
+
     this.checkLogin();
     let url=this.location.path();
     url=url.substring(1,url.length);
@@ -195,6 +208,8 @@ export class MainComponent implements OnInit{
         }
       });
   }
+
+
 
   private checkLogin(){
     this.mainService.getUserInfo()

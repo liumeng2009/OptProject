@@ -21,22 +21,22 @@ export function drawProcess(surface,data) {
     for (let i = 0; i < data.process.length; i++) {
       if (data.process[i].operationFinish) {
         //说明这条进程标志着工单结束，那么最大时间就是这个进程的完成时间
-        let finishTime = data.process[0].finishTime;
+        let finishTime = data.process[i].finishTime;
         xAxisMaxTime = new Date(finishTime.getFullYear(), finishTime.getMonth(), finishTime.getDate(), finishTime.getHours() + 1, 0, 0, 0);
         break;
       }
       else {
         //没有工单完成的标志位，说明全部的进程都没有完成工单，再找arriveTime的最大值
-        if (data.process[0].arriveTime) {
-          let arriveTime = data.process[0].arriveTime;
+        if (data.process[i].arriveTime) {
+          let arriveTime = data.process[i].arriveTime;
           if (Date.parse(arriveTime) > Date.parse(xAxisMaxTime.toDateString()))
             xAxisMaxTime = new Date(arriveTime.getFullYear(), arriveTime.getMonth(), arriveTime.getDate(), arriveTime.getHours() + 1, 0, 0, 0)
         }
         else {
           //连arrivetime都没有，再看zptime
-          let zptime = data.process[0].zpTime;
+          let zptime = data.process[i].zpTime;
           if (zptime) {
-            if (Date.parse(zptime) > Date.parse(xAxisMaxTime.toDateString())) {
+            if (Date.parse(zptime) > Date.parse(xAxisMaxTime.toString())) {
               xAxisMaxTime = new Date(zptime.getFullYear(), zptime.getMonth(), zptime.getDate(), zptime.getHours() + 1, 0, 0, 0)
             }
           }

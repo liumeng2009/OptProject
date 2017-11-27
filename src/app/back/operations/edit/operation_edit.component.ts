@@ -161,7 +161,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
   private submitWorkOrder:WorkOrder=new WorkOrder('','',null,null,null,null,
     null,null,false,0,null,null,
     0,null,null,null,null,null,null,true,false,false,true,'',0,null,null,
-    null,null,true
+    null,null,false
   );
   private getData(){
     this.route.params.subscribe((params: Params) =>{
@@ -175,9 +175,13 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
             this.submitWorkOrder.id=params.id;
             let operation_create_time=result.data.create_time;
             let createTime=new Date(operation_create_time);
-            //先把工单建立时间赋值给指派时间
+            //先把工单建立时间赋值给指派时间、开始时间和结束时间，作为初始值
             this.submitWorkOrder.call_date=createTime;
             this.submitWorkOrder.call_date_time=new LmTime(createTime.getHours(),createTime.getMinutes(),createTime.getSeconds());
+            this.submitWorkOrder.arrive_date=createTime;
+            this.submitWorkOrder.arrive_date_time=new LmTime(createTime.getHours(),createTime.getMinutes(),createTime.getSeconds());
+            this.submitWorkOrder.finish_date=createTime;
+            this.submitWorkOrder.finish_date_time=new LmTime(createTime.getHours(),createTime.getMinutes(),createTime.getSeconds());
             //把数据送到图表类，开始画图表
             let operationCreateTime=new Date(result.data.create_time);
             this.processData.createTime=operationCreateTime;
@@ -326,12 +330,34 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
 
   private isSavingProcess:boolean=false;
   private saveProcess(){
+    //处理一下submit
+    //处理calltime
+    let call_time_Stamp_type_date=new Date(this.submitWorkOrder.call_date.getFullYear(),this.submitWorkOrder.call_date.getMonth(),
+    this.submitWorkOrder.call_date.getDate(),this.submitWorkOrder.call_date_time.hour,this.submitWorkOrder.call_date_time.minute,
+      this.submitWorkOrder.call_date_time.second,0);
+    this.submitWorkOrder.call_date_timestamp=Date.parse(call_time_Stamp_type_date.toString());
+    //处理arrivetime
+    if(this.submitWorkOrder.showArriveDate&&this.submitWorkOrder.arrive_date!=null&&this.submitWorkOrder.arrive_date_time!=null){
+      let arrive_time_Stamp_type_date=new Date(this.submitWorkOrder.arrive_date.getFullYear(),this.submitWorkOrder.arrive_date.getMonth(),
+        this.submitWorkOrder.arrive_date.getDate(),this.submitWorkOrder.arrive_date_time.hour,this.submitWorkOrder.arrive_date_time.minute,
+        this.submitWorkOrder.arrive_date_time.second,0);
+      this.submitWorkOrder.arrive_date_timestamp=Date.parse(arrive_time_Stamp_type_date.toString());
+    }
+    //处理finishtime
+    if(this.submitWorkOrder.showFinishDate&&this.submitWorkOrder.finish_date!=null&&this.submitWorkOrder.finish_date_time!=null){
+      let finish_time_Stamp_type_date=new Date(this.submitWorkOrder.finish_date.getFullYear(),this.submitWorkOrder.finish_date.getMonth(),
+        this.submitWorkOrder.finish_date.getDate(),this.submitWorkOrder.finish_date_time.hour,this.submitWorkOrder.finish_date_time.minute,
+        this.submitWorkOrder.finish_date_time.second,0);
+      this.submitWorkOrder.finish_date_timestamp=Date.parse(finish_time_Stamp_type_date.toString());
+    }
+    console.log(this.submitWorkOrder);
     this.isSavingProcess=true;
     this.operationService.createAction(this.submitWorkOrder).then(
       data=>{
         this.isSavingProcess=false;
         let result=this.apiResultService.result(data);
         //成功，更新图表
+        drawProcess(this.createSurface(),this.processData);
       },
       error=>{
         this.isSavingProcess=false;
@@ -357,8 +383,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
           for(let i=0;i<result.data.length;i++){
-            if(result.data[0].worker){
-              let user=result.data[0];
+            if(result.data[i].worker){
+              let user=result.data[i];
               this.workers.push(user);
             }
           }
@@ -373,6 +399,51 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
         this.ajaxExceptionService.simpleOp(error);
       }
     )
+  }
+
+  private callDateChange($event){
+    console.log($event);
+    this.submitWorkOrder.call_date=$event;
+  }
+
+  private arriveDateChange($event){
+    console.log($event);
+    this.submitWorkOrder.arrive_date=$event;
+  }
+
+  private finishDateChange($event){
+    console.log($event);
+    this.submitWorkOrder.finish_date=$event;
+  }
+  private onCallTimeChange($event){
+    console.log($event);
+    this.submitWorkOrder.call_date_time=$event;
+  }
+  private onArriveTimeChange($event){
+    console.log($event);
+    this.submitWorkOrder.arrive_date_time=$event;
+    console.log(this.submitWorkOrder);
+  }
+  private onFinishTimeChange($event){
+    console.log($event);
+    this.submitWorkOrder.finish_date_time=$event;
+  }
+  private finishCheckedChange($event){
+    console.log($event);
+    if($event.target.checked){
+      this.submitWorkOrder.showArriveDate=true;
+      this.submitWorkOrder.isCompleteOperation=true;
+    }
+    else{
+      this.submitWorkOrder.isCompleteOperation=false;
+    }
+  }
+
+  private finishCheckChanged($event){
+    if($event.target.checked){
+      this.submitWorkOrder.showArriveDate=true;
+      this.submitWorkOrder.showFinishDate=true;
+    }
   }
 
 }

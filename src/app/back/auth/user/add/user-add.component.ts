@@ -21,7 +21,7 @@ import {Gender} from "../../../../bean/gender";
 
 export class UserAddComponent implements OnInit{
 
-  user=new User(null,null,null,null,null,null,true);
+  user=new User(null,null,null,true,null,null,true);
 
   genders=[
     new Gender('男',false),
@@ -71,5 +71,14 @@ export class UserAddComponent implements OnInit{
       this.ajaxExceptionService.simpleOp(error);
     }
     )
+  }
+
+  private femaleChange($event){
+    console.log($event);
+    this.user.gender=false;
+  }
+  private maleChange($event){
+    console.log($event);
+    this.user.gender=true;
   }
 }

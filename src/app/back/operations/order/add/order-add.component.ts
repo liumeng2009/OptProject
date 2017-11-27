@@ -207,8 +207,8 @@ export class OrderAddComponent implements OnInit{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
           for(let i=0;i<result.data.length;i++){
-            if(result.data[0].worker){
-              let user=result.data[0];
+            if(result.data[i].worker){
+              let user=result.data[i];
               this.workers.push(user);
             }
           }

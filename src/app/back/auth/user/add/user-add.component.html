@@ -18,15 +18,18 @@
           </label>
 
           <label class="k-form-field">
-            <span for="gender">性别</span>
-
-              <label style="float:left;margin-top: 3px;" *ngFor="let g of genders">
+<!--            <span>性别</span>
+              <span *ngFor="let g of genders">
                 <input type="radio" name="gender" id="gender{{g.value}}" class="k-radio" value="{{g.value}}" [(ngModel)]="user.gender">
                 <label class="k-radio-label" for="gender{{g.value}}">{{g.name}}</label>
-              </label>
-              <div style="clear:both">
+              </span>-->
+            <span>性别</span>
 
-              </div>
+            <input type="radio" name="gender" id="female" class="k-radio" (change)="femaleChange($event)" checked="{{user.gender?'':'checked'}}" >
+            <label class="k-radio-label" for="female">女</label>
+
+            <input type="radio" name="gender" id="male" class="k-radio" (change)="maleChange($event)" checked="{{user.gender?'checked':''}}">
+            <label class="k-radio-label" for="male">男</label>
           </label>
           <label class="k-form-field">
             <span for="phone">电话</span>

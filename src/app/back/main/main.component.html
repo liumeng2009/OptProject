@@ -19,7 +19,7 @@
 <div class="container-fluid" *ngIf="user" style="padding-top: 70px;padding-bottom: 50px;">
   <div class="row">
     <div class="col-xs-4 col-sm-4 col-lg-2 col-md-3">
-      <div>
+      <div [ngStyle]="topNumber">
         <div>
           <div class="teamMate">
             <img [src]="imageUrl('avata_128')" alt="{{user.name}}">
