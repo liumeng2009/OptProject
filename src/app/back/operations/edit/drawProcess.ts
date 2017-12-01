@@ -4,13 +4,34 @@ import {
 } from '@progress/kendo-drawing';
 
 import { transform,Point,Size,Rect,Transformation} from '@progress/kendo-drawing/geometry';
+import {Coordinate} from "../../../bean/coordinate";
 
-export function drawProcess(surface,data) {
+
+export function drawProcess(surface,data,_this) {
 
   let height=surface._size.height;
   let width=surface._size.width;
 
   let createTime=data.createTime;
+
+  //组织一个list，里面存放id和这个id相关的四个坐标，点击时，根据点击点在哪个坐标区域内，来决定id是谁
+  let coordinateArray:Coordinate[]=[];
+
+  surface.bind('click',(e)=>{
+    console.log(e);
+    console.log(coordinateArray);
+    let xClickInMap=e.originalEvent.offsetX;
+    let yClickInMap=e.originalEvent.offsetY;
+    for(let coord of coordinateArray){
+      if(xClickInMap>=coord.lt&&xClickInMap<=coord.rt&&yClickInMap>=coord.lb&&yClickInMap<=coord.rb){
+        //说明在区域中
+        //alert(coord.id);
+        //mission.showActionDialog.emit(coord.id);
+        _this.test(coord.id);
+        break;
+      }
+    }
+  });
 
   let processs=data.process;
   //x轴的最小时间
@@ -25,23 +46,33 @@ export function drawProcess(surface,data) {
         xAxisMaxTime = new Date(finishTime.getFullYear(), finishTime.getMonth(), finishTime.getDate(), finishTime.getHours() + 1, 0, 0, 0);
         break;
       }
-      else {
-        //没有工单完成的标志位，说明全部的进程都没有完成工单，再找arriveTime的最大值
-        if (data.process[i].arriveTime) {
-          let arriveTime = data.process[i].arriveTime;
-          if (Date.parse(arriveTime) > Date.parse(xAxisMaxTime.toDateString()))
-            xAxisMaxTime = new Date(arriveTime.getFullYear(), arriveTime.getMonth(), arriveTime.getDate(), arriveTime.getHours() + 1, 0, 0, 0)
+      else{
+        //有完成时间
+        if(data.process[i].finishTime){
+          let finishTime=data.process[i].finishTime;
+          if(Date.parse(finishTime)>Date.parse(xAxisMaxTime.toString())){
+            xAxisMaxTime=new Date(finishTime.getFullYear(), finishTime.getMonth(), finishTime.getDate(), finishTime.getHours() + 1, 0, 0, 0)
+          }
         }
         else {
-          //连arrivetime都没有，再看zptime
-          let zptime = data.process[i].zpTime;
-          if (zptime) {
-            if (Date.parse(zptime) > Date.parse(xAxisMaxTime.toString())) {
-              xAxisMaxTime = new Date(zptime.getFullYear(), zptime.getMonth(), zptime.getDate(), zptime.getHours() + 1, 0, 0, 0)
+          //没有工单完成的标志位，说明全部的进程都没有完成工单，再找arriveTime的最大值
+          if (data.process[i].arriveTime) {
+            let arriveTime = data.process[i].arriveTime;
+            if (Date.parse(arriveTime) > Date.parse(xAxisMaxTime.toString()))
+              xAxisMaxTime = new Date(arriveTime.getFullYear(), arriveTime.getMonth(), arriveTime.getDate(), arriveTime.getHours() + 1, 0, 0, 0)
+          }
+          else {
+            //连arrivetime都没有，再看zptime
+            let zptime = data.process[i].zpTime;
+            if (zptime) {
+              if (Date.parse(zptime) > Date.parse(xAxisMaxTime.toString())) {
+                xAxisMaxTime = new Date(zptime.getFullYear(), zptime.getMonth(), zptime.getDate(), zptime.getHours() + 1, 0, 0, 0)
+              }
             }
           }
         }
       }
+
     }
   }
   else{
@@ -170,6 +201,7 @@ export function drawProcess(surface,data) {
   //绑定进程
   let groupBar=new Group();
   let PROCESS_BAR_WIDTH=30;
+  let xMin=0;
   for(let i=0;i<processLength;i++){
     let _process=processs[i];
     let y=50+((personHeight-PROCESS_BAR_WIDTH)/2)+personHeight*i;
@@ -178,6 +210,15 @@ export function drawProcess(surface,data) {
       let x;
       let zpToYTime= Date.parse(_process.zpTime)-Date.parse(xAxisMinTime.toString());
       x=(zpToYTime/(scale*60*1000))*scaleWidth+LEFT_MARGIN;
+
+      if(xMin==0){
+        xMin=x;
+      }
+      else{
+        if(x<xMin){
+          xMin=x;
+        }
+      }
 
       let xArrive;
       let arriveToYTime= Date.parse(_process.arriveTime)-Date.parse(xAxisMinTime.toString());
@@ -200,12 +241,8 @@ export function drawProcess(surface,data) {
         cursor: 'pointer'
       });
 
-
-
-
-
-
-
+      let _coordinateZp=new Coordinate(_process.id,'zp',parseInt(x),parseInt(xArrive),parseInt(y.toString()),parseInt((y+PROCESS_BAR_WIDTH).toString()));
+      coordinateArray.push(_coordinateZp);
 
       groupBar.append(path);
       groupLine.append(textZp,textStartWork);
@@ -225,6 +262,9 @@ export function drawProcess(surface,data) {
           fill:{color:'rgb(25,148,177)'},
           cursor: 'pointer'
         })
+
+        let _coordinateFinish=new Coordinate(_process.id,'finish',xArrive,xFinish,y,y+PROCESS_BAR_WIDTH);
+        coordinateArray.push(_coordinateFinish);
 
 
         let textEndWork = new Text('工作结束:'+showTimeSimple(new Date(_process.finishTime)), [xFinish+6, y+(PROCESS_BAR_WIDTH-16)/2], {
@@ -250,6 +290,9 @@ export function drawProcess(surface,data) {
           fill:l,
           cursor: 'pointer'
         });
+
+        let _coordinateWorking=new Coordinate(_process.id,'working',xArrive,xArrive+2*scaleWidth,y,y+PROCESS_BAR_WIDTH);
+        coordinateArray.push(_coordinateWorking);
 
         let textNoEndWork = new Text('工作未结束', [xArrive+2*scaleWidth, y+(PROCESS_BAR_WIDTH-16)/2], {
 
@@ -280,6 +323,10 @@ export function drawProcess(surface,data) {
         fill:l,
         cursor: 'pointer'
       });
+
+      let _coordinateZping=new Coordinate(_process.id,'worker',xZp,xZp+2*scaleWidth,y,y+PROCESS_BAR_WIDTH);
+      coordinateArray.push(_coordinateZping);
+
       let textZp = new Text('指派:'+showTimeSimple(new Date(_process.zpTime)), [xZp+6, y-16-6], {
 
       });
@@ -335,16 +382,21 @@ export function drawProcess(surface,data) {
   let intervalTime=10;
   let than=0;
   let intervalNow=0;
+  let than2=0-xMin;
+  let than3=than2;
+
 
   let loop=setInterval(()=>{
-    groupBar.transform(transform().scale(than,1));
+    groupBar.transform(transform().translate(than2,0).scale(than,1));
     //than=than+intervalTime/animationTime;
     let newthan=easeInOut(intervalNow,0,1,animationTime);
+    let newthan2=easeInOut(intervalNow,xMin,than3,animationTime);
     if(newthan<than){
       clearInterval(loop);
     }
     else{
       than=newthan;
+      than2=newthan2;
     }
     intervalNow=intervalNow+intervalTime;
   },intervalTime)

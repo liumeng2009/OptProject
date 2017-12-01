@@ -40,7 +40,7 @@
 
     <kendo-grid-column field="custom_phone" title="工程师">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <label *ngFor="let acti of dataItem.actions" >
+        <label style="margin-right: 10px" *ngFor="let acti of dataItem.actions" >
           <span>{{acti?.user?.name}}</span>
         </label>
       </ng-template>

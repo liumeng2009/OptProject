@@ -75,9 +75,14 @@ export class OperationListComponent  implements OnInit {
             // complete==0 未处理 complete==1 处理中  complete==2 处理完成 complete=3 已指派
             for(let d of this.gridData.data){
               if(d.actions&&d.actions.length>0){
-                d.complete='3'
+                if(d.complete){
+
+                }
+                else{
+                  d.complete='3'
+                }
                 for(let i=0;i<d.actions.length;i++){
-                  if(d.actions[i].operationStart.toString()=='1'){
+                  if(d.actions[i].start_time){
                     d.complete='1';
                   }
                   if(d.actions[i].operationComplete.toString()=='1'){

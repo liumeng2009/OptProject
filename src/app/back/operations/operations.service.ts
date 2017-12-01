@@ -24,6 +24,8 @@ export class OperationService{
   private deleteurl=new OptConfig().serverPath+'/api/operation/delete';
 
   private saveactionurl=new OptConfig().serverPath+'/api/action/add';
+  private editactionurl=new OptConfig().serverPath+'/api/action/edit';
+  private deleteactionurl=new OptConfig().serverPath+'/api/action/delete';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
@@ -64,10 +66,10 @@ export class OperationService{
       .catch(this.handleError);
   }
 
-  delete(userId:string):Promise<ResponseData> {
+  delete(id:string):Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.deleteurl+'/'+userId+'?token='+token)
+      .get(this.deleteurl+'/'+id+'?token='+token)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -77,6 +79,24 @@ export class OperationService{
     let token=this.cookieService.get('optToken');
     return this.http
       .post(this.saveactionurl+'?token='+token, workOrder, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  editAction(actionDetail:any):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.editactionurl+'?token='+token, actionDetail, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  deleteAction(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .get(this.deleteactionurl+'/'+id+'?token='+token)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

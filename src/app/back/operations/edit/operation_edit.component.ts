@@ -4,7 +4,7 @@ import {animation,animate,style,state,transition,trigger,keyframes} from '@angul
 import {Router,ActivatedRoute,Params} from '@angular/router';
 
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
-import { Surface } from '@progress/kendo-drawing';
+import { Surface,SurfaceOptions } from '@progress/kendo-drawing';
 
 import {User} from '../../../bean/user'
 import {OperationService} from "../operations.service";
@@ -22,6 +22,7 @@ import {EquipOp} from "../../../bean/equipOp";
 import { drawProcess } from './drawProcess';
 import {WorkerService} from "../../basicSettings/worker/worker.service";
 import {LmTime} from "../../components/lmtimepicker/lmtime";
+import {MissionService} from "../../main/mission.service";
 
 @Component({
   selector:'operation_edit',
@@ -55,7 +56,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
     private ajaxExceptionService:AjaxExceptionService,
     private dialogService:DialogService,
     private businessContentService:BusinessContentService,
-    private workerService:WorkerService
+    private workerService:WorkerService,
+    private missionService:MissionService
   ){
     console.log(this.operation);
   };
@@ -66,7 +68,17 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
 
     this.initWorkers();
 
+    this.missionListeer();
+
     //this.chart();
+  }
+
+
+  private mySubscription;
+  private missionListeer(){
+    this.mySubscription=this.missionService.showActionDialog.subscribe((id:string)=>{
+      console.log(id);
+    })
   }
 
   private equipTypeLoading:boolean=false;
@@ -189,7 +201,12 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
             //处理状态
             let d =result.data;
             if(d.actions&&d.actions.length>0){
-              d.complete='3'
+              if(d.complete){
+
+              }
+              else{
+                d.complete='3'
+              }
               for(let i=0;i<d.actions.length;i++){
                 if(d.actions[i].start_time){
                   d.complete='1';
@@ -209,7 +226,9 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
               for(let i=0;i<result.data.actions.length;i++){
                 let _action=result.data.actions[i];
                 let obj={
+                  id:_action.id,
                   worker:_action.user.name,
+                  workerId:_action.user.id,
                   zpTime:_action.call_time?new Date(_action.call_time):null,
                   arriveTime:_action.start_time?new Date(_action.start_time):null,
                   finishTime:_action.end_time?new Date(_action.end_time):null,
@@ -217,13 +236,245 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
                 }
                 this.processData.process.push(obj);
               }
-            }
 
-            drawProcess(this.createSurface(),this.processData);
+              let processLength=this.processData.process.length;
+              let per=150;
+
+              let height=processLength*per<300?300:processLength*per;
+
+              this.surfaceHeight.height=height+'px';
+              setTimeout(()=>{
+                drawProcess(this.createSurface(),this.processData,this);
+              },500)
+
+
+            }
           }
+        },
+        error=>{
+          this.ajaxExceptionService.simpleOp(error);
         }
       );
     })
+  }
+
+  //将actions  排序一下
+
+  private actionId:string;
+  private actionDetail={
+    operationId:'',
+    id:'',
+    workerId:'',
+    create_date:null,
+    create_time:null,
+    create_stamp:null,
+    call_date:null,
+    call_time:null,
+    call_stamp:null,
+    showArriveDate:false,
+    start_date:null,
+    start_time:null,
+    start_stamp:null,
+    showFinishDate:false,
+    end_date:null,
+    end_time:null,
+    end_stamp:null,
+    isCompleteOperation:false
+  }
+
+  @ViewChild('actionEditDeleteTemplate')actionEditDeleteRef: TemplateRef<any>;
+  @ViewChild('actionDetailTemplate')actionDetailRef:TemplateRef<any>;
+  private deleteActionIcon;
+  private isHiddenDeleteAction:boolean=false;
+  private editDeleteActionDialog;
+  //对某个进程进行操作
+  private test(id){
+    this.route.params.subscribe((params: Params) =>{
+      this.actionId=id;
+      this.actionDetail.operationId=params.id;
+      for(let i=0;i<this.processData.process.length;i++){
+        if(id==this.processData.process[i].id){
+          let _acc=this.processData.process[i];
+          this.actionDetail.id=id;
+          this.actionDetail.workerId=_acc.workerId;
+
+          let _create=new Date(this.processData.createTime);
+          this.actionDetail.create_date=_create;
+          this.actionDetail.create_time=new LmTime(_create.getHours(),_create.getMinutes(),_create.getSeconds());
+
+          let zp=new Date(_acc.zpTime);
+          this.actionDetail.call_date=zp;
+          this.actionDetail.call_time=new LmTime(zp.getHours(),zp.getMinutes(),zp.getSeconds());
+
+          if(_acc.arriveTime){
+            let arrive=new Date(_acc.arriveTime);
+            this.actionDetail.showArriveDate=true;
+            this.actionDetail.start_date=arrive;
+            this.actionDetail.start_time=new LmTime(arrive.getHours(),arrive.getMinutes(),arrive.getSeconds());
+          }
+          else{
+            this.actionDetail.showArriveDate=false;
+            this.actionDetail.start_date=_create;
+            this.actionDetail.start_time=new LmTime(_create.getHours(),_create.getMinutes(),_create.getSeconds());;
+          }
+          if(_acc.finishTime){
+            let finish=new Date(_acc.finishTime);
+            this.actionDetail.end_date=finish;
+            this.actionDetail.showFinishDate=true;
+            this.actionDetail.end_time=new LmTime(finish.getHours(),finish.getMinutes(),finish.getSeconds());
+          }
+          else{
+            this.actionDetail.end_date=_create;
+            this.actionDetail.showFinishDate=false;
+            this.actionDetail.end_time=new LmTime(_create.getHours(),_create.getMinutes(),_create.getSeconds());;
+          }
+
+          if(_acc.operationFinish){
+            this.actionDetail.isCompleteOperation=true;
+          }
+          else{
+            this.actionDetail.isCompleteOperation=false;
+          }
+          break;
+        }
+      }
+
+      this.editDeleteActionDialog=this.dialogService.open({
+        title:'操作工作进程',
+        content:this.actionDetailRef,
+        actions:this.actionEditDeleteRef
+      });
+    })
+
+
+  }
+
+  private editArriveDateChange($event){
+    this.actionDetail.start_date=new Date($event);
+  }
+  private editFinishDateChange($event){
+    this.actionDetail.end_date=new Date($event);
+  }
+  private onEditArriveTimeChange($event){
+    console.log($event);
+    this.actionDetail.start_time=$event;
+  }
+  private onEditFinishTimeChange($event){
+    console.log($event);
+    this.actionDetail.end_time=$event;
+  }
+  private editFinishOperationCheckChanged($event,dataItem){
+    if($event.target.checked){
+      this.actionDetail.isCompleteOperation=true;
+      this.actionDetail.showArriveDate=true;
+      this.actionDetail.showFinishDate=true;
+    }
+    else{
+      this.actionDetail.isCompleteOperation=false;
+    }
+  }
+
+  private editStartCheckedChange($event){
+    this.actionDetail.showArriveDate=true;
+  }
+  private editFinishCheckedChange(){
+    this.actionDetail.showArriveDate=true;
+    this.actionDetail.showFinishDate=true;
+  }
+
+
+
+
+  private cancelAction(){
+    this.editDeleteActionDialog.close();
+  }
+  private saveActionIcon;
+  private isHiddenSaveAction:boolean=false;
+  private editAction(){
+    this.saveActionIcon='k-icon k-i-loading';
+    this.isHiddenSaveAction=true;
+    //处理actionDetail对象
+    let createDateNew=new Date(this.actionDetail.create_date);
+    createDateNew.setHours(this.actionDetail.create_time.hour);
+    createDateNew.setMinutes(this.actionDetail.create_time.minute);
+    createDateNew.setSeconds(this.actionDetail.create_time.second);
+    this.actionDetail.create_stamp=Date.parse(createDateNew.toString());
+
+    let callDateNew=new Date(this.actionDetail.call_date);
+    callDateNew.setHours(this.actionDetail.call_time.hour);
+    callDateNew.setMinutes(this.actionDetail.call_time.minute);
+    callDateNew.setSeconds(this.actionDetail.call_time.second);
+    this.actionDetail.call_stamp=Date.parse(callDateNew.toString());
+
+    let startDateNew=new Date(this.actionDetail.start_date);
+    startDateNew.setHours(this.actionDetail.start_time.hour);
+    startDateNew.setMinutes(this.actionDetail.start_time.minute);
+    startDateNew.setSeconds(this.actionDetail.start_time.second);
+    this.actionDetail.start_stamp=Date.parse(startDateNew.toString());
+
+    let endDateNew=new Date(this.actionDetail.end_date);
+    endDateNew.setHours(this.actionDetail.end_time.hour);
+    endDateNew.setMinutes(this.actionDetail.end_time.minute);
+    endDateNew.setSeconds(this.actionDetail.end_time.second);
+    this.actionDetail.end_stamp=Date.parse(endDateNew.toString());
+
+    //
+    console.log(this.actionDetail);
+
+    this.operationService.editAction(this.actionDetail).then(
+      data=>{
+        this.saveActionIcon='';
+        this.isHiddenSaveAction=false;
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.editDeleteActionDialog.close();
+          this.updateProcess();
+        }
+      },
+      error=>{
+        this.saveActionIcon='';
+        this.isHiddenSaveAction=false;
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+  }
+  private confirmDialogResult;
+  private deleteAction(){
+
+    let confirmDialog=this.dialogService.open({
+      title:'确认',
+      content:'确认要删除吗？',
+      actions:[
+        {text:'是',primary:true},
+        {text:'否'}
+      ]
+    })
+
+    confirmDialog.result.subscribe((result) =>{
+      this.confirmDialogResult=result;
+      if(this.confirmDialogResult.text=='是'){
+        this.deleteActionIcon='k-icon k-i-loading';
+        this.isHiddenDeleteAction=true;
+        this.operationService.deleteAction(this.actionId).then(
+          data=>{
+            this.deleteActionIcon='';
+            this.isHiddenDeleteAction=false;
+            let result=this.apiResultService.result(data);
+            if(result&&result.status==0){
+              this.editDeleteActionDialog.close();
+              this.updateProcess();
+            }
+          },
+          error=>{
+            this.ajaxExceptionService.simpleOp(error);
+            this.deleteActionIcon='';
+            this.isHiddenDeleteAction=false;
+          }
+        )
+      }
+    })
+
+
   }
 
   private processData={
@@ -300,22 +551,94 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
   }
 
   public ngOnDestroy() {
-    this.surface.destroy();
+    if(this.surface)
+      this.surface.destroy();
   }
+
+  private surfaceHeight={height:'400px'};
 
   private createSurface(): Surface {
     // Obtain a reference to the native DOM element of the wrapper
     const element = this.surfaceElement.nativeElement;
 
+
+
     // Create a drawing surface
     this.surface = Surface.create(element);
+
+
 
     return this.surface;
   }
 
   private updateProcess(){
-    console.log('更新图表');
-    drawProcess(this.createSurface(),this.processData);
+    this.surface.destroy();
+    this.processData.process.splice(0,this.processData.process.length);
+    this.route.params.subscribe((params: Params) =>{
+      this.operationService.getOperation(params.id).then(
+        data=>{
+          let result=this.apiResultService.result(data);
+          if(result&&result.status==0&&result.data){
+            this.operation=result.data;
+            //把数据送到图表类，开始画图表
+            let operationCreateTime=new Date(result.data.create_time);
+            this.processData.createTime=operationCreateTime;
+
+
+            //处理状态
+            let d =result.data;
+            if(d.actions&&d.actions.length>0){
+              if(d.complete){
+
+              }
+              else{
+                d.complete='3'
+              }
+              for(let i=0;i<d.actions.length;i++){
+                if(d.actions[i].start_time){
+                  d.complete='1';
+                }
+                if(d.actions[i].operationComplete.toString()=='1'){
+                  d.complete='2';
+                  break;
+                }
+              }
+            }
+            else{
+              d.complete='0'
+            }
+
+            if(result.data.actions){
+              for(let i=0;i<result.data.actions.length;i++){
+                let _action=result.data.actions[i];
+                let obj={
+                  id:_action.id,
+                  worker:_action.user.name,
+                  workerId:_action.user.id,
+                  zpTime:_action.call_time?new Date(_action.call_time):null,
+                  arriveTime:_action.start_time?new Date(_action.start_time):null,
+                  finishTime:_action.end_time?new Date(_action.end_time):null,
+                  operationFinish:_action.operationComplete?_action.operationComplete:false
+                }
+                this.processData.process.push(obj);
+              }
+
+              let processLength=this.processData.process.length;
+              let per=150;
+
+              let height=processLength*per<300?300:processLength*per;
+
+              this.surfaceHeight.height=height+'px';
+
+            }
+            setTimeout(()=>{
+              drawProcess(this.createSurface(),this.processData,this);
+            },200)
+
+          }
+        }
+      );
+    });
   }
 
   @ViewChild('itemListRef')tpl: TemplateRef<any>;
@@ -329,9 +652,11 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
   }
 
   private isSavingProcess:boolean=false;
+  private savingProcessIcon='';
   private saveProcess(){
     //处理一下submit
     //处理calltime
+
     let call_time_Stamp_type_date=new Date(this.submitWorkOrder.call_date.getFullYear(),this.submitWorkOrder.call_date.getMonth(),
     this.submitWorkOrder.call_date.getDate(),this.submitWorkOrder.call_date_time.hour,this.submitWorkOrder.call_date_time.minute,
       this.submitWorkOrder.call_date_time.second,0);
@@ -352,15 +677,22 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
     }
     console.log(this.submitWorkOrder);
     this.isSavingProcess=true;
+    this.savingProcessIcon='k-icon k-i-loading';
     this.operationService.createAction(this.submitWorkOrder).then(
       data=>{
         this.isSavingProcess=false;
+        this.savingProcessIcon='';
         let result=this.apiResultService.result(data);
         //成功，更新图表
-        drawProcess(this.createSurface(),this.processData);
+        if(result&&result.status==0){
+          //drawProcess(this.createSurface(),this.processData,this);
+          this.dialog.close();
+          this.updateProcess();
+        }
       },
       error=>{
         this.isSavingProcess=false;
+        this.savingProcessIcon='';
         this.ajaxExceptionService.simpleOp(error);
       }
     )
@@ -399,6 +731,10 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
         this.ajaxExceptionService.simpleOp(error);
       }
     )
+  }
+
+  private workerChange($event){
+    this.submitWorkOrder.worker=$event.id;
   }
 
   private callDateChange($event){

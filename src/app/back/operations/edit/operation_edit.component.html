@@ -97,8 +97,7 @@
               <button class="k-button k-primary " type="button" (click)="addProcess(actionTemplate)" >新增进程</button>
               <button class="k-button" type="button" (click)="updateProcess()" >刷新</button>
             </div>
-
-            <div #surface style="height:400px">
+            <div #surface [ngStyle]="surfaceHeight">
 
             </div>
           </div>
@@ -127,6 +126,7 @@
           [textField]="'name'"
           [valueField]="'id'"
           [(ngModel)]="submitWorkOrder.worker"
+          (valueChange)="workerChange($event)"
         >
         </kendo-dropdownlist>
       </p>
@@ -194,9 +194,99 @@
   </form>
 
 </ng-template>
+
+
+<ng-template #actionDetailTemplate>
+  <form class="k-form" #actionEditForm="ngForm">
+    <div class="k-form-field">
+      <p style="display: flex">
+        <input type="checkbox" id="edit-2fa" [disabled]="true" class="k-checkbox" name="edit-2fa" checked="checked" >
+        <label class="k-checkbox-label" style="top:3px" for="edit-2fa" >工程师&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <kendo-dropdownlist
+          name="worker"
+          [data]="workers"
+          [textField]="'name'"
+          [valueField]="'id'"
+          [(ngModel)]="actionDetail.workerId"
+          (valueChange)="workerChange($event)"
+        >
+        </kendo-dropdownlist>
+      </p>
+      <span class="k-icon k-i-loading loading loading-position" *ngIf="groupLoading"></span>
+    </div>
+    <div class="k-form-field">
+      <p style="display: flex;">
+        <input type="checkbox" id="edit-2fb" [disabled]="true" class="k-checkbox" name="edit-2fb" checked="checked" >
+        <label class="k-checkbox-label" style="top:3px" for="edit-2fb" >指派时间&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <kendo-datepicker #incoming_date [value]="actionDetail.call_date" name="call_time" [format]="'yyyy年MM月dd日'"
+
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+        <lmtimepicker [timeNow]="actionDetail.call_time"   id="timetest" name="timetest" ></lmtimepicker>
+      </p>
+    </div>
+
+    <div class="k-form-field">
+      <p style="display:flex;">
+        <input type="checkbox" id="edit-2fc" class="k-checkbox" name="edit-2fc"  [(ngModel)]="actionDetail.showArriveDate" (change)="editStartCheckedChange($event)"  >
+        <label class="k-checkbox-label" style="top:3px" for="edit-2fc" >开始工作时间</label>
+
+        <kendo-datepicker #incoming_date [value]="actionDetail.start_date" name="call_date" [format]="'yyyy年MM月dd日'"
+                          (valueChange)="editArriveDateChange($event)" [disabled]="!actionDetail.showArriveDate"
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+
+        <lmtimepicker [timeNow]="actionDetail.start_time" [disabled]="actionDetail.showArriveDate" id="timetest1" name="timetest1" (change)="onEditArriveTimeChange($event)" ></lmtimepicker>
+      </p>
+    </div>
+
+    <div class="k-form-field">
+      <p style="display: flex">
+        <input type="checkbox" id="edit-2fd" class="k-checkbox" name="edit-2fd"  [(ngModel)]="actionDetail.showFinishDate" (change)="editFinishCheckedChange($event)" >
+        <label class="k-checkbox-label" style="top:3px" for="edit-2fd" >结束工作时间</label>
+        <kendo-datepicker #incoming_date [value]="actionDetail.end_date" name="call_date" [format]="'yyyy年MM月dd日'"
+                          (valueChange)="editFinishDateChange($event)" [disabled]="!actionDetail.showFinishDate"
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+
+        <lmtimepicker [timeNow]="actionDetail.end_time" [disabled]="actionDetail.showFinishDate"  id="timetest2" name="timetest2" (change)="onEditFinishTimeChange($event)" ></lmtimepicker>
+
+      </p>
+    </div>
+
+    <div class="k-form-field">
+      <p style="display: flex">
+        <input type="checkbox" id="edit-2fe" class="k-checkbox" name="edit-2fe"  [(ngModel)]="actionDetail.isCompleteOperation" (click)="editFinishOperationCheckChanged($event,dataItem)" >
+        <label class="k-checkbox-label" style="top:3px" for="edit-2fe" >工单完成了？</label>
+      </p>
+    </div>
+
+  </form>
+</ng-template>
+
 <ng-template #actionTemplate>
   <button kendoButton (click)="cancelProcess()">取消</button>
-  <button kendoButton [primary]="true" (click)="saveProcess()" [icon]="SaveOrderAllLoading" [disabled]="isHiddenSaveOrderAllButton">
+  <button kendoButton [primary]="true" (click)="saveProcess()" [icon]="savingProcessIcon" [disabled]="isSavingProcess">
     保存
+  </button>
+</ng-template>
+
+<ng-template #actionEditDeleteTemplate>
+  <button kendoButton (click)="cancelAction()"  >取消</button>
+  <button kendoButton (click)="editAction()" [primary]="true" [icon]="saveActionIcon" [disabled]="isHiddenSaveAction">保存</button>
+  <button kendoButton (click)="deleteAction()" [icon]="deleteActionIcon" [disabled]="isHiddenDeleteAction">
+    删除
   </button>
 </ng-template>
