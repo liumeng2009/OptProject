@@ -175,6 +175,12 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
     0,null,null,null,null,null,null,true,false,false,true,'',0,null,null,
     null,null,false
   );
+
+
+  private isHiddenType:boolean=false;
+  private isHiddenEquipment:boolean=false;
+  private isHiddenOp:boolean=false;
+  private isHiddenReamrk:boolean=false;
   private getData(){
     this.route.params.subscribe((params: Params) =>{
       this.operationService.getOperation(params.id).then(
@@ -183,6 +189,16 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
           if(result&&result.status==0&&result.data){
             this.operation=result.data;
             console.log(result);
+            //如果已经有行为了，就不能修改
+            if(result.data.actions.length>0){
+              this.isHiddenType=true;
+              this.isHiddenEquipment=true;
+              this.isHiddenOp=true;
+              this.isHiddenReamrk=true;
+            }
+
+
+
             //可以初始化submit了
             this.submitWorkOrder.id=params.id;
             let operation_create_time=result.data.create_time;

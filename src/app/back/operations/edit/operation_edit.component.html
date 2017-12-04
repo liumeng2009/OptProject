@@ -47,6 +47,7 @@
                 [valueField]="'id'"
                 [(ngModel)]="operation.businessContent.equipType"
                 (selectionChange)="equipTypeChange($event)"
+                [disabled]="isHiddenType"
               >
               </kendo-dropdownlist>
               <span class="k-icon k-i-loading loading loading-position-2" *ngIf="equipTypeLoading"></span>
@@ -62,6 +63,7 @@
                 [(ngModel)]="operation.businessContent.equipment"
                 [valuePrimitive]="true"
                 (selectionChange)="equipChange($event)"
+                [disabled]="isHiddenEquipment"
               >
               </kendo-dropdownlist>
               <span class="k-icon k-i-loading loading loading-position-2" *ngIf="equipmentLoading"></span>
@@ -75,6 +77,7 @@
                 [valueField]="'id'"
                 [(ngModel)]="operation.businessContent"
                 name="op"
+                [disabled]="isHiddenOp"
               >
               </kendo-dropdownlist>
               <span *ngIf="equipOpLoading" class="k-icon k-i-loading loading loading-position-2"></span>
@@ -88,7 +91,7 @@
           </label>
           <label class="k-form-field">
             <span for="remark">备注：</span>
-            <input id="remark" class="k-textbox" placeholder="备注"  name="remark" [(ngModel)]="operation.remark" />
+            <input id="remark" class="k-textbox" placeholder="备注"  name="remark" disabled="false" [(ngModel)]="operation.remark" />
           </label>
           <div class="k-form-field">
             <span style="font-weight:bolder">进程：</span>
