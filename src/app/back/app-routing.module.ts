@@ -51,6 +51,7 @@ import {OrderListComponent} from "./operations/order/list/order-list.component";
 import {OrderAddComponent} from "./operations/order/add/order-add.component";
 import {OrderEditComponent} from "./operations/order/edit/order-edit.component";
 import {OperationEditComponent} from "./operations/edit/operation_edit.component";
+import {OperationAddComponent} from "./operations/add/operation_add.component";
 
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
@@ -79,7 +80,8 @@ export const PanelbarRoutes:Routes=[
     {path:'operations',data:{name:'工作管理'},children:[
       { path: 'op', component: OperationsComponent,data:{name:'工单'},children:[
         {path:'list',component:OperationListComponent,data:{name:'列表'}},
-        {path:'add',component:OperationEditComponent,data:{name:'新增'}},
+        {path:'add',component:OperationAddComponent,data:{name:'新增'}},
+        {path:'add/:orderid',component:OperationAddComponent,data:{name:'新增'}},
         {path:':id',component:OperationEditComponent,data:{name:'编辑'}}
       ] },
       { path: 'order', component: OrderComponent,data:{name:'客户需求'},children:[

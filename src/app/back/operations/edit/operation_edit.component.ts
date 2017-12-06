@@ -180,7 +180,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
   private isHiddenType:boolean=false;
   private isHiddenEquipment:boolean=false;
   private isHiddenOp:boolean=false;
-  private isHiddenReamrk:boolean=false;
+  private isHiddenRemark:boolean=false;
+  private isHiddenImportant:boolean=false;
   private getData(){
     this.route.params.subscribe((params: Params) =>{
       this.operationService.getOperation(params.id).then(
@@ -194,7 +195,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
               this.isHiddenType=true;
               this.isHiddenEquipment=true;
               this.isHiddenOp=true;
-              this.isHiddenReamrk=true;
+              this.isHiddenRemark=true;
+              this.isHiddenImportant=true;
             }
 
 
@@ -520,6 +522,14 @@ export class OperationEditComponent  implements OnInit,AfterViewInit {
 
   private onSubmit(){
     console.log(this.operation);
+    this.operationService.edit(this.operation).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
   }
 
   private dateChartNone=[

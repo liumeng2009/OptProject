@@ -166,9 +166,14 @@ export class OrderEditComponent implements OnInit{
           if(this.operations instanceof Array&&this.operations.length>0 ){
             for(let d of this.operations){
               if(d.actions&&d.actions.length>0){
-                d.complete='3'
+                if(d.complete){
+
+                }
+                else{
+                  d.complete='3'
+                }
                 for(let i=0;i<d.actions.length;i++){
-                  if(d.actions[i].operationStart.toString()=='1'){
+                  if(d.actions[i].start_time){
                     d.complete='1';
                   }
                   if(d.actions[i].operationComplete.toString()=='1'){
@@ -226,5 +231,11 @@ export class OrderEditComponent implements OnInit{
 
   private onTimeChange($event){
 
+  }
+
+  private add(){
+    this.route.params.subscribe((params: Params) => {
+      this.router.navigate(['op/add/'+params.id], {relativeTo: this.route.parent.parent});
+    });
   }
 }

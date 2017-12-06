@@ -20,7 +20,8 @@ export class OperationService{
 
   private listurl=new OptConfig().serverPath+'/api/operation/list';
   private geturl=new OptConfig().serverPath+'/api/operation';
-  private saveurl=new OptConfig().serverPath+'/api/operation/add';
+  private saveurl=new OptConfig().serverPath+'/api/operation/save';
+  private editurl=new OptConfig().serverPath+'/api/operation/edit';
   private deleteurl=new OptConfig().serverPath+'/api/operation/delete';
 
   private saveactionurl=new OptConfig().serverPath+'/api/action/add';
@@ -57,10 +58,19 @@ export class OperationService{
       .catch(this.handleError)
   }
 
-  create(userId:string): Promise<ResponseData> {
+  create(operation:WorkOrder): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveurl+'?token='+token, {userId:userId}, {headers: this.headers})
+      .post(this.saveurl+'?token='+token, operation, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  edit(operation:WorkOrder):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.editurl+'?token='+token, operation, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

@@ -26,15 +26,25 @@ export class OrderService{
 
   constructor(private http:Http,private cookieService:CookieService){}
 
-  getOrderList(pageid):Promise<ResponseData>{
+  getOrderList(pageid,time):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
+      if(time){
+        url=this.listurl+'/page/'+pageid+'/time/'+time+'?token='+token
+      }else{
         url=this.listurl+'/page/'+pageid+'?token='+token
-        }
+      }
+
+    }
     else{
+      if(time){
+        url=this.listurl+'/time/'+time+'?token='+token
+      }
+      else{
         url=this.listurl+'?token='+token
-        }
+      }
+    }
 
     /*
     if(type&&type!=''){

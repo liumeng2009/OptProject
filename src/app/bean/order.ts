@@ -5,7 +5,7 @@ import {Operation} from "./operation";
 export class Order {
   constructor(
     public id:string,
-    public no:boolean,
+    public no:string,
     public custom_name:string,
     public custom_phone: string,
     public incoming_date:string,

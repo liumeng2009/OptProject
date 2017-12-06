@@ -54,6 +54,7 @@ import {CorpBuildingService} from './back/basicSettings/corporation/corpBuilding
 //工单组件
 import {OperationsComponent} from './back/operations/operations.component';
 import {OperationListComponent} from './back/operations/list/operation_list.component';
+import {OperationAddComponent} from './back/operations/add/operation_add.component';
 import {OperationEditComponent} from './back/operations/edit/operation_edit.component';
 import {OperationService} from './back/operations/operations.service';
 //权限组件
@@ -143,6 +144,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
 
     OperationsComponent,
     OperationListComponent,
+    OperationAddComponent,
     OperationEditComponent,
 
     AuthComponent,

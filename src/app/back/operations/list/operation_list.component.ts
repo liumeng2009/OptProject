@@ -115,5 +115,43 @@ export class OperationListComponent  implements OnInit {
   private editRow(id){
       this.router.navigate([id],{relativeTo:this.route.parent});
   }
+  private deleteRow(id){
+    let dialog=this.dialogService.open({
+      title:'确认？',
+      content:'确认要删除吗？',
+      actions:[
+        {text:'否'},
+        {text:'是',primary:true}
+      ]
+    })
+    dialog.result.subscribe((result)=>{
+      if (result instanceof DialogCloseResult) {
+
+      } else {
+
+      }
+      this.result = result;
+      if(this.result.text=='是'){
+        this.operationService.delete(id).then(
+          data=>{
+            let result=this.apiResultService.result(data);
+            if(result&&result.status==0){
+              this.getData(1);
+            }
+          },
+          error=>{
+            this.ajaxExceptionService.simpleOp(error);
+          }
+        )
+      }
+      else{
+
+      }
+    })
+  }
+
+  private add(){
+    this.router.navigate(['add'],{relativeTo:this.route.parent});
+  }
 
 }

@@ -63,7 +63,7 @@ export class OrderListComponent implements OnInit {
   }
 
   private getData(pageid) {
-    this.orderService.getOrderList(pageid)
+    this.orderService.getOrderList(pageid,null)
       .then(
         data=> {
           console.log(data);

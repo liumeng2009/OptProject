@@ -4,39 +4,39 @@
       <div class="card-block">
         <form class="k-form"  (ngSubmit)="onSubmit()" #operationForm="ngForm">
           <label class="k-form-field">
-            <span>订单序号：<span style="font-weight:lighter">{{operation.order.no}}</span></span>
-
+            <span>订单生成日期：</span>
+            <kendo-datepicker #order_incoming_time_range [value]="orderSelectDate" name="order_incoming_time_range" [format]="'yyyy年MM月dd日'"
+                              (valueChange)="OrderIncomingDateChange($event)"
+            >
+              <kendo-datepicker-messages
+                today="今天"
+                toggle="选择日期"
+              ></kendo-datepicker-messages>
+            </kendo-datepicker>
           </label>
 
+
           <label class="k-form-field">
-            <span>订单来源：<span style="font-weight:lighter">{{operation.order.corporation?.name}} {{operation.order.custom_name}} {{operation.order.custom_phone}}</span></span>
+            <span>选择所属订单：<span class="k-required">*</span></span>
+            <kendo-dropdownlist
+              name="orderNo"
+              [data]="orders"
+              [textField]="'no'"
+              [valueField]="'id'"
+              [(ngModel)]="orderObj.orderId"
+              [valuePrimitive]="true"
+              style="width:500px;"
+              (valueChange)="orderSelect($event)"
+            >
+            </kendo-dropdownlist>
           </label>
 
           <label class="k-form-field">
-            <span *ngIf="operation.order?.corpBuilding?.position=='A'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;全部</span></span>
-            <span *ngIf="operation.order?.corpBuilding?.position=='E'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;东</span></span>
-            <span *ngIf="operation.order?.corpBuilding?.position=='W'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;西</span></span>
-            <span *ngIf="operation.order?.corpBuilding?.position=='S'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;南</span></span>
-            <span *ngIf="operation.order?.corpBuilding?.position=='N'">地点：<span style="font-weight:lighter">{{operation.order?.corpBuilding?.building.name}} <span>{{operation.order?.corpBuilding?.floor}}层</span>&nbsp;&nbsp;北</span></span>
-          </label>
-          <label class="k-form-field">
-            <span>工单序号：<span style="font-weight:lighter">{{operation.no}}</span></span>
-          </label>
-          <label class="k-form-field">
-            <span>工单加急：<span style="font-weight:lighter">
-              <kendo-switch [(ngModel)]="operation.important" name="important" [onLabel]="'是'" [offLabel]="'否'" [disabled]="isHiddenImportant" ></kendo-switch>
+            <span>工单加急：<span class="k-required">*</span><span style="font-weight:lighter">
+              <kendo-switch [(ngModel)]="operation.important" name="important" [onLabel]="'是'" [offLabel]="'否'"></kendo-switch>
             </span></span>
           </label>
           <label class="k-form-field">
-            <span>工单处理程度：<span style="font-weight:lighter">
-              <span style="color:#cccccc" *ngIf="operation.complete=='0'">未处理</span>
-              <span style="color:#ffa500" *ngIf="operation.complete=='1'">处理中</span>
-              <span style="color:#008000" *ngIf="operation.complete=='2'">处理完成</span>
-              <span style="color:#999999" *ngIf="operation.complete=='3'">已指派工程师</span>
-            </span></span>
-          </label>
-          <label class="k-form-field">
-
             <div class="ddl-float">
               <label>业务类型:<span class="k-required">*</span> </label>
               <kendo-dropdownlist
@@ -46,7 +46,6 @@
                 [valueField]="'id'"
                 [(ngModel)]="operation.businessContent.equipType"
                 (selectionChange)="equipTypeChange($event)"
-                [disabled]="isHiddenType"
               >
               </kendo-dropdownlist>
               <span class="k-icon k-i-loading loading loading-position-2" *ngIf="equipTypeLoading"></span>
@@ -62,7 +61,6 @@
                 [(ngModel)]="operation.businessContent.equipment"
                 [valuePrimitive]="true"
                 (selectionChange)="equipChange($event)"
-                [disabled]="isHiddenEquipment"
               >
               </kendo-dropdownlist>
               <span class="k-icon k-i-loading loading loading-position-2" *ngIf="equipmentLoading"></span>
@@ -76,7 +74,6 @@
                 [valueField]="'id'"
                 [(ngModel)]="operation.businessContent"
                 name="op"
-                [disabled]="isHiddenOp"
               >
               </kendo-dropdownlist>
               <span *ngIf="equipOpLoading" class="k-icon k-i-loading loading loading-position-2"></span>
@@ -109,7 +106,7 @@
 
 
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!operationForm.form.valid">提交</button>
+            <button class="k-button k-primary" [disabled]="!operationForm.form.valid||isSubmitDisabled">提交</button>
             <button class="k-button">重置</button>
           </div>
         </form>
