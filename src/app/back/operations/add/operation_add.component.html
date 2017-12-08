@@ -95,8 +95,7 @@
             <span style="font-weight:bolder">进程：</span>
 
             <div>
-              <button class="k-button k-primary " type="button" (click)="addProcess(actionTemplate)" >新增进程</button>
-              <button class="k-button" type="button" (click)="updateProcess()" >刷新</button>
+              <button class="k-button k-primary " type="button" (click)="addProcess()" [disabled]="!operationForm.form.valid||isSubmitDisabled">新增进程</button>
             </div>
             <div #surface [ngStyle]="surfaceHeight">
 

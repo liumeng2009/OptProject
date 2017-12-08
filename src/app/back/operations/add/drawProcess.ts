@@ -13,7 +13,6 @@ export function drawProcess(surface,data,_this) {
   let width=surface._size.width;
 
   let createTime=data.createTime;
-
   //组织一个list，里面存放id和这个id相关的四个坐标，点击时，根据点击点在哪个坐标区域内，来决定id是谁
   let coordinateArray:Coordinate[]=[];
 

@@ -45,7 +45,7 @@ import {MissionService} from "../../main/mission.service";
   ]
 })
 
-export class OperationEditComponent  implements OnInit,AfterViewInit {
+export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
   private operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true);
   constructor(

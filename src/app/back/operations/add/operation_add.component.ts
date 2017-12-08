@@ -46,7 +46,7 @@ import {OrderService} from "../order/order.service";
   ]
 })
 
-export class OperationAddComponent  implements OnInit {
+export class OperationAddComponent  implements OnInit,OnDestroy {
   private operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true);
   constructor(
@@ -61,7 +61,34 @@ export class OperationAddComponent  implements OnInit {
   ){
 
   };
+  private surfaceHeight={height:'400px'};
+  @ViewChild('surface')
+  private surfaceElement: ElementRef;
+  private surface: Surface;
+  private processData={
+    createTime:new Date(2017,11,16,23,50,50,0),
+    process:[
 
+    ]
+  }
+  public ngOnDestroy() {
+    if(this.surface)
+      this.surface.destroy();
+  }
+
+  private createSurface(): Surface {
+    // Obtain a reference to the native DOM element of the wrapper
+    const element = this.surfaceElement.nativeElement;
+
+
+
+    // Create a drawing surface
+    this.surface = Surface.create(element);
+
+
+
+    return this.surface;
+  }
   ngOnInit(){
     this.route.params.subscribe((params: Params) => {
       if(params.orderid){
@@ -95,6 +122,10 @@ export class OperationAddComponent  implements OnInit {
           this.orderObj.orderId=result.data.id;
           this.orderSelectDate=new Date();
           this.orderSelectDate.setTime(result.data.incoming_time);
+
+          this.processData.createTime=new Date();
+          this.processData.createTime.setTime(result.data.incoming_time);
+
           callback();
         }
       },
@@ -116,16 +147,21 @@ export class OperationAddComponent  implements OnInit {
             let o=new Order('1','今日暂无订单','',null,null,null,null,null,null,null,null,null,null,null,null,null);
             this.orders.push(o);
             this.isSubmitDisabled=true;
+            this.processData.createTime=new Date();
+            this.orderObj.orderId='1';
           }else{
             this.isSubmitDisabled=false;
-            if(this.orderObj.orderId||this.orderObj.orderId=='1'){
-
+            if(!this.orderObj.orderId||this.orderObj.orderId=='1'){
+              this.orderObj.orderId=result.data[0].id;
             }
             else{
-              this.orderObj.orderId=result.data[0].id;
+
             }
 
             this.operation.order=result.data[0];
+            this.processData.createTime=new Date();
+            this.processData.createTime.setTime(result.data[0].incoming_time);
+
             //细化no列，让用户看到更多的信息
             for(let i=0;i<result.data.length;i++){
               let newNo=result.data[i].no+' '+result.data[i].custom_name+' '+result.data[i].custom_phone+' '+result.data[i].corporation.name+' '
@@ -154,6 +190,14 @@ export class OperationAddComponent  implements OnInit {
               result.data[i].no=newNo;
             }
           }
+
+          let height=300
+
+          this.surfaceHeight.height=height+'px';
+          setTimeout(()=>{
+            drawProcess(this.createSurface(),this.processData,this);
+          },500)
+
         }
       },
       error=>{
@@ -278,5 +322,22 @@ export class OperationAddComponent  implements OnInit {
         this.ajaxExceptionService.simpleOp(error);
       }
     )
+  }
+
+  private addProcess(){
+    //保存后，跳转到edit页面
+    this.operation.important=this.operation.important?this.operation.important:false;
+    this.operationService.create(this.operation).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.router.navigate(['../../'+data.data.id],{relativeTo:this.route});
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+
   }
 }
