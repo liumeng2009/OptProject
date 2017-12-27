@@ -23,26 +23,28 @@
       </ng-template>
     </kendo-grid-column>
 
+    <kendo-grid-column  title="建立时间">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.create_time|timeshow}}
+      </ng-template>
+    </kendo-grid-column>
+
     <kendo-grid-column  title="加急" [width]="60">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span>{{dataItem.important?'是':'否'}}</span>
+        <span style="color:red" *ngIf="dataItem.important">是</span>
+        <span style="color:green" *ngIf="!dataItem.important">否</span>
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="custom_phone" title="状态">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        <span style="color:#cccccc" *ngIf="dataItem.complete=='0'">未处理</span>
-        <span style="color:#ffa500" *ngIf="dataItem.complete=='1'">处理中</span>
-        <span style="color:#008000" *ngIf="dataItem.complete=='2'">处理完成</span>
-        <span style="color:#999999" *ngIf="dataItem.complete=='3'">已指派工程师</span>
-      </ng-template>
-    </kendo-grid-column>
-
-    <kendo-grid-column field="custom_phone" title="工程师">
+    <kendo-grid-column field="custom_phone" title="处理状态">
       <ng-template kendoGridCellTemplate let-dataItem>
         <label style="margin-right: 10px" *ngFor="let acti of dataItem.actions" >
           <span>{{acti?.user?.name}}</span>
         </label>
+        <span style="color:#cccccc" *ngIf="dataItem.complete=='0'">未处理</span>
+        <span style="color:#ffa500" *ngIf="dataItem.complete=='1'">处理中</span>
+        <span style="color:#008000" *ngIf="dataItem.complete=='2'">处理完成</span>
+        <span style="color:#999999" *ngIf="dataItem.complete=='3'">已指派</span>
       </ng-template>
     </kendo-grid-column>
 

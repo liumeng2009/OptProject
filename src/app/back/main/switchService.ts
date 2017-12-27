@@ -6,6 +6,7 @@ import {Injectable} from '@angular/core';
 export class SwitchService {
 
   private CORP_BUILDING_LIST_AUTO_ADD:boolean=false;
+  private ACTION_AUTO_ADD:boolean=false;
 
   constructor(
 
@@ -19,4 +20,12 @@ export class SwitchService {
   getCorpBuildingListAutoAdd(){
     return this.CORP_BUILDING_LIST_AUTO_ADD;
   }
+  setActionAutoAdd(bool:boolean){
+    this.ACTION_AUTO_ADD=bool;
+  }
+  getActionAutoAdd(){
+    return this.ACTION_AUTO_ADD;
+  }
+
+
 }

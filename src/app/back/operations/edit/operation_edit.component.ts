@@ -23,6 +23,7 @@ import { drawProcess } from './drawProcess';
 import {WorkerService} from "../../basicSettings/worker/worker.service";
 import {LmTime} from "../../components/lmtimepicker/lmtime";
 import {MissionService} from "../../main/mission.service";
+import {SwitchService} from "../../main/switchService";
 
 @Component({
   selector:'operation_edit',
@@ -46,7 +47,7 @@ import {MissionService} from "../../main/mission.service";
 })
 
 export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
-  private operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+  private operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true);
   constructor(
     private operationService:OperationService,
@@ -57,7 +58,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     private dialogService:DialogService,
     private businessContentService:BusinessContentService,
     private workerService:WorkerService,
-    private missionService:MissionService
+    private missionService:MissionService,
+    private switchService:SwitchService
   ){
     console.log(this.operation);
   };
@@ -68,18 +70,11 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
     this.initWorkers();
 
-    this.missionListeer();
-
-    //this.chart();
   }
 
 
-  private mySubscription;
-  private missionListeer(){
-    this.mySubscription=this.missionService.showActionDialog.subscribe((id:string)=>{
-      console.log(id);
-    })
-  }
+
+
 
   private equipTypeLoading:boolean=false;
   private equiptypes:EquipType[]=[];
@@ -170,7 +165,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
       }
     );
   }
-  private submitWorkOrder:WorkOrder=new WorkOrder('','',null,null,null,null,
+  private submitWorkOrder:WorkOrder=new WorkOrder('','',null,null,null,null,null,
     null,null,false,0,null,null,
     0,null,null,null,null,null,null,true,false,false,true,'',0,null,null,
     null,null,false
@@ -570,12 +565,6 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
   private surface: Surface;
 
 
-
-
-  public ngAfterViewInit(): void {
-    //drawProcess(this.createSurface(),this.processData);
-  }
-
   public ngOnDestroy() {
     if(this.surface)
       this.surface.destroy();
@@ -668,13 +657,26 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
   }
 
   @ViewChild('itemListRef')tpl: TemplateRef<any>;
+  @ViewChild('actionTemplate')actionTemplate: TemplateRef<any>;
   private dialog;
-  private addProcess(actionTemplate: TemplateRef<any>){
+  private addProcess(){
     this.dialog=this.dialogService.open({
       title: "添加进度？",
       content: this.tpl,
-      actions:actionTemplate
+      actions:this.actionTemplate
     });
+  }
+
+  ngAfterViewInit() {
+    if(this.switchService.getActionAutoAdd()){
+      //打开dialog
+      this.dialog=this.dialogService.open({
+        title: "添加进度？",
+        content: this.tpl,
+        actions:this.actionTemplate
+      });
+      this.switchService.setActionAutoAdd(false);
+    }
   }
 
   private isSavingProcess:boolean=false;

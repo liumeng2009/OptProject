@@ -6,5 +6,5 @@ export class OptConfig{
   closing='正在退出登录...'
 
 
-  pageSize=10
+  pageSize=15
 }

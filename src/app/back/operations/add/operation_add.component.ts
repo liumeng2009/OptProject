@@ -24,6 +24,7 @@ import {WorkerService} from "../../basicSettings/worker/worker.service";
 import {LmTime} from "../../components/lmtimepicker/lmtime";
 import {MissionService} from "../../main/mission.service";
 import {OrderService} from "../order/order.service";
+import {SwitchService} from "../../main/switchService";
 
 @Component({
   selector:'operation_add',
@@ -47,7 +48,8 @@ import {OrderService} from "../order/order.service";
 })
 
 export class OperationAddComponent  implements OnInit,OnDestroy {
-  private operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+  private now:Date=new Date();
+  private operation:WorkOrder=new WorkOrder(null,null,null,null,null,this.now,new LmTime(this.now.getHours(),this.now.getMinutes(),this.now.getSeconds()),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
     new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true);
   constructor(
     private operationService:OperationService,
@@ -57,7 +59,8 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
     private ajaxExceptionService:AjaxExceptionService,
     private dialogService:DialogService,
     private businessContentService:BusinessContentService,
-    private orderService:OrderService
+    private orderService:OrderService,
+    private switchService:SwitchService
   ){
 
   };
@@ -162,6 +165,12 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
             this.processData.createTime=new Date();
             this.processData.createTime.setTime(result.data[0].incoming_time);
 
+            let da=new Date();
+            da.setTime(result.data[0].incoming_time);
+            this.operation.incoming_date=da;
+            this.operation.incoming_date_time=new LmTime(da.getHours(),da.getMinutes(),da.getSeconds());
+
+
             //细化no列，让用户看到更多的信息
             for(let i=0;i<result.data.length;i++){
               let newNo=result.data[i].no+' '+result.data[i].custom_name+' '+result.data[i].custom_phone+' '+result.data[i].corporation.name+' '
@@ -210,12 +219,15 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
   private OrderIncomingDateChange($event){
     let dateStamp=Date.parse($event);
     this.getData(0,dateStamp);
-    //影响到提交按钮可见性
   }
 
   private orderSelect($event){
     console.log($event);
     this.operation.order=$event;
+  }
+
+  private onOperationCreateTimeChange($event){
+    this.operation.incoming_date_time=$event;
   }
 
   private equipTypeLoading:boolean=false;
@@ -314,6 +326,11 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
 
   private onSubmit(){
     console.log(this.operation);
+    let date=new Date(this.operation.incoming_date.toString());
+    date.setHours(this.operation.incoming_date_time.hour,this.operation.incoming_date_time.minute,this.operation.incoming_date_time.second,0);
+
+    this.operation.incoming_date_timestamp=Date.parse(date.toString());
+
     this.operationService.create(this.operation).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -331,7 +348,9 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
-          this.router.navigate(['../../'+data.data.id],{relativeTo:this.route});
+          this.router.navigate(['../'+data.data.id],{relativeTo:this.route}).then(()=>{
+            this.switchService.setActionAutoAdd(true);
+          });
         }
       },
       error=>{

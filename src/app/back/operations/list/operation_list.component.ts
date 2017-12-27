@@ -154,4 +154,10 @@ export class OperationListComponent  implements OnInit {
     this.router.navigate(['add'],{relativeTo:this.route.parent});
   }
 
+  private pageChange(event,PageChangeEvent){
+    this.skip=event.skip;
+    this.isLoading=true;
+    this.getData(this.skip/this.pageSize+1);
+  }
+
 }

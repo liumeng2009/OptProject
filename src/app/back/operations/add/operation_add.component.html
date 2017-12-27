@@ -4,7 +4,7 @@
       <div class="card-block">
         <form class="k-form"  (ngSubmit)="onSubmit()" #operationForm="ngForm">
           <label class="k-form-field">
-            <span>订单生成日期：</span>
+            <span>根据日期检索订单：</span>
             <kendo-datepicker #order_incoming_time_range [value]="orderSelectDate" name="order_incoming_time_range" [format]="'yyyy年MM月dd日'"
                               (valueChange)="OrderIncomingDateChange($event)"
             >
@@ -29,6 +29,23 @@
               (valueChange)="orderSelect($event)"
             >
             </kendo-dropdownlist>
+          </label>
+
+          <label class="k-form-field">
+            <div style="border-bottom:#ccc 1px solid;width: 100%;padding-bottom: 16px;"></div>
+          </label>
+
+          <label class="k-form-field">
+            <span>工单建立时间：</span>
+            <kendo-datepicker style="float:left" #operation_create_time [(ngModel)]="operation.incoming_date" name="operation_create_time" [format]="'yyyy年MM月dd日'"
+            >
+              <kendo-datepicker-messages
+                today="今天"
+                toggle="选择日期"
+              ></kendo-datepicker-messages>
+            </kendo-datepicker>
+            <lmtimepicker style="float:left;margin-left:10px;" [timeNow]="operation.incoming_date_time"  id="operation_create_date_time" name="operation_create_date_time" (change)="onOperationCreateTimeChange($event)" ></lmtimepicker>
+            <div style="clear: both;"></div>
           </label>
 
           <label class="k-form-field">

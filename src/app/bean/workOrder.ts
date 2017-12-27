@@ -20,7 +20,9 @@ export class WorkOrder {
     //建立时间
     public incoming_date_timestamp:number,
 
-    public incomig_date:Date,
+    public incoming_date:Date,
+
+    public incoming_date_time:LmTime,
 
     public custom_position:CorpBuilding,
 

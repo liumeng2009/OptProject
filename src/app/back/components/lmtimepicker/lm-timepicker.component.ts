@@ -39,11 +39,13 @@ export class LmTimePicker implements OnChanges{
     if(changes['timeNow']){
       let vm=changes['timeNow'].currentValue;
       //this.txtValueSubmit=this.txtValue=vm.hour+'时'+vm.minute+'分'+vm.second+'秒';
-      this.timeNow.hour=vm.hour;
-      this.timeNow.minute=vm.minute;
-      this.timeNow.second=vm.second;
-      this.makeTextValue(true);
-      this.initWheel();
+      if(vm){
+        this.timeNow.hour=vm.hour;
+        this.timeNow.minute=vm.minute;
+        this.timeNow.second=vm.second;
+        this.makeTextValue(true);
+        this.initWheel();
+      }
     }
     if(changes['disabled'])
       this.showMask=!changes['disabled'].currentValue;
