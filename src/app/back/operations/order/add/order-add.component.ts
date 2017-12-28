@@ -281,9 +281,9 @@ export class OrderAddComponent implements OnInit{
   private isHiddenSaveOrderAllButton:boolean=false;
   private SaveOrderLoading:string='';
   private isHiddenSaveOrderButton:boolean=false;
-  private yes(){
-    this.saveOrderAll();
-  }
+    private yes(){
+      this.saveOrderAll();
+    }
 
   private saveOrder(){
     this.SaveOrderLoading='k-icon k-i-loading';
