@@ -100,6 +100,7 @@ export class WorkerComponent implements OnInit{
   removeWorker(userId){
     this.workerService.delete(userId).then(
       data=>{
+        console.log(data);
         this.apiResultService.result(data);
         this.getData();
       },
