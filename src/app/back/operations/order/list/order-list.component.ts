@@ -1,9 +1,10 @@
-import {Component,OnInit} from '@angular/core';
+import {Component,OnInit,ElementRef,HostListener,ViewEncapsulation,ViewChild} from '@angular/core';
 import {animation,animate,style,state,transition,trigger,keyframes} from '@angular/animations';
 import {Router,ActivatedRoute} from '@angular/router';
 
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
+import { filterBy, FilterDescriptor, CompositeFilterDescriptor } from '@progress/kendo-data-query';
 
 import {OrderService} from "../order.service";
 import {ApiResultService} from "../../../main/apiResult.service";
@@ -15,6 +16,7 @@ import {Position} from "../../../../bean/position";
   selector:'order-list',
   templateUrl:'./order-list.component.html',
   styleUrls:['./order-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   animations: [ // 动画的内容
     trigger('pageChanged', [
       // state 控制不同的状态下对应的不同的样式
@@ -47,6 +49,8 @@ export class OrderListComponent implements OnInit {
   private lastRecord:number = 0;
   private result;
   private isLoading:boolean = true;
+  public filter: CompositeFilterDescriptor;
+  private todayFilter:Date=new Date();
 
   constructor(private orderService:OrderService,
               private router:Router,
@@ -59,11 +63,15 @@ export class OrderListComponent implements OnInit {
 
   ngOnInit() {
     this.height = (window.document.body.clientHeight - 70 - 56 - 50 - 20-27);
-    this.getData(1);
+    this.getData(1,this.todayFilter);
   }
 
-  private getData(pageid) {
-    this.orderService.getOrderList(pageid,null)
+  private getData(pageid,time) {
+    let date=new Date(time.toString());
+    let timeSubmit=date.getTime();
+
+
+    this.orderService.getOrderList(pageid,timeSubmit)
       .then(
         data=> {
           console.log(data);
@@ -72,6 +80,10 @@ export class OrderListComponent implements OnInit {
             this.total = this.gridData.total = this.apiResultService.result(data).total;
             this.firstRecord = this.skip + 1;
             this.lastRecord = this.apiResultService.result(data).data.length + this.skip;
+
+
+
+
           }
           this.isLoading = false;
         },
@@ -82,11 +94,18 @@ export class OrderListComponent implements OnInit {
       );
   }
 
+  private dateFilterChange($event){
+    console.log($event);
+    this.todayFilter=new Date($event);
+    this.getData(1,this.todayFilter);
+  }
+
+
   private refresh() {
     this.gridData.data = [];
     this.gridData.total = 0;
     this.isLoading = true;
-    this.getData(this.skip / this.pageSize + 1);
+    this.getData(this.skip / this.pageSize + 1,this.todayFilter);
   }
 
   private add() {
@@ -96,7 +115,7 @@ export class OrderListComponent implements OnInit {
   private pageChange(event, PageChangeEvent) {
     this.skip = event.skip;
     this.isLoading = true;
-    this.getData(this.skip / this.pageSize + 1);
+    this.getData(this.skip / this.pageSize + 1,this.todayFilter);
   }
 
   private editRow(id) {

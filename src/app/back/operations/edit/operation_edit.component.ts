@@ -184,6 +184,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
           let result=this.apiResultService.result(data);
           if(result&&result.status==0&&result.data){
             this.operation=result.data;
+            console.log(data);
             console.log(result);
             //如果已经有行为了，就不能修改
             if(result.data.actions.length>0){

@@ -134,7 +134,7 @@ export function drawProcess(surface,data,_this) {
     // Create the text
 
     if(i==0){
-      let timeText=xAxisMinTime.getFullYear().toString().substring(2,4)+'/'+xAxisMinTime.getMonth() +'/'+xAxisMinTime.getDate();
+      let timeText=xAxisMinTime.getFullYear().toString()+'年'+(xAxisMinTime.getMonth()+1) +'月'+xAxisMinTime.getDate()+'日';
       let textDate=new Text(timeText,[scaleWidth*i+LEFT_MARGIN-33, height-50+26],{});
       groupLine.append(textDate);
     }

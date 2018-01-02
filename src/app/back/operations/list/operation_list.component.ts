@@ -4,6 +4,7 @@ import {Router,ActivatedRoute} from '@angular/router';
 
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
+import { filterBy, FilterDescriptor, CompositeFilterDescriptor } from '@progress/kendo-data-query';
 
 import {User} from '../../../bean/user'
 import {OperationService} from "../operations.service";
@@ -48,6 +49,10 @@ export class OperationListComponent  implements OnInit {
   private result;
   private isLoading:boolean = true;
 
+  public filter: CompositeFilterDescriptor;
+
+  private todayFilter:Date=new Date();
+
   constructor(
     private operationService:OperationService,
     private router:Router,
@@ -59,9 +64,9 @@ export class OperationListComponent  implements OnInit {
 
   ngOnInit(){
     this.height = (window.document.body.clientHeight - 70 - 56 - 50 - 20-27);
-    this.getData(1);
+    this.getData(1,this.todayFilter);
   }
-  private getData(pageid){
+  private getData(pageid,time){
     this.operationService.getOperationList(pageid)
       .then(
         data=> {
@@ -109,7 +114,7 @@ export class OperationListComponent  implements OnInit {
     this.gridData.data = [];
     this.gridData.total = 0;
     this.isLoading = true;
-    this.getData(this.skip / this.pageSize + 1);
+    this.getData(this.skip / this.pageSize + 1,this.todayFilter);
   }
 
   private editRow(id){
@@ -136,7 +141,7 @@ export class OperationListComponent  implements OnInit {
           data=>{
             let result=this.apiResultService.result(data);
             if(result&&result.status==0){
-              this.getData(1);
+              this.getData(1,this.todayFilter);
             }
           },
           error=>{
@@ -157,7 +162,7 @@ export class OperationListComponent  implements OnInit {
   private pageChange(event,PageChangeEvent){
     this.skip=event.skip;
     this.isLoading=true;
-    this.getData(this.skip/this.pageSize+1);
+    this.getData(this.skip/this.pageSize+1,this.todayFilter);
   }
 
 }

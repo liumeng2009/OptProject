@@ -1,5 +1,8 @@
 <div [@pageChanged]="'in'">
   <kendo-grid
+    [filter]="filter"
+    [filterable]="true"
+
     [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
 
     <ng-template kendoGridToolbarTemplate>
@@ -12,24 +15,48 @@
 
 
     <kendo-grid-column field="no" title="编号">
+      <ng-template kendoGridFilterCellTemplate>
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.no}}
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column  title="客户信息">
+    <kendo-grid-column field="order"  title="客户信息">
+      <ng-template kendoGridFilterCellTemplate>
+        <kendo-dropdownlist
+          [data]="equiptypesFilter"
+          [textField]="'name'"
+          [valueField]="'code'"
+          (valueChange)="handleTypeChange($event)"
+        >
+        </kendo-dropdownlist>
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.order.corporation.name}} {{dataItem.order.custom_name}} {{dataItem.order.custom_phone}}
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column  title="建立时间">
+    <kendo-grid-column  title="建立时间" field="create_time">
+      <ng-template kendoGridFilterCellTemplate>
+        <kendo-datepicker [value]="todayFilter" [format]="'yyyy年MM月dd日'"
+                          (valueChange)="dateFilterChange($event)"
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.create_time|timeshow}}
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column  title="加急" [width]="60">
+    <kendo-grid-column  title="加急" field="important" [width]="60">
+      <ng-template kendoGridFilterCellTemplate>
+
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <span style="color:red" *ngIf="dataItem.important">是</span>
         <span style="color:green" *ngIf="!dataItem.important">否</span>
@@ -37,6 +64,8 @@
     </kendo-grid-column>
 
     <kendo-grid-column field="custom_phone" title="处理状态">
+      <ng-template kendoGridFilterCellTemplate>
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <label style="margin-right: 10px" *ngFor="let acti of dataItem.actions" >
           <span>{{acti?.user?.name}}</span>
