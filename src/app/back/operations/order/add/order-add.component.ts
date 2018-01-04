@@ -38,6 +38,7 @@ import {LmTime} from "../../../components/lmtimepicker/lmtime";
 import {LmTimePicker} from "../../../components/lmtimepicker/lm-timepicker.component";
 import {User} from "../../../../bean/user";
 import {WorkerService} from "../../../basicSettings/worker/worker.service";
+import {SwitchService} from "../../../main/switchService";
 
 const formGroup = dataItem => new FormGroup({
   'type':new FormControl(dataItem.type),
@@ -71,7 +72,8 @@ export class OrderAddComponent implements OnInit{
     private workerService:WorkerService,
     private dialogService:DialogService,
     private businessContentService:BusinessContentService,
-    private cookieService:CookieService
+    private cookieService:CookieService,
+    private switchService:SwitchService
   ){
 
   };
@@ -237,7 +239,7 @@ export class OrderAddComponent implements OnInit{
   private dialog;
   private onOrderSubmit(actionTemplate: TemplateRef<any>){
     this.workerOrders.splice(0,this.workerOrders.length);
-    this.order.needs=this.needs;
+    this.order.needs=JSON.stringify(this.needs);
     console.log(this.needs);
     let date=new Date(this.order.incoming_date);
     date.setHours(this.time.hour,this.time.minute,this.time.second,0);
@@ -300,7 +302,9 @@ export class OrderAddComponent implements OnInit{
          this.cookieService.remove('tmpneed');
          if(result&&result.status==0){
            this.dialog.close();
-           this.router.navigate(['../'],{relativeTo:this.route});
+           this.router.navigate(['../'],{relativeTo:this.route}).then(()=>{
+             this.switchService.setOrderListFilter('create_time',this.order.incoming_date.toString())
+           });
          }
        },
        error=>{
@@ -351,7 +355,9 @@ export class OrderAddComponent implements OnInit{
         }
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
-          this.router.navigate(['../'],{relativeTo:this.route});
+          this.router.navigate(['../'],{relativeTo:this.route}).then(()=>{
+            this.switchService.setOrderListFilter('create_time',this.order.incoming_date.toString())
+          });
           this.dialog.close();
         }
       },

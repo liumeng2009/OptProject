@@ -25,10 +25,11 @@
     <kendo-grid-column field="order"  title="客户信息">
       <ng-template kendoGridFilterCellTemplate>
         <kendo-dropdownlist
-          [data]="equiptypesFilter"
+          [data]="corps"
           [textField]="'name'"
-          [valueField]="'code'"
-          (valueChange)="handleTypeChange($event)"
+          [valueField]="'id'"
+          [(ngModel)]="searchFilter.corpFilter"
+          (valueChange)="handleCorpChange($event)"
         >
         </kendo-dropdownlist>
       </ng-template>
@@ -39,7 +40,7 @@
 
     <kendo-grid-column  title="建立时间" field="create_time">
       <ng-template kendoGridFilterCellTemplate>
-        <kendo-datepicker [value]="todayFilter" [format]="'yyyy年MM月dd日'"
+        <kendo-datepicker [value]="searchFilter.todayFilter" [format]="'yyyy年MM月dd日'"
                           (valueChange)="dateFilterChange($event)"
         >
           <kendo-datepicker-messages

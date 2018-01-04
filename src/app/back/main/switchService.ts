@@ -8,6 +8,15 @@ export class SwitchService {
   private CORP_BUILDING_LIST_AUTO_ADD:boolean=false;
   private ACTION_AUTO_ADD:boolean=false;
 
+  private operationListFilter={
+    corp:'',
+    create_time:''
+  }
+
+  private orderListFilter={
+    create_time:''
+  }
+
   constructor(
 
   ){
@@ -27,5 +36,38 @@ export class SwitchService {
     return this.ACTION_AUTO_ADD;
   }
 
+  setOperationListFilter(name:string,value:string){
+    for(let p in this.operationListFilter){
+      if(name==p.toString()){
+        this.operationListFilter[p]=value;
+        break;
+      }
+    }
+  }
 
+  getOperationListFilter(name:string){
+    for(let p in this.operationListFilter){
+      if(name==p.toString()){
+        return this.operationListFilter[p];
+      }
+    }
+    return null;
+  }
+
+  setOrderListFilter(name:string,value:string){
+    for(let p in this.orderListFilter){
+      if(name==p.toString()){
+        this.orderListFilter[p]=value;
+      }
+    }
+  }
+
+  getOrderListFilter(name:string){
+    for(let p in this.orderListFilter){
+      if(name==p.toString()){
+        return this.orderListFilter[p];
+      }
+    }
+    return null;
+  }
 }

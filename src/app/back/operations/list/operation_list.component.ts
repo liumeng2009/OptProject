@@ -11,6 +11,8 @@ import {OperationService} from "../operations.service";
 import {ApiResultService} from "../../main/apiResult.service";
 import {AjaxExceptionService} from "../../main/ajaxExceptionService";
 import {OptConfig} from "../../../config/config";
+import {CorporationService} from "../../basicSettings/corporation/corporation.service";
+import {SwitchService} from "../../main/switchService";
 
 @Component({
   selector:'operation_list',
@@ -50,8 +52,11 @@ export class OperationListComponent  implements OnInit {
   private isLoading:boolean = true;
 
   public filter: CompositeFilterDescriptor;
-
-  private todayFilter:Date=new Date();
+  private corps=[];
+  private searchFilter={
+    todayFilter:new Date(),
+    corpFilter:'0'
+  }
 
   constructor(
     private operationService:OperationService,
@@ -59,15 +64,33 @@ export class OperationListComponent  implements OnInit {
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
-    private dialogService:DialogService
+    private dialogService:DialogService,
+    private corporationService:CorporationService,
+    private switchService:SwitchService
   ){};
 
   ngOnInit(){
     this.height = (window.document.body.clientHeight - 70 - 56 - 50 - 20-27);
-    this.getData(1,this.todayFilter);
+    this.initFilter();
+    this.getFilterCorpoationData();
+    console.log(this.searchFilter);
+    this.getData(1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
   }
-  private getData(pageid,time){
-    this.operationService.getOperationList(pageid)
+  private initFilter(){
+    let create_time=this.switchService.getOperationListFilter('create_time');
+    if(create_time&&create_time!=''){
+      this.searchFilter.todayFilter=new Date(create_time.toString());
+    }
+
+    let corp=this.switchService.getOperationListFilter('corp');
+    if(corp&&corp!=''){
+      this.searchFilter.corpFilter=corp;
+    }
+  }
+  private getData(pageid,time,corp){
+    let dateSubmit=new Date(time.toString());
+    let d=dateSubmit.getTime();
+    this.operationService.getOperationList(pageid,d,corp)
       .then(
         data=> {
           console.log(data);
@@ -110,11 +133,37 @@ export class OperationListComponent  implements OnInit {
         }
       );
   }
+  private dateFilterChange($event){
+    this.switchService.setOperationListFilter('create_time',$event);
+    this.searchFilter.todayFilter=new Date($event);
+    this.getData( 1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+  }
+  private handleCorpChange($event){
+    this.searchFilter.corpFilter=$event.id;
+    this.switchService.setOperationListFilter('corp',$event.id);
+    this.getData( 1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+  }
   private refresh() {
     this.gridData.data = [];
     this.gridData.total = 0;
     this.isLoading = true;
-    this.getData(this.skip / this.pageSize + 1,this.todayFilter);
+    this.getData(this.skip / this.pageSize + 1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+  }
+
+  private getFilterCorpoationData(){
+    this.corps.slice(0,this.corps.length);
+    this.corporationService.getCorporationList(null,null).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.corps=result.data;
+        }
+        this.corps.unshift({name:'全部',id:'0'});
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
   }
 
   private editRow(id){
@@ -141,7 +190,7 @@ export class OperationListComponent  implements OnInit {
           data=>{
             let result=this.apiResultService.result(data);
             if(result&&result.status==0){
-              this.getData(1,this.todayFilter);
+              this.getData(1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
             }
           },
           error=>{
@@ -162,7 +211,7 @@ export class OperationListComponent  implements OnInit {
   private pageChange(event,PageChangeEvent){
     this.skip=event.skip;
     this.isLoading=true;
-    this.getData(this.skip/this.pageSize+1,this.todayFilter);
+    this.getData(this.skip/this.pageSize+1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
   }
 
 }

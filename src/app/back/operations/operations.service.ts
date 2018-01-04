@@ -30,14 +30,15 @@ export class OperationService{
 
   constructor(private http:Http,private cookieService:CookieService){}
 
-  getOperationList(pageid):Promise<ResponseData>{
+  getOperationList(pageid,time,corp):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url='';
+    let searchStr='/time/'+(time?time:'0')+'/corp/'+(corp?corp:'0')
     if(pageid){
-      url=this.listurl+'/page/'+pageid+'?token='+token
+      url=this.listurl+'/page/'+pageid+searchStr+'?token='+token
     }
     else{
-      url=this.listurl+'?token='+token
+      url=this.listurl+searchStr+'?token='+token
     }
     console.log(url);
     return this.http.get(url)

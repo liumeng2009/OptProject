@@ -11,6 +11,7 @@ import {ApiResultService} from "../../../main/apiResult.service";
 import {AjaxExceptionService} from "../../../main/ajaxExceptionService";
 import {OptConfig} from "../../../../config/config";
 import {Position} from "../../../../bean/position";
+import {SwitchService} from "../../../main/switchService";
 
 @Component({
   selector:'order-list',
@@ -57,13 +58,24 @@ export class OrderListComponent implements OnInit {
               private route:ActivatedRoute,
               private apiResultService:ApiResultService,
               private ajaxExceptionService:AjaxExceptionService,
-              private dialogService:DialogService) {
+              private dialogService:DialogService,
+              private switchService:SwitchService
+
+  ) {
 
   };
 
   ngOnInit() {
     this.height = (window.document.body.clientHeight - 70 - 56 - 50 - 20-27);
+    this.initFilter();
     this.getData(1,this.todayFilter);
+  }
+
+  private initFilter(){
+    let filter=this.switchService.getOrderListFilter('create_time');
+    if(filter&&filter!=''){
+      this.todayFilter=filter;
+    }
   }
 
   private getData(pageid,time) {
@@ -95,7 +107,7 @@ export class OrderListComponent implements OnInit {
   }
 
   private dateFilterChange($event){
-    console.log($event);
+    this.switchService.setOrderListFilter('create_time',$event);
     this.todayFilter=new Date($event);
     this.getData(1,this.todayFilter);
   }
