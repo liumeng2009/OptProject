@@ -55,7 +55,7 @@ const formGroup = dataItem => new FormGroup({
 
 export class OrderAddComponent implements OnInit{
 
-  order=new Order(null,null,'刘孟','15822927208',null,null,null,null,null,null,null,null,null,null,null,null);
+  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
   groups:Group[]=[];
   public today: Date = new Date();
 
@@ -101,13 +101,11 @@ export class OrderAddComponent implements OnInit{
         this.groupLoading=false;
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
-          //console.log(result);
           for(let data of result.data){
             let group=new Group(data.id,data.name,null,data.status);
             this.groups.push(group);
           }
           this.order.group=this.groups[0]?this.groups[0].id:'';
-          console.log(this.order);
           this.initCorporation();
         }
       },
@@ -126,7 +124,6 @@ export class OrderAddComponent implements OnInit{
       data=>{
         this.corporationLoading=false;
         let result=this.apiResultService.result(data);
-        console.log(result);
         if(result.status==0){
           for(let data of result.data){
             let corp=new Corporation(data.id,data.name,data.description,data.group,data.status);
@@ -134,7 +131,6 @@ export class OrderAddComponent implements OnInit{
           }
           if(this.corporations.length>0){
             this.order.corporation=new Corporation(this.corporations[0].id,this.corporations[0].name,this.corporations[0].description,this.corporations[0].group,this.corporations[0].status);
-            console.log(this.order);
             this.initCorpBuilding();
           }
         }
@@ -155,7 +151,6 @@ export class OrderAddComponent implements OnInit{
       data=>{
         this.corpBuildingLoading=false;
         let result=this.apiResultService.result(data);
-        console.log(result);
         if(result.status==0){
           for(let d of result.data){
             switch(d.position){
@@ -181,11 +176,9 @@ export class OrderAddComponent implements OnInit{
             let corpBuild=new CorpBuilding(d.id,d.corporationId,d.building,d.floor,d.position,d.status,(d.building?d.building.name:null)+d.floor+'层'+d.position);
             this.corpBuildings.push(corpBuild);
           }
-          console.log(this.corpBuildings);
           if(this.corpBuildings.length>0){
             this.order.custom_position=this.corpBuildings[0];
           }
-          console.log(this.order);
         }
       },
       error=>{
@@ -205,7 +198,6 @@ export class OrderAddComponent implements OnInit{
     this.workers.splice(0,this.workers.length);
     this.workerService.getWorkerList(null).then(
       data=>{
-        console.log(data);
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
           for(let i=0;i<result.data.length;i++){
@@ -214,7 +206,6 @@ export class OrderAddComponent implements OnInit{
               this.workers.push(user);
             }
           }
-          console.log(this.workers);
         }
       },
       error=>{
@@ -240,7 +231,6 @@ export class OrderAddComponent implements OnInit{
   private onOrderSubmit(actionTemplate: TemplateRef<any>){
     this.workerOrders.splice(0,this.workerOrders.length);
     this.order.needs=JSON.stringify(this.needs);
-    console.log(this.needs);
     let date=new Date(this.order.incoming_date);
     date.setHours(this.time.hour,this.time.minute,this.time.second,0);
     let lm=new LmTime(this.time.hour,this.time.minute,this.time.second);
@@ -256,7 +246,6 @@ export class OrderAddComponent implements OnInit{
         this.workerOrders.push(workOrder);
       }
     }
-    console.log(this.workerOrders);
 
 
     this.dialog=this.dialogService.open({
@@ -297,12 +286,12 @@ export class OrderAddComponent implements OnInit{
          this.isHiddenSaveOrderButton=false;
          this.isHiddenSaveOrderAllButton=false;
          let result=this.apiResultService.result(data);
-         console.log(result);
-         //保存成功之后，就把needs的缓存删除掉
-         this.cookieService.remove('tmpneed');
          if(result&&result.status==0){
            this.dialog.close();
            this.router.navigate(['../'],{relativeTo:this.route}).then(()=>{
+             //保存成功之后，就把needs的缓存删除掉
+             this.cookieService.remove('tmpneed');
+             this.needs.splice(0,this.needs.length);
              this.switchService.setOrderListFilter('create_time',this.order.incoming_date.toString())
            });
          }
@@ -323,8 +312,6 @@ export class OrderAddComponent implements OnInit{
 
   }
   private saveOrderAll(){
-    console.log(this.order);
-    console.log(this.workerOrders);
     this.SaveOrderAllLoading='k-icon k-i-loading';
     this.isHiddenSaveOrderAllButton=true;
     this.isHiddenSaveOrderButton=true;
@@ -356,6 +343,9 @@ export class OrderAddComponent implements OnInit{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
           this.router.navigate(['../'],{relativeTo:this.route}).then(()=>{
+            //保存成功之后，就把needs的缓存删除掉
+            this.cookieService.remove('tmpneed');
+            this.needs.splice(0,this.needs.length);
             this.switchService.setOrderListFilter('create_time',this.order.incoming_date.toString())
           });
           this.dialog.close();
@@ -505,13 +495,6 @@ export class OrderAddComponent implements OnInit{
   private needs:Need[]=[];
 
   private myAddRow(grid){
-/*    this.formGroup =formGroup({
-      'type':new EquipType('','',''),
-      'equipment': '',
-      'position': new Position('全部区域','A'),
-      'id':''
-    });*/
-    console.log(this.formGroup);
     grid.addRow(this.formGroup);
   }
   protected addHandler({sender}) {
@@ -526,16 +509,11 @@ export class OrderAddComponent implements OnInit{
       'op': this.equipOps[0]?this.equipOps[0]:'',
       'no':1
     });
-    console.log(this.formGroup);
     sender.addRow(this.formGroup);
   }
 
   protected editHandler({sender, rowIndex, dataItem}) {
-
     this.closeEditor(sender);
-
-    console.log(dataItem);
-
     //初始化三个下拉菜单
     this.initEquipType();
 
@@ -545,7 +523,6 @@ export class OrderAddComponent implements OnInit{
       'op': dataItem.op,
       'no':dataItem.no
     });
-    console.log(this.formGroup);
     this.editedRowIndex = rowIndex;
     sender.editRow(rowIndex,this.formGroup);
   }
@@ -562,7 +539,6 @@ export class OrderAddComponent implements OnInit{
 
   protected saveHandler({sender, rowIndex, formGroup, isNew}) {
     const product = formGroup.value;
-    console.log(product+isNew);
     if(isNew){
       if(this.needs.length==0){
         this.needs.push(product);
@@ -596,12 +572,10 @@ export class OrderAddComponent implements OnInit{
   protected saveTmpNeed(){
     let date=new Date();
     date.setDate(date.getDate()+999);
-    console.log(JSON.stringify(this.needs));
     this.cookieService.put('tmpneed',''+JSON.stringify(this.needs)+'',{expires:date});
   }
 
   protected initTmpNeed(){
-    //console.log(this.cookieService.get('tmpneed'));
     let tmp=this.cookieService.get('tmpneed');
     if(tmp&&tmp!='')
       this.needs=JSON.parse(this.cookieService.get('tmpneed'));
@@ -609,7 +583,6 @@ export class OrderAddComponent implements OnInit{
 
   private result;
   protected removeHandler({dataItem}) {
-
     const dialog: DialogRef = this.dialogService.open({
       title: "确认删除？",
       content: "确定删除吗？",
@@ -621,7 +594,7 @@ export class OrderAddComponent implements OnInit{
 
     dialog.result.subscribe((result) => {
       if (result instanceof DialogCloseResult) {
-        console.log("close");
+
       } else {
 
       }
@@ -633,9 +606,7 @@ export class OrderAddComponent implements OnInit{
   }
 
   private onTimeChange($event){
-    console.log($event);
     this.time=$event;
-
   }
 
   private onArriveDateTimeChange($event){

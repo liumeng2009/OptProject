@@ -74,7 +74,7 @@ export class OrderListComponent implements OnInit {
   private initFilter(){
     let filter=this.switchService.getOrderListFilter('create_time');
     if(filter&&filter!=''){
-      this.todayFilter=filter;
+      this.todayFilter=new Date(filter.toString());
     }
   }
 

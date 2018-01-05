@@ -54,8 +54,10 @@ export class OperationListComponent  implements OnInit {
   public filter: CompositeFilterDescriptor;
   private corps=[];
   private searchFilter={
+    showTodayFilter:true,
     todayFilter:new Date(),
-    corpFilter:'0'
+    corpFilter:'0',
+    noFilter:''
   }
 
   constructor(
@@ -74,7 +76,7 @@ export class OperationListComponent  implements OnInit {
     this.initFilter();
     this.getFilterCorpoationData();
     console.log(this.searchFilter);
-    this.getData(1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+    this.getData(1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
   private initFilter(){
     let create_time=this.switchService.getOperationListFilter('create_time');
@@ -86,11 +88,27 @@ export class OperationListComponent  implements OnInit {
     if(corp&&corp!=''){
       this.searchFilter.corpFilter=corp;
     }
+    let no=this.switchService.getOperationListFilter('no');
+    if(no&&no!=''){
+      this.searchFilter.noFilter=no;
+    }
+
+    let show=this.switchService.getOperationListFilter('show_create_time');
+    if(show){
+      this.searchFilter.showTodayFilter=true;
+    }
+    else{
+      this.searchFilter.showTodayFilter=false;
+    }
+
   }
-  private getData(pageid,time,corp){
-    let dateSubmit=new Date(time.toString());
-    let d=dateSubmit.getTime();
-    this.operationService.getOperationList(pageid,d,corp)
+  private getData(pageid,time,corp,no){
+    let d;
+    if(time){
+      let dateSubmit=new Date(time.toString());
+      d=dateSubmit.getTime();
+    }
+    this.operationService.getOperationList(pageid,d,corp,no)
       .then(
         data=> {
           console.log(data);
@@ -136,18 +154,23 @@ export class OperationListComponent  implements OnInit {
   private dateFilterChange($event){
     this.switchService.setOperationListFilter('create_time',$event);
     this.searchFilter.todayFilter=new Date($event);
-    this.getData( 1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+    this.getData( 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
   private handleCorpChange($event){
     this.searchFilter.corpFilter=$event.id;
     this.switchService.setOperationListFilter('corp',$event.id);
-    this.getData( 1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+    this.getData( 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
+  }
+  private noFilterChange($event){
+    let noSelect=$event.target.value;
+    console.log(this.searchFilter);
+    this.getData( 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
   private refresh() {
     this.gridData.data = [];
     this.gridData.total = 0;
     this.isLoading = true;
-    this.getData(this.skip / this.pageSize + 1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+    this.getData(this.skip / this.pageSize + 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
 
   private getFilterCorpoationData(){
@@ -164,6 +187,21 @@ export class OperationListComponent  implements OnInit {
         this.ajaxExceptionService.simpleOp(error);
       }
     )
+  }
+
+  private searchDateChange($event){
+    let bol=$event.target.checked;
+    if(bol){
+      this.searchFilter.showTodayFilter=true;
+      this.switchService.setOperationListFilter('show_create_time',true);
+      this.getData( 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
+    }
+    else{
+      this.searchFilter.showTodayFilter=false;
+      this.switchService.setOperationListFilter('show_create_time',false);
+      this.getData( 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
+    }
+
   }
 
   private editRow(id){
@@ -190,7 +228,7 @@ export class OperationListComponent  implements OnInit {
           data=>{
             let result=this.apiResultService.result(data);
             if(result&&result.status==0){
-              this.getData(1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+              this.getData(1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
             }
           },
           error=>{
@@ -211,7 +249,7 @@ export class OperationListComponent  implements OnInit {
   private pageChange(event,PageChangeEvent){
     this.skip=event.skip;
     this.isLoading=true;
-    this.getData(this.skip/this.pageSize+1,this.searchFilter.todayFilter,this.searchFilter.corpFilter);
+    this.getData(this.skip/this.pageSize+1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
 
 }

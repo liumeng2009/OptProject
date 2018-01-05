@@ -10,7 +10,9 @@ export class SwitchService {
 
   private operationListFilter={
     corp:'',
-    create_time:''
+    create_time:'',
+    no:'',
+    show_create_time:true
   }
 
   private orderListFilter={
@@ -36,7 +38,7 @@ export class SwitchService {
     return this.ACTION_AUTO_ADD;
   }
 
-  setOperationListFilter(name:string,value:string){
+  setOperationListFilter(name:string,value:any){
     for(let p in this.operationListFilter){
       if(name==p.toString()){
         this.operationListFilter[p]=value;

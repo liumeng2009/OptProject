@@ -30,10 +30,10 @@ export class OperationService{
 
   constructor(private http:Http,private cookieService:CookieService){}
 
-  getOperationList(pageid,time,corp):Promise<ResponseData>{
+  getOperationList(pageid,time,corp,no):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url='';
-    let searchStr='/time/'+(time?time:'0')+'/corp/'+(corp?corp:'0')
+    let searchStr='/time/'+(time?time:'0')+'/corp/'+(corp?corp:'0')+'/no/'+(no?no:'0')
     if(pageid){
       url=this.listurl+'/page/'+pageid+searchStr+'?token='+token
     }

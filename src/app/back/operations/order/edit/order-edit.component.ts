@@ -1,6 +1,8 @@
 import {Component,OnInit,ViewContainerRef} from '@angular/core';
 import {Router,ActivatedRoute,Params} from '@angular/router';
 
+import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
+
 import {MissionService} from '../../../main/mission.service';
 
 import {OrderService} from '../order.service';
@@ -20,6 +22,7 @@ import {CorporationService} from "../../../basicSettings/corporation/corporation
 import {GroupService} from "../../../basicSettings/group/group.service";
 import {Group} from "../../../../bean/group";
 import {LmTime} from "../../../components/lmtimepicker/lmtime";
+import {OperationService} from "../../operations.service";
 
 @Component({
   selector:'order-edit',
@@ -42,7 +45,9 @@ export class OrderEditComponent implements OnInit{
     private orderService:OrderService,
     private groupService:GroupService,
     private corporationService:CorporationService,
-    private corpBuildingService:CorpBuildingService
+    private corpBuildingService:CorpBuildingService,
+    private dialogService:DialogService,
+    private operationService:OperationService
   ){
   };
 
@@ -110,7 +115,7 @@ export class OrderEditComponent implements OnInit{
   private initCorpBuilding(callback){
     this.corpBuildingLoading=true;
     this.corpBuildings.splice(0,this.corpBuildings.length);
-    this.corpBuildingService.getCorporationList(this.order.corporation.id).then(
+    this.corpBuildingService.getCorporationList(this.order.corporation).then(
       data=>{
         this.corpBuildingLoading=false;
         let result=this.apiResultService.result(data);
@@ -156,11 +161,11 @@ export class OrderEditComponent implements OnInit{
     this.orderService.getOrder(id).then(
       data=>{
         let result=this.apiResultService.result(data);
-        console.log(result);
         if(result&&result.data){
           this.order.custom_name=result.data.custom_name;
           this.order.custom_phone=result.data.custom_phone;
           this.order.remark=result.data.remark;
+          this.order.id=result.data.id;
           this.operations=result.data.operations;
 
           if(this.operations instanceof Array&&this.operations.length>0 ){
@@ -190,9 +195,9 @@ export class OrderEditComponent implements OnInit{
           this.initGroup(()=>{
             this.order.group=result.data.corporation.groupId;
             this.initCorporation(()=>{
-              this.order.corporation=result.data.corporation;
+              this.order.corporation=result.data.corporation.id;
               this.initCorpBuilding(()=>{
-                this.order.custom_position=result.data.corpBuilding;
+                this.order.custom_position=result.data.corpBuilding.id;
               })
             });
           });
@@ -200,6 +205,7 @@ export class OrderEditComponent implements OnInit{
           let dateEdit=new Date(this.order.incoming_date_timestamp);
           this.today=new Date(dateEdit.getFullYear(),dateEdit.getMonth(),dateEdit.getDate());
           this.time=new LmTime(dateEdit.getHours(),dateEdit.getMinutes(),dateEdit.getSeconds());
+
         }
       },
       error=>{
@@ -237,5 +243,43 @@ export class OrderEditComponent implements OnInit{
     this.route.params.subscribe((params: Params) => {
       this.router.navigate(['op/add/'+params.id], {relativeTo: this.route.parent.parent});
     });
+  }
+  private result;
+  private editRow(id){
+    this.router.navigate([id],{relativeTo:this.route.parent});
+  }
+  private deleteRow(id){
+    let dialog=this.dialogService.open({
+      title:'确认？',
+      content:'确认要删除吗？',
+      actions:[
+        {text:'否'},
+        {text:'是',primary:true}
+      ]
+    })
+    dialog.result.subscribe((result)=>{
+      if (result instanceof DialogCloseResult) {
+
+      } else {
+
+      }
+      this.result = result;
+      if(this.result.text=='是'){
+        this.operationService.delete(id).then(
+          data=>{
+            let result=this.apiResultService.result(data);
+            if(result&&result.status==0){
+              this.refresh();
+            }
+          },
+          error=>{
+            this.ajaxExceptionService.simpleOp(error);
+          }
+        )
+      }
+      else{
+
+      }
+    })
   }
 }

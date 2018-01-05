@@ -54,7 +54,6 @@ export class OrderService{
       url=url+'&equipment='+equipment
     }
 */
-    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
@@ -82,7 +81,6 @@ export class OrderService{
 
   getOrder(id:string):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-    console.log(this.geturl+id+'?token='+token);
     return this.http
       .get(this.geturl+id+'?token='+token)
       .toPromise()

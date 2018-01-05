@@ -57,6 +57,7 @@
                 [textField]="'name'"
                 [valueField]="'id'"
                 [(ngModel)]="order.corporation"
+                [valuePrimitive]="true"
                 (valueChange)="initCorpBuilding($event)"
               >
               </kendo-dropdownlist>
@@ -116,6 +117,16 @@
                   <span style="color:#ffa500" *ngIf="dataItem.complete=='1'">处理中</span>
                   <span style="color:#008000" *ngIf="dataItem.complete=='2'">处理完成</span>
                   <span style="color:#999999" *ngIf="dataItem.complete=='3'">已指派工程师</span>
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column field="id" title="操作"  [width]="130">
+                <ng-template kendoGridFilterCellTemplate>
+
+                </ng-template>
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                  <button kendoButton type="button" (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
+                  <button kendoButton type="button" (click)="deleteRow(dataItem.id)" >删除</button>
                 </ng-template>
               </kendo-grid-column>
 
