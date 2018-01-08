@@ -56,9 +56,10 @@
           [valueField]="'code'"
           (valueChange)="handleTypeChange($event)"
           [valuePrimitive]="true"
-          [(ngModel)]="searchObj.type.code"
+          [(ngModel)]="searchObj.type"
         >
         </kendo-dropdownlist>
+
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.equipType.name}}
@@ -70,12 +71,14 @@
         <kendo-dropdownlist
           [data]="searchEquipment"
           [textField]="'name'"
-          [valueField]="'code'"
+          [valueField]="'value'"
           (valueChange)="handleEquipmentChange($event)"
-          [valuePrimitive]="true"
-          [(ngModel)]="searchObj.equipment.code"
+          [(ngModel)]="searchObj.equipment"
         >
         </kendo-dropdownlist>
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.equipment}}
       </ng-template>
     </kendo-grid-column>
 
