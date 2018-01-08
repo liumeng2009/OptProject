@@ -17,6 +17,7 @@ import {OptConfig} from "../../../../config/config";
 import {Position} from "../../../../bean/position";
 import {EquipType} from "../../../../bean/equipType";
 import {EquipOp} from "../../../../bean/equipOp";
+import {SwitchService} from "../../../main/switchService";
 
 @Component({
   selector:'business-list',
@@ -56,11 +57,11 @@ export class BusinessContentListComponent implements OnInit{
   private isLoading:boolean=false;
 
   private searchTypeName:EquipType[]=[];
-  private searchEquipment:Position[]=[];
+  private searchEquipment:any[]=[];
 
   private searchObj={
     type:{name:null,code:''},
-    equipment:{name:null,value:''}
+    equipment:{name:null,code:''}
   }
 
   public filter: CompositeFilterDescriptor;
@@ -71,18 +72,20 @@ export class BusinessContentListComponent implements OnInit{
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
-    private dialogService:DialogService
+    private dialogService:DialogService,
+    private switchService:SwitchService
   ){
 
   };
 
-  private subs;
   ngOnInit(){
 
     this.height=(window.document.body.clientHeight-70-56-50-20-27);
 
+    this.initFilter();
+
     //获取参数
-    let urlTree=this.router.parseUrl(this.router.url);
+/*    let urlTree=this.router.parseUrl(this.router.url);
     let queryParams=urlTree.queryParams;
     let page=1;
     try{
@@ -90,32 +93,28 @@ export class BusinessContentListComponent implements OnInit{
     }
     catch(e){
 
-    }
-    let type=queryParams.type;
-    let equipment=queryParams.equipment;
+    }*/
+/*    let type=queryParams.type;
+    let equipment=queryParams.equipment;*/
 
-    this.getSearchEquipment(type);
-    this.getEquipTypeList(type);
+    this.getSearchEquipment(this.searchObj.type.code);
+    this.getEquipTypeList(this.searchObj.type.code);
     this.getEquipOpList();
 
-    console.log('init');
-    this.getData(page,type,equipment);
-    this.skip=(page-1)*this.pageSize;
-
-    this.subs=this.router.events
+    this.getData(1,this.searchObj.type.code,this.searchObj.equipment.code);
+/*    this.subs=this.router.events
       .subscribe((event) => {
         if (event instanceof NavigationEnd) {
           this.initQueryParams();
         }
-      });
-
+      });*/
   }
 
   ngOnDestroy(){
-    this.subs.unsubscribe();
+    //this.subs.unsubscribe();
   }
 
-  private initQueryParams(){
+/*  private initQueryParams(){
     //获取参数
     let urlTree=this.router.parseUrl(this.router.url);
     let queryParams=urlTree.queryParams;
@@ -130,6 +129,18 @@ export class BusinessContentListComponent implements OnInit{
     let equipment=queryParams.equipment?queryParams.equipment:'';
     this.getData(page,type,equipment);
     this.skip=(page-1)*this.pageSize;
+  }*/
+
+  private initFilter(){
+    let typeFilter=this.switchService.getBusinessListFilter('type');
+    if(typeFilter&&typeFilter!=''){
+      this.searchObj.type.code=typeFilter;
+    }
+
+    let equipmentFilter=this.switchService.getBusinessListFilter('equipment');
+    if(equipmentFilter&&equipmentFilter!=''){
+      this.searchObj.equipment.code=equipmentFilter;
+    }
   }
 
   private getData(pageid,type,equipment){
@@ -156,7 +167,7 @@ export class BusinessContentListComponent implements OnInit{
     this.gridData.data=[];
     this.gridData.total=0;
     this.isLoading=true;
-    this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.value);
+    this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.code);
   }
   private add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
@@ -168,7 +179,8 @@ export class BusinessContentListComponent implements OnInit{
     //this.router.navigate(['list/'+(this.skip/this.pageSize+1).toString()],{relativeTo:this.route.parent})
     //this.router.navigate([{'page':(this.skip/this.pageSize+1).toString()}],{relativeTo:this.route})
     //this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.value);
-    this.router.navigate(['list'],{queryParams:{page:(this.skip/this.pageSize+1).toString()},relativeTo:this.route.parent});
+    //this.router.navigate(['list'],{queryParams:{page:(this.skip/this.pageSize+1).toString()},relativeTo:this.route.parent});
+    this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.code);
   }
 
 
@@ -215,13 +227,12 @@ export class BusinessContentListComponent implements OnInit{
 
 
   private handleTypeChange(e){
-    let urlTree=this.router.parseUrl(this.router.url);
-    let queryParams=urlTree.queryParams;
-    queryParams.type=e.code;
-    this.getSearchEquipment(e.code);
+    this.switchService.setBusinessListFilter('type',e);
+    this.getSearchEquipment(e);
+    this.getData(1,this.searchObj.type.code,this.searchObj.equipment.code);
     //this.searchObj.equipment=this.searchEquipment[0]?this.searchEquipment[0]:null;
-    queryParams.equipment=this.searchEquipment[0]?this.searchEquipment[0].value:null;
-    this.router.navigate(['list'],{queryParams:queryParams,relativeTo:this.route.parent});
+    //queryParams.equipment=this.searchEquipment[0]?this.searchEquipment[0].value:null;
+    //this.router.navigate(['list'],{queryParams:queryParams,relativeTo:this.route.parent});
 
 /*    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(
       data=>{
@@ -241,13 +252,10 @@ export class BusinessContentListComponent implements OnInit{
     );*/
   }
 
-  private handleEquimentChange(e){
-
-    let urlTree=this.router.parseUrl(this.router.url);
-    let queryParams=urlTree.queryParams;
-    queryParams.equipment=e.value;
-    this.router.navigate(['list'],{queryParams:queryParams,relativeTo:this.route.parent});
-
+  private handleEquipmentChange(e){
+    this.switchService.setBusinessListFilter('equipment',e);
+    //this.router.navigate(['list'],{queryParams:queryParams,relativeTo:this.route.parent});
+    this.getData(1,this.searchObj.type.code,this.searchObj.equipment.code);
 /*    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(
       data=>{
         if(this.apiResultService.result(data)) {
@@ -268,19 +276,24 @@ export class BusinessContentListComponent implements OnInit{
 
   private getSearchEquipment(type:string){
     this.searchEquipment.splice(0,this.searchEquipment.length);
-    this.searchEquipment.push(new Position('全部设备',''));
+    this.searchEquipment.push({name:'全部设备',code:''});
     this.businessContentService.getEquipment(type).then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
           for(let d of this.apiResultService.result(data).data){
-            this.searchEquipment.push(new Position(d.equipment,d.equipment));
+            this.searchEquipment.push({name:d.equipment,code:d.equipment});
           }
         }
         if(this.searchEquipment.length>0){
-          this.searchObj.equipment=this.searchEquipment[0];
+          if(this.searchObj.equipment.code&&this.searchObj.equipment.code!='')
+          {
+
+          }
+          else{
+            this.searchObj.equipment=this.searchEquipment[0];
+          }
         }
-        //console.log(this.searchEquipment);
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);

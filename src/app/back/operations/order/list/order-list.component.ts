@@ -52,6 +52,7 @@ export class OrderListComponent implements OnInit {
   private isLoading:boolean = true;
   public filter: CompositeFilterDescriptor;
   private todayFilter:Date=new Date();
+  private showTodayFilter:boolean=true;
 
   constructor(private orderService:OrderService,
               private router:Router,
@@ -76,26 +77,27 @@ export class OrderListComponent implements OnInit {
     if(filter&&filter!=''){
       this.todayFilter=new Date(filter.toString());
     }
+
+    let showfilter=this.switchService.getOrderListFilter('show_create_time');
+    if(showfilter&&showfilter!=''){
+      this.showTodayFilter=showfilter;
+    }
   }
 
   private getData(pageid,time) {
-    let date=new Date(time.toString());
-    let timeSubmit=date.getTime();
-
-
-    this.orderService.getOrderList(pageid,timeSubmit)
+    let d;
+    if(time){
+      let dateSubmit=new Date(time.toString());
+      d=dateSubmit.getTime();
+    }
+    this.orderService.getOrderList(pageid,d)
       .then(
         data=> {
-          console.log(data);
           if (this.apiResultService.result(data)) {
             this.gridData.data = this.apiResultService.result(data).data;
             this.total = this.gridData.total = this.apiResultService.result(data).total;
             this.firstRecord = this.skip + 1;
             this.lastRecord = this.apiResultService.result(data).data.length + this.skip;
-
-
-
-
           }
           this.isLoading = false;
         },
@@ -110,6 +112,20 @@ export class OrderListComponent implements OnInit {
     this.switchService.setOrderListFilter('create_time',$event);
     this.todayFilter=new Date($event);
     this.getData(1,this.todayFilter);
+  }
+
+  private searchDateChange($event){
+    let bol=$event.target.checked;
+    if(bol){
+      this.showTodayFilter=true;
+      this.switchService.setOrderListFilter('show_create_time',true);
+      this.getData( 1,this.showTodayFilter?this.todayFilter:null);
+    }
+    else{
+      this.showTodayFilter=false;
+      this.switchService.setOrderListFilter('show_create_time',false);
+      this.getData( 1,this.showTodayFilter?this.todayFilter:null);
+    }
   }
 
 

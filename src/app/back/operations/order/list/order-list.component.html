@@ -23,14 +23,20 @@
 
     <kendo-grid-column field="incoming_time" title="订单日期" [width]="190">
       <ng-template kendoGridFilterCellTemplate>
-        <kendo-datepicker [value]="todayFilter" [format]="'yyyy年MM月dd日'"
-                          (valueChange)="dateFilterChange($event)"
-        >
-          <kendo-datepicker-messages
-            today="今天"
-            toggle="选择日期"
-          ></kendo-datepicker-messages>
-        </kendo-datepicker>
+        <div style="display:flex;margin-bottom: 0px">
+          <span style="padding-top: 5px;display: block">
+            <input type="checkbox" id="auth-2fa" class="k-checkbox" checked="checked" (change)="searchDateChange($event)" [(ngModel)]="showTodayFilter" >
+            <label class="k-checkbox-label" for="auth-2fa"></label>
+          </span>
+          <kendo-datepicker [value]="todayFilter" [format]="'yyyy年MM月dd日'"
+                            (valueChange)="dateFilterChange($event)" [disabled]="!showTodayFilter"
+          >
+            <kendo-datepicker-messages
+              today="今天"
+              toggle="选择日期"
+            ></kendo-datepicker-messages>
+          </kendo-datepicker>
+        </div>
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.incoming_time|timeshow}}

@@ -16,7 +16,13 @@ export class SwitchService {
   }
 
   private orderListFilter={
-    create_time:''
+    create_time:'',
+    show_create_time:true
+  }
+
+  private businessListFilter={
+    type:'',
+    equipment:''
   }
 
   constructor(
@@ -56,7 +62,7 @@ export class SwitchService {
     return null;
   }
 
-  setOrderListFilter(name:string,value:string){
+  setOrderListFilter(name:string,value:any){
     for(let p in this.orderListFilter){
       if(name==p.toString()){
         this.orderListFilter[p]=value;
@@ -72,4 +78,22 @@ export class SwitchService {
     }
     return null;
   }
+
+  setBusinessListFilter(name:string,value:any){
+    for(let p in this.businessListFilter){
+      if(name==p.toString()){
+        this.businessListFilter[p]=value;
+      }
+    }
+  }
+
+  getBusinessListFilter(name:string){
+    for(let p in this.businessListFilter){
+      if(name==p.toString()){
+        return this.businessListFilter[p];
+      }
+    }
+    return null;
+  }
+
 }

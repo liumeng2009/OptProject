@@ -21,6 +21,7 @@ export class BusinessContentService{
 
   private listurl=new OptConfig().serverPath+'/api/business/list';
   private saveurl=new OptConfig().serverPath+'/api/business/save';
+  private editurl=new OptConfig().serverPath+'/api/business/edit';
   private geturl=new OptConfig().serverPath+'/api/business/';
   private getequipment=new OptConfig().serverPath+'/api/business/getequip/get';
   private deleteurl=new OptConfig().serverPath+'/api/business/delete';
@@ -60,6 +61,14 @@ export class BusinessContentService{
     let token=this.cookieService.get('optToken');
     return this.http
       .post(this.saveurl+'?token='+token, businessContent, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  edit(businessContent:BusinessContent): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.editurl+'?token='+token, businessContent, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

@@ -112,7 +112,7 @@ export class BusinessContentEditComponent implements OnInit{
 
   private onSubmit(){
     console.log(this.business);
-    this.businessContentService.create(this.business).then(
+    this.businessContentService.edit(this.business).then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){

@@ -55,7 +55,8 @@
           [textField]="'name'"
           [valueField]="'code'"
           (valueChange)="handleTypeChange($event)"
-          [(ngModel)]="searchObj.type"
+          [valuePrimitive]="true"
+          [(ngModel)]="searchObj.type.code"
         >
         </kendo-dropdownlist>
       </ng-template>
@@ -69,9 +70,10 @@
         <kendo-dropdownlist
           [data]="searchEquipment"
           [textField]="'name'"
-          [valueField]="'value'"
-          (valueChange)="handleEquimentChange($event)"
-          [(ngModel)]="searchObj.equipment"
+          [valueField]="'code'"
+          (valueChange)="handleEquipmentChange($event)"
+          [valuePrimitive]="true"
+          [(ngModel)]="searchObj.equipment.code"
         >
         </kendo-dropdownlist>
       </ng-template>
