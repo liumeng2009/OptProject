@@ -19,6 +19,7 @@ export class UserService{
 
   private listurl=new OptConfig().serverPath+'/api/user/list';
   private saveurl=new OptConfig().serverPath+'/api/user/reg';
+  private editurl=new OptConfig().serverPath+'/api/user/edit';
   private deleteurl=new OptConfig().serverPath+'/api/user/delete';
   private geturl=new OptConfig().serverPath+'/api/user/';
 

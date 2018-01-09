@@ -600,7 +600,18 @@ export class OrderAddComponent implements OnInit{
       }
       this.result = result;
       if(this.result.text=='是'){
-
+        console.log(dataItem);
+        let id=dataItem.op.id;
+        let i=0;
+        for(let ns of this.needs){
+          if(ns.op.id==id){
+            this.needs.splice(i,1);
+            break;
+          }
+          i++;
+        }
+        console.log(this.needs)
+        this.saveTmpNeed();;
       }
     });
   }

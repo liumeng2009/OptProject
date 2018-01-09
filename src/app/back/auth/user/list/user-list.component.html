@@ -25,20 +25,13 @@
     </ng-template>
   </kendo-grid-column>
 
-  <kendo-grid-column field="email" title="邮箱">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      <span style="color:#ccc" *ngIf="dataItem.email==null">未设置</span>
-      <span *ngIf="dataItem.email!=null">{{dataItem.email}}</span>
-    </ng-template>
-  </kendo-grid-column>
-
   <kendo-grid-column field="canLogin" title="允许登录">
     <ng-template kendoGridCellTemplate let-dataItem>
       <span *ngIf="dataItem.canLogin!=null">{{dataItem.canLogin?"是":"否"}}</span>
     </ng-template>
   </kendo-grid-column>
 
-  <kendo-grid-column field="id" title="操作">
+  <kendo-grid-column field="id" title="操作" [width]="150">
     <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
       <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
       <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>

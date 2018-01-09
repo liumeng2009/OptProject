@@ -22,7 +22,8 @@ export class SwitchService {
 
   private businessListFilter={
     type:'',
-    equipment:''
+    equipment:'',
+    page:1
   }
 
   constructor(

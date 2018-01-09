@@ -5,7 +5,7 @@
         <form class="k-form"  (ngSubmit)="onSubmit()" #userForm="ngForm">
           <label class="k-form-field">
             <span for="name">用户名<span class="k-required">*</span></span>
-            <input id="name" class="k-textbox" placeholder="用户名" required disabled [(ngModel)]="user.username" name="username" />
+            <input id="name" class="k-textbox" placeholder="用户名" required disabled [(ngModel)]="user.name" name="username" />
           </label>
           <label class="k-form-field">
             <span for="password">密码<span class="k-required">*</span></span>
@@ -20,13 +20,11 @@
           <label class="k-form-field">
             <span for="gender">性别</span>
 
-              <label style="float:left;margin-top: 3px;" *ngFor="let g of genders">
-                <input type="radio" name="gender" id="gender{{g.value}}" class="k-radio" value="{{g.value}}" [(ngModel)]="user.gender">
-                <label class="k-radio-label" for="gender{{g.value}}">{{g.name}}</label>
-              </label>
-              <div style="clear:both">
+            <input type="radio" name="gender" id="female" class="k-radio" (change)="femaleChange($event)" checked="{{user.gender?'':'checked'}}" >
+            <label class="k-radio-label" for="female">女</label>
 
-              </div>
+            <input type="radio" name="gender" id="male" class="k-radio" (change)="maleChange($event)" checked="{{user.gender?'checked':''}}">
+            <label class="k-radio-label" for="male">男</label>
           </label>
           <label class="k-form-field">
             <span for="phone">电话</span>

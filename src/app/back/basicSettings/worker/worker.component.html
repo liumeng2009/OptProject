@@ -18,7 +18,7 @@
     <kendo-grid-column field="gender" title="性别">
       <ng-template kendoGridCellTemplate let-dataItem>
         <span style="color:#ccc" *ngIf="dataItem.gender==null">未设置</span>
-        <span *ngIf="dataItem.gender!=null">{{dataItem.gender?"女":"男"}}</span>
+        <span *ngIf="dataItem.gender!=null">{{dataItem.gender?"男":"女"}}</span>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="phone" title="电话">

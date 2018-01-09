@@ -26,6 +26,7 @@ export class UserEditComponent implements OnInit{
     new Gender('女',true)
   ]
 
+
   constructor(
     private userService:UserService,
     private router:Router,
@@ -51,7 +52,7 @@ export class UserEditComponent implements OnInit{
           this.user.name=userObj.data.name;
           this.user.password=userObj.data.password;
           this.user.canLogin=userObj.data.canLogin;
-          this.user.gender=userObj.data.gender.toString();
+          this.user.gender=userObj.data.gender;
           this.user.phone=userObj.data.phone;
           this.user.email=userObj.data.email;
           this.user.id=id;
@@ -68,7 +69,6 @@ export class UserEditComponent implements OnInit{
   }
 
   private onSubmit(){
-    console.log(this.user);
     this.userService.create(this.user).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -80,5 +80,13 @@ export class UserEditComponent implements OnInit{
       this.ajaxExceptionService.simpleOp(error);
     }
     )
+  }
+  private femaleChange($event){
+    console.log($event);
+    this.user.gender=false;
+  }
+  private maleChange($event){
+    console.log($event);
+    this.user.gender=true;
   }
 }

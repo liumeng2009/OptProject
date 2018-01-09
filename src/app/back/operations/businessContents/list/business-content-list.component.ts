@@ -60,7 +60,8 @@ export class BusinessContentListComponent implements OnInit{
 
   private searchObj={
     type:'',
-    equipment:null
+    equipment:null,
+    page:1
   }
 
   public filter: CompositeFilterDescriptor;
@@ -85,7 +86,7 @@ export class BusinessContentListComponent implements OnInit{
 
     this.getEquipTypeList();
     this.getSearchEquipment(this.searchObj.type,()=>{
-      this.getData(1,this.searchObj.type,this.searchObj.equipment.value);
+      this.getData(this.searchObj.page,this.searchObj.type,this.searchObj.equipment.value);
     },true);
     this.getEquipOpList();
   }
@@ -101,6 +102,12 @@ export class BusinessContentListComponent implements OnInit{
     if(equipmentFilter&&equipmentFilter!=''){
       this.searchObj.equipment=equipmentFilter;
     }
+
+    let page=this.switchService.getBusinessListFilter('page');
+    if(page&&page!=''){
+      this.searchObj.page=page;
+    }
+
   }
 
   private getData(pageid,type,equipment){
@@ -112,8 +119,9 @@ export class BusinessContentListComponent implements OnInit{
           if(this.apiResultService.result(data)) {
             this.gridData.data = this.apiResultService.result(data).data;
             this.total = this.gridData.total = this.apiResultService.result(data).total;
-            this.firstRecord=this.skip+1;
-            this.lastRecord=this.apiResultService.result(data).data.length+this.skip;
+            this.skip=this.pageSize*(pageid-1);
+            this.firstRecord=this.pageSize*(pageid-1)+1;
+            this.lastRecord=this.apiResultService.result(data).data.length+this.pageSize*(pageid-1);
           }
           this.isLoading=false;
 
@@ -140,10 +148,7 @@ export class BusinessContentListComponent implements OnInit{
   private pageChange(event,PageChangeEvent){
     this.skip=event.skip;
     this.isLoading=true;
-    //this.router.navigate(['list/'+(this.skip/this.pageSize+1).toString()],{relativeTo:this.route.parent})
-    //this.router.navigate([{'page':(this.skip/this.pageSize+1).toString()}],{relativeTo:this.route})
-    //this.getData(this.skip/this.pageSize+1,this.searchObj.type.code,this.searchObj.equipment.value);
-    //this.router.navigate(['list'],{queryParams:{page:(this.skip/this.pageSize+1).toString()},relativeTo:this.route.parent});
+    this.switchService.setBusinessListFilter('page',this.skip/this.pageSize+1);
     this.getData(this.skip/this.pageSize+1,this.searchObj.type,this.searchObj.equipment.value);
   }
 
@@ -192,6 +197,7 @@ export class BusinessContentListComponent implements OnInit{
 
   private handleTypeChange(e){
     this.switchService.setBusinessListFilter('type',e);
+    this.switchService.setBusinessListFilter('page',1);
     this.getSearchEquipment(e,()=>{
       this.getData(1,this.searchObj.type,this.searchObj.equipment.value);
     },false);
@@ -220,6 +226,7 @@ export class BusinessContentListComponent implements OnInit{
 
   private handleEquipmentChange(e){
     this.switchService.setBusinessListFilter('equipment',e.value);
+    this.switchService.setBusinessListFilter('page',1);
     //this.router.navigate(['list'],{queryParams:queryParams,relativeTo:this.route.parent});
     this.getData(1,this.searchObj.type,this.searchObj.equipment.value);
 /*    this.businessContentService.getBusinessContentList(1,this.searchObj.type.code,this.searchObj.equipment.value).then(

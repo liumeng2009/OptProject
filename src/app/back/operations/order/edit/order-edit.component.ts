@@ -246,7 +246,7 @@ export class OrderEditComponent implements OnInit{
   }
   private result;
   private editRow(id){
-    this.router.navigate([id],{relativeTo:this.route.parent});
+    this.router.navigate(['op/'+id],{relativeTo:this.route.parent.parent});
   }
   private deleteRow(id){
     let dialog=this.dialogService.open({
