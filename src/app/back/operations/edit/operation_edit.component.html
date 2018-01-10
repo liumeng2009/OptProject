@@ -201,12 +201,14 @@
 
 
 <ng-template #actionDetailTemplate>
-  <form class="k-form" #actionEditForm="ngForm">
+  <form class="k-form-inline" #actionEditForm="ngForm">
     <div class="k-form-field">
-      <p style="display: flex">
-        <input type="checkbox" id="edit-2fa" [disabled]="true" class="k-checkbox" name="edit-2fa" checked="checked" >
-        <label class="k-checkbox-label" style="top:3px" for="edit-2fa" >工程师&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <kendo-dropdownlist
+
+<!--        <input type="checkbox" id="edit-2fa" [disabled]="true" class="k-checkbox" name="edit-2fa" checked="checked" >-->
+<!--        <label class="k-checkbox-label" style="top:3px" for="edit-2fa" >工程师&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>-->
+        <label style="margin-left: 11px;" [for]="worker">工程师：</label>
+        <kendo-dropdownlist style="margin-left: 4px;"
+          #worker
           name="worker"
           [data]="workers"
           [textField]="'name'"
@@ -215,15 +217,11 @@
           (valueChange)="workerChange($event)"
         >
         </kendo-dropdownlist>
-      </p>
-      <span class="k-icon k-i-loading loading loading-position" *ngIf="groupLoading"></span>
+      <span class="k-icon k-i-loading loading" *ngIf="isWorkerLoading"></span>
     </div>
     <div class="k-form-field">
-      <p style="display: flex;">
-        <input type="checkbox" id="edit-2fb" [disabled]="true" class="k-checkbox" name="edit-2fb" checked="checked" >
-        <label class="k-checkbox-label" style="top:3px" for="edit-2fb" >指派时间&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <kendo-datepicker #incoming_date [value]="actionDetail.call_date" name="call_time" [format]="'yyyy年MM月dd日'"
-
+        <label style="margin-left: 11px;"  [for]="incoming_date" >指派时间：</label>
+        <kendo-datepicker #incoming_date style="margin-left: 4px;" [value]="actionDetail.call_date" name="call_time" [format]="'yyyy年MM月dd日'"
         >
           <kendo-datepicker-messages
             today="今天"
@@ -231,15 +229,14 @@
           ></kendo-datepicker-messages>
         </kendo-datepicker>
         <lmtimepicker [timeNow]="actionDetail.call_time"   id="timetest" name="timetest" ></lmtimepicker>
-      </p>
     </div>
 
     <div class="k-form-field">
       <p style="display:flex;">
         <input type="checkbox" id="edit-2fc" class="k-checkbox" name="edit-2fc"  [(ngModel)]="actionDetail.showArriveDate" (change)="editStartCheckedChange($event)"  >
-        <label class="k-checkbox-label" style="top:3px" for="edit-2fc" >开始工作时间</label>
+        <label class="k-checkbox-label" style="top:3px" for="edit-2fc" >开始工作时间：</label>
 
-        <kendo-datepicker #incoming_date [value]="actionDetail.start_date" name="call_date" [format]="'yyyy年MM月dd日'"
+        <kendo-datepicker #incoming_date  [value]="actionDetail.start_date" name="call_date" [format]="'yyyy年MM月dd日'"
                           (valueChange)="editArriveDateChange($event)" [disabled]="!actionDetail.showArriveDate"
         >
           <kendo-datepicker-messages
@@ -255,7 +252,7 @@
     <div class="k-form-field">
       <p style="display: flex">
         <input type="checkbox" id="edit-2fd" class="k-checkbox" name="edit-2fd"  [(ngModel)]="actionDetail.showFinishDate" (change)="editFinishCheckedChange($event)" >
-        <label class="k-checkbox-label" style="top:3px" for="edit-2fd" >结束工作时间</label>
+        <label class="k-checkbox-label" style="top:3px" for="edit-2fd" >结束工作时间：</label>
         <kendo-datepicker #incoming_date [value]="actionDetail.end_date" name="call_date" [format]="'yyyy年MM月dd日'"
                           (valueChange)="editFinishDateChange($event)" [disabled]="!actionDetail.showFinishDate"
         >

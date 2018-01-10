@@ -10,7 +10,7 @@ import {Coordinate} from "../../../bean/coordinate";
 export function drawProcess(surface,data,_this) {
 
   let height=surface._size.height;
-  let width=surface._size.width;
+  let width=surface._size.width-40;
 
   let createTime=data.createTime;
 
@@ -123,7 +123,7 @@ export function drawProcess(surface,data,_this) {
 
     }
     else{
-      let timeText=timeNow.getFullYear().toString().substring(2,4)+'/'+timeNow.getMonth() +'/'+timeNow.getDate();
+      let timeText=timeNow.getFullYear().toString()+'年'+(timeNow.getMonth()+1) +'月'+timeNow.getDate()+'日';
       let textDate=new Text(timeText,[scaleWidth*i+LEFT_MARGIN-33, height-50+26],{});
       groupLine.append(textDate);
       dayFirst=timeNow.getDate();

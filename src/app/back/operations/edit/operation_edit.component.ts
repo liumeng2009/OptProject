@@ -389,11 +389,23 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
   }
 
   private editStartCheckedChange($event){
-    this.actionDetail.showArriveDate=true;
+    if($event.target.checked){
+      this.actionDetail.showArriveDate=true;
+    }
+    else{
+      this.actionDetail.showArriveDate=false;
+      this.actionDetail.showFinishDate=false;
+    }
   }
-  private editFinishCheckedChange(){
-    this.actionDetail.showArriveDate=true;
-    this.actionDetail.showFinishDate=true;
+  private editFinishCheckedChange($event){
+    if($event.target.checked){
+      this.actionDetail.showArriveDate=true;
+      this.actionDetail.showFinishDate=true;
+    }
+    else{
+      this.actionDetail.showFinishDate=false;
+    }
+
   }
 
 
@@ -752,11 +764,11 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
           if(this.workers.length>0){
             this.submitWorkOrder.worker=this.workers[0].id;
           }
-          console.log(this.workers);
+          this.isWorkerLoading=false;
         }
       },
       error=>{
-        this.isWorkerLoading=true;
+        this.isWorkerLoading=false;
         this.ajaxExceptionService.simpleOp(error);
       }
     )

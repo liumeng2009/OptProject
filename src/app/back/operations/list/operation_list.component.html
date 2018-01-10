@@ -76,9 +76,10 @@
       <ng-template kendoGridFilterCellTemplate>
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
-        <label style="margin-right: 10px" *ngFor="let acti of dataItem.actions" >
+<!--        <label style="margin-right: 10px" *ngFor="let acti of dataItem.actions" >
           <span>{{acti?.user?.name}}</span>
-        </label>
+        </label>-->
+        <span>{{dataItem?.workers}}</span>
         <span style="color:#cccccc" *ngIf="dataItem.complete=='0'">未处理</span>
         <span style="color:#ffa500" *ngIf="dataItem.complete=='1'">处理中</span>
         <span style="color:#008000" *ngIf="dataItem.complete=='2'">处理完成</span>
