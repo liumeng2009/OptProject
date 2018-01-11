@@ -108,15 +108,15 @@ export class LmTimePicker implements OnChanges{
 
   @ViewChild('hourWheel') public hourWheel:ElementRef;
   private containsHourWheel(target:any):boolean{
-    return this.hourWheel.nativeElement.contains(target);
+    return this.hourWheel?this.hourWheel.nativeElement.contains(target):null;
   }
   @ViewChild('minuteWheel') public minuteWheel:ElementRef;
   private containsMinuteWheel(target:any):boolean{
-    return this.minuteWheel.nativeElement.contains(target);
+    return this.hourWheel?this.minuteWheel.nativeElement.contains(target):null;
   }
   @ViewChild('secondWheel') public secondWheel:ElementRef;
   private containsSecondWheel(target:any):boolean{
-    return this.secondWheel.nativeElement.contains(target);
+    return this.hourWheel?this.secondWheel.nativeElement.contains(target):null;
   }
 
   @HostListener('wheel',['$event'])

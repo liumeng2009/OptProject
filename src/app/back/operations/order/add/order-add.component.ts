@@ -229,6 +229,7 @@ export class OrderAddComponent implements OnInit{
   private workerOrders:WorkOrder[]=[];
   private dialog;
   private onOrderSubmit(actionTemplate: TemplateRef<any>){
+    console.log(this.order);
     this.workerOrders.splice(0,this.workerOrders.length);
     this.order.needs=JSON.stringify(this.needs);
     let date=new Date(this.order.incoming_date);
@@ -312,6 +313,7 @@ export class OrderAddComponent implements OnInit{
 
   }
   private saveOrderAll(){
+    console.log(this.order);
     this.SaveOrderAllLoading='k-icon k-i-loading';
     this.isHiddenSaveOrderAllButton=true;
     this.isHiddenSaveOrderButton=true;

@@ -190,7 +190,41 @@ export class OrderEditComponent implements OnInit{
               else{
                 d.complete='0'
               }
+
+
+              //哪些人参与了运维
+              let nameArray=[];
+              for(let act of d.actions){
+                if(act.user&&act.user.name){
+                  if(nameArray.length==0){
+                    nameArray.push(act.user.name);
+                  }
+                  else{
+                    let i=0;
+                    for(let na of nameArray){
+                      if(na==act.user.name){
+                        break;
+                      }
+                      else{
+                        if(i==nameArray.length-1){
+                          nameArray.push(act.user.name);
+                        }
+                      }
+                      i++;
+                    }
+                  }
+                }
+              }
+              d.workers='';
+              for(let na of nameArray){
+                d.workers=d.workers+na+'  ';
+              }
+
             }
+
+
+
+
           }
           this.initGroup(()=>{
             this.order.group=result.data.corporation.groupId;

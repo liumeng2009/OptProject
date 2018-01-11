@@ -275,7 +275,7 @@ export class BusinessContentListComponent implements OnInit{
 
           }
           else{
-
+            this.searchObj.equipment=this.searchEquipment[0];
           }
           //if(this.searchObj.equipment&&this.searchObj.equipment!='')
           {

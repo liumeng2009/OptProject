@@ -69,7 +69,7 @@ export class OrderListComponent implements OnInit {
   ngOnInit() {
     this.height = (window.document.body.clientHeight - 70 - 56 - 50 - 20-27);
     this.initFilter();
-    this.getData(1,this.todayFilter);
+    this.getData(1,this.showTodayFilter?this.todayFilter:null);
   }
 
   private initFilter(){
@@ -79,8 +79,11 @@ export class OrderListComponent implements OnInit {
     }
 
     let showfilter=this.switchService.getOrderListFilter('show_create_time');
-    if(showfilter&&showfilter!=''){
+    if(showfilter){
       this.showTodayFilter=showfilter;
+    }
+    else{
+      this.showTodayFilter=false;
     }
   }
 
@@ -116,6 +119,7 @@ export class OrderListComponent implements OnInit {
 
   private searchDateChange($event){
     let bol=$event.target.checked;
+    this.switchService.setOrderListFilter('show_create_time',bol);
     if(bol){
       this.showTodayFilter=true;
       this.switchService.setOrderListFilter('show_create_time',true);

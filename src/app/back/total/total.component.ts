@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  template: `
-        <h1>综合数据情况</h1>
-    `
+  selector:'total-area',
+  templateUrl:'./total.component.html',
+  styleUrls:['./total.component.scss']
 })
 
 export class TotalComponent {

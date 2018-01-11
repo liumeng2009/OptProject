@@ -113,6 +113,7 @@
 
               <kendo-grid-column field="no" title="处理进度">
                 <ng-template kendoGridCellTemplate let-dataItem>
+                  <span>{{dataItem.workers}}</span>
                   <span style="color:#cccccc" *ngIf="dataItem.complete=='0'">未处理</span>
                   <span style="color:#ffa500" *ngIf="dataItem.complete=='1'">处理中</span>
                   <span style="color:#008000" *ngIf="dataItem.complete=='2'">处理完成</span>
