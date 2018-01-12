@@ -178,6 +178,7 @@ export class OrderAddComponent implements OnInit{
           }
           if(this.corpBuildings.length>0){
             this.order.custom_position=this.corpBuildings[0];
+            console.log(this.order);
           }
         }
       },
@@ -186,6 +187,15 @@ export class OrderAddComponent implements OnInit{
         this.ajaxExceptionService.simpleOp(error);
       }
     );
+  }
+
+  private positionChange($event){
+    for(let cb of this.corpBuildings){
+      if(cb.id==$event){
+        this.order.custom_position=cb;
+        break;
+      }
+    }
   }
 
   private dateChange($event){

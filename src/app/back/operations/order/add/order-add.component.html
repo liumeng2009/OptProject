@@ -70,6 +70,7 @@
                 [textField]="'union'"
                 [valueField]="'id'"
                 [valuePrimitive]="true"
+                (valueChange)="positionChange($event)"
                 [(ngModel)]="order.custom_position"
               >
               </kendo-dropdownlist>

@@ -161,7 +161,7 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
 
             }
 
-            this.operation.order=result.data[0];
+            this.operation.order=result.data[0].id;
             this.processData.createTime=new Date();
             this.processData.createTime.setTime(result.data[0].incoming_time);
 
@@ -343,12 +343,17 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
 
   private addProcess(){
     //保存后，跳转到edit页面
+    console.log(this.operation);
+    let date=new Date(this.operation.incoming_date.toString());
+    date.setHours(this.operation.incoming_date_time.hour,this.operation.incoming_date_time.minute,this.operation.incoming_date_time.second,0);
+
+    this.operation.incoming_date_timestamp=Date.parse(date.toString());
     this.operation.important=this.operation.important?this.operation.important:false;
     this.operationService.create(this.operation).then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
-          this.router.navigate(['../'+data.data.id],{relativeTo:this.route}).then(()=>{
+          this.router.navigate(['./'+data.data.id],{relativeTo:this.route.parent}).then(()=>{
             this.switchService.setActionAutoAdd(true);
           });
         }

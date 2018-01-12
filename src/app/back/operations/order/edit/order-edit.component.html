@@ -107,7 +107,7 @@
 
               <kendo-grid-column field="no" title="工单内容">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  {{dataItem.businessContent.equipOp.name}}  {{dataItem.businessContent.equipment}}
+                  {{dataItem.businessContent?.equipOp?.name}}  {{dataItem.businessContent?.equipment}}
                 </ng-template>
               </kendo-grid-column>
 

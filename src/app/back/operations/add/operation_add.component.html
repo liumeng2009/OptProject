@@ -35,8 +35,8 @@
             <div style="border-bottom:#ccc 1px solid;width: 100%;padding-bottom: 16px;"></div>
           </label>
 
-          <label class="k-form-field">
-            <span>工单建立时间：</span>
+          <span class="k-form-field">
+            <span style="font-weight: bolder">工单建立时间：</span>
             <kendo-datepicker style="float:left" #operation_create_time [(ngModel)]="operation.incoming_date" name="operation_create_time" [format]="'yyyy年MM月dd日'"
             >
               <kendo-datepicker-messages
@@ -46,6 +46,11 @@
             </kendo-datepicker>
             <lmtimepicker style="float:left;margin-left:10px;" [timeNow]="operation.incoming_date_time"  id="operation_create_date_time" name="operation_create_date_time" (change)="onOperationCreateTimeChange($event)" ></lmtimepicker>
             <div style="clear: both;"></div>
+          </span>
+
+          <label class="k-form-field">
+            <span>工单单号：</span>
+            <input kendoTextBox class="k-textbox" placeholder="不填写则自动生成"  name="no"  [(ngModel)]="operation.no" />
           </label>
 
           <label class="k-form-field">

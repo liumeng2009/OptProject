@@ -213,6 +213,7 @@
           [data]="workers"
           [textField]="'name'"
           [valueField]="'id'"
+          [valuePrimitive]="true"
           [(ngModel)]="actionDetail.workerId"
           (valueChange)="workerChange($event)"
         >
