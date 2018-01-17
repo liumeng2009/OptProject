@@ -15,3 +15,17 @@ export class TimeShowPipe implements PipeTransform{
       +":"+(date.getSeconds()>9?date.getSeconds().toString():('0'+date.getSeconds().toString()));
   }
 }
+
+@Pipe({name:'timeshowsimple'})
+export class TimeShowSimplePipe implements PipeTransform{
+
+  constructor(private location:Location){
+
+  }
+
+  transform(timestamp:number){
+    let date=new Date(timestamp);
+    return date.getHours()+":"+(date.getMinutes()>9?date.getMinutes().toString():('0'+date.getMinutes().toString()))
+      +":"+(date.getSeconds()>9?date.getSeconds().toString():('0'+date.getSeconds().toString()));
+  }
+}

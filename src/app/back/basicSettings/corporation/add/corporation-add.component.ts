@@ -66,6 +66,14 @@ export class CorporationAddComponent implements OnInit{
       );
   }
 
+  private groupSelectChanged($event){
+    for(let g of this.groups){
+      if(g.id==$event){
+        this.corporation.group=g;
+      }
+    }
+  }
+
   private onSubmit(){
     //alert(this.building);
     console.log(this.corporation);

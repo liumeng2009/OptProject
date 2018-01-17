@@ -85,8 +85,9 @@ import {OrderService} from './back/operations/order/order.service';
 
 //信息综述
 import {TotalComponent} from './back/total/total.component';
+import {TotalService} from './back/total/total.service';
 
-import {OtherComponent} from './back/components/other.component';
+import {OtherComponent} from './back/components/noFound/other.component';
 
 import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 
@@ -101,7 +102,7 @@ import {SwitchService} from "./back/main/switchService";
 
 
 import {MainPipe} from './back/main/main.pipe';
-import {TimeShowPipe} from './back/components/pipes/timeShow.pipe';
+import {TimeShowPipe,TimeShowSimplePipe} from './back/components/pipes/timeShow.pipe';
 
 import { LmTimePicker }   from './back/components/lmtimepicker/lm-timepicker.component';
 import { MouseWheel } from './back/components/lmtimepicker/lm-timepicker.directive';
@@ -170,6 +171,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
 
     MainPipe,
     TimeShowPipe,
+    TimeShowSimplePipe,
 
 
     LmTimePicker,
@@ -218,6 +220,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     BusinessContentService,
     OrderService,
     OperationService,
+    TotalService,
 
     MissionService,
     ApiResultService,

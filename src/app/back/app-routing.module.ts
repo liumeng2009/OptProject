@@ -45,7 +45,7 @@ import {BusinessContentListComponent} from './operations/businessContents/list/b
 import {BusinessContentAddComponent} from './operations/businessContents/add/business-content-add.component';
 import {BusinessContentEditComponent} from './operations/businessContents/edit/business-content-edit.component';
 
-import {OtherComponent} from "./components/other.component";
+import {OtherComponent} from "./components/noFound/other.component";
 import {OrderComponent} from "./operations/order/order.component";
 import {OrderListComponent} from "./operations/order/list/order-list.component";
 import {OrderAddComponent} from "./operations/order/add/order-add.component";

@@ -175,6 +175,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
   private isHiddenType:boolean=false;
   private isHiddenEquipment:boolean=false;
   private isHiddenOp:boolean=false;
+
   private isHiddenRemark:boolean=false;
   private isHiddenImportant:boolean=false;
   private getData(){
@@ -187,13 +188,13 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
             console.log(data);
             console.log(result);
             //如果已经有行为了，就不能修改
-            if(result.data.actions.length>0){
+/*            if(result.data.actions.length>0){
               this.isHiddenType=true;
               this.isHiddenEquipment=true;
               this.isHiddenOp=true;
               this.isHiddenRemark=true;
               this.isHiddenImportant=true;
-            }
+            }*/
 
 
 

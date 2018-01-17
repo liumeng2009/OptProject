@@ -8,11 +8,11 @@
           </div>
           <div class="col-xs-7 area-1-2">
             <h5>未处理工单数</h5>
-            <h2>9</h2>
+            <h2>{{nostart}}个</h2>
           </div>
           <div class="col-xs-12 area-1-3">
             <hr>
-            <span class="glyphicon glyphicon-refresh" style="color:green"></span>
+            <span class="k-icon k-i-reset-sm" style="color:green"  (click)="refreshOperationList()"></span>
           </div>
         </div>
       </div>
@@ -26,11 +26,11 @@
           </div>
           <div class="col-xs-7 area-1-2">
             <h5>正在处理工单数</h5>
-            <h2>9</h2>
+            <h2>{{start}}个</h2>
           </div>
           <div class="col-xs-12 area-1-3">
             <hr>
-            <span class="glyphicon glyphicon-refresh" style="color:green"></span>
+            <span class="k-icon k-i-reset-sm" style="color:green" (click)="refreshOperationList()"></span>
           </div>
         </div>
       </div>
@@ -44,27 +44,124 @@
           </div>
           <div class="col-xs-7 area-1-2">
             <h5>处理完成工单数</h5>
-            <h2>9</h2>
+            <h2>{{end}}个</h2>
           </div>
           <div class="col-xs-12 area-1-3">
             <hr>
-            <span class="glyphicon glyphicon-refresh" style="color:green"></span>
+            <span class="k-icon k-i-reset-sm" style="color:green" (click)="refreshOperationList()"></span>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px;">
+      <kendo-grid [data]="actionList" [height]="actionListHeight" [scrollable]="true"  >
+
+        <ng-template kendoGridToolbarTemplate [position]="'top'">
+          <span style="margin-right: 50px;">
+            今日工作情况
+          </span>
+          <span class="yuan startY"></span>忙碌
+          <span class="yuan endY"></span>空闲
+          <span class="yuan callY"></span>被指派工作，慎重指派
+          <button kendoButton style="float:right" class="k-button"  (click)="refreshActionList()" title="刷新数据">
+            <span style="color:green" class="k-icon k-i-refresh"></span>
+          </button>
+        </ng-template>
+
+        <kendo-grid-column field="time" title="时间">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.time|timeshowsimple}}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="user" title="工程师姓名">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.user}}
+            <span class="yuan startY" *ngIf="dataItem.status=='start'" ></span>
+            <span class="yuan endY" *ngIf="dataItem.status=='end'"></span>
+            <span class="yuan callY" *ngIf="dataItem.status=='call'"></span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="type" title="动作">
+        </kendo-grid-column>
+        <kendo-grid-column field="goWhere" title="去哪儿">
+        </kendo-grid-column>
+        <kendo-grid-column field="doWhat" title="做了什么">
+        </kendo-grid-column>
+        <kendo-grid-column field="orderNo" title="工单详情">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <a routerLink="../operations/op/{{dataItem.operationId}}" style="color:#00b3ee;text-decoration: underline;" >{{dataItem.operationNo}}</a>
+          </ng-template>
+        </kendo-grid-column>
+
+        <ng-template kendoGridNoRecordsTemplate>
+          <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refreshActionList()">点击刷新</a>.</div>
+          <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
+        </ng-template>
+
+
+
+      </kendo-grid>
+    </div>
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px;">
-      <kendo-panelbar>
-        <kendo-panelbar-item [title]="'实时工作情况'" expanded="true">
-          <ng-template kendoPanelBarContent>
-            <div class="row">
+      <kendo-tabstrip (tabSelect)="tabChange($event)">
+        <kendo-tabstrip-tab [title]="'本周工单情况'" [selected]="true">
+          <ng-template kendoTabContent>
+            <kendo-chart #chart>
+              <kendo-chart-title></kendo-chart-title>
+              <kendo-chart-category-axis>
+                <kendo-chart-category-axis-item
+                  [categories]="weeks">
+                </kendo-chart-category-axis-item>
+              </kendo-chart-category-axis>
+              <kendo-chart-series-defaults type="column">
+                <kendo-chart-series-defaults-labels format="0个">
+                </kendo-chart-series-defaults-labels>
+              </kendo-chart-series-defaults>
+              <kendo-chart-series>
+                <kendo-chart-series-item type="column" [data]="operationCounts">
 
-            </div>
+                </kendo-chart-series-item>
+              </kendo-chart-series>
+            </kendo-chart>
           </ng-template>
-        </kendo-panelbar-item>
-      </kendo-panelbar>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab [title]="'本月工单情况'">
+          <ng-template kendoTabContent>
+            <kendo-chart #monthChart>
+              <kendo-chart-title></kendo-chart-title>
+              <kendo-chart-category-axis>
+                <kendo-chart-category-axis-item
+                  [categories]="months">
+                </kendo-chart-category-axis-item>
+              </kendo-chart-category-axis>
+              <kendo-chart-series-defaults type="column">
+                <kendo-chart-series-defaults-labels format="0个">
+                </kendo-chart-series-defaults-labels>
+              </kendo-chart-series-defaults>
+              <kendo-chart-series>
+                <kendo-chart-series-item type="column" [data]="monthOperationCounts">
+
+                </kendo-chart-series-item>
+              </kendo-chart-series>
+            </kendo-chart>
+          </ng-template>
+        </kendo-tabstrip-tab>
+      </kendo-tabstrip>
     </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">
+
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">
+
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">
+
+    </div>
+
   </div>
 </div>

@@ -108,6 +108,7 @@ export class OperationListComponent  implements OnInit {
       let dateSubmit=new Date(time.toString());
       d=dateSubmit.getTime();
     }
+    console.log(d);
     this.operationService.getOperationList(pageid,d,corp,no)
       .then(
         data=> {

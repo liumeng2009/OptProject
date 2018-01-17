@@ -8,27 +8,78 @@ import {User} from '../../bean/user';
 
 import {OptConfig} from '../../config/config'
 import {ResponseData} from "../../bean/responseData";
+import {CookieService} from "angular2-cookie/core";
 
 @Injectable()
 export class TotalService{
-  private loginurl=new OptConfig().serverPath+'/api/user/reg'
+  private headers = new Headers({'Content-Type': 'application/json'});
 
-  constructor(private http:Http){}
+  private listurl=new OptConfig().serverPath+'/api/operation/list';
+  private workerdoinglisturl=new OptConfig().serverPath+'/api/workers/doinglist';
+  private actionlisturl=new OptConfig().serverPath+'/api/action/list';
+  private oplistweekurl=new OptConfig().serverPath+'/api/operation/list_week';
+  private oplistmonthurl=new OptConfig().serverPath+'/api/operation/list_month';
 
-  reg(username:string,password:string):Promise<ResponseData>{
+  constructor(private http:Http,private cookieService:CookieService){}
 
-    let headers=new Headers({'Content-Type':'application/json'});
-    let options=new RequestOptions(headers);
-    console.log('请求的url是：'+this.loginurl);
-    return this.http.post(this.loginurl,{username:username,password:password},options)
+  getOperationList(time):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url='';
+    let searchStr='/time/'+time
+    url=this.listurl+searchStr+'?token='+token
+
+    console.log(url);
+    return this.http.get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
+  getDoingList(time):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.workerdoinglisturl+'/time/'+time+'?token='+token;
+    console.log(url);
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  getActionList(time):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.actionlisturl+'/time/'+time+'?token='+token;
+    console.log(url);
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  getOperationListWeek(time):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.oplistweekurl+'/time/'+time+'?token='+token;
+    console.log(url);
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  getOperationListMonth(time):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.oplistmonthurl+'/time/'+time+'?token='+token;
+    console.log(url);
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
   private extractData(res:Response){
     let body=res.json();
-    console.log(JSON.stringify(body));
     return body||{};
   }
   private handleError(error:Response|any){
