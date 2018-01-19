@@ -23,7 +23,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="order"  title="客户信息">
+    <kendo-grid-column field="order"  title="客户信息" [width]="200">
       <ng-template kendoGridFilterCellTemplate>
         <kendo-dropdownlist
           [data]="corps"

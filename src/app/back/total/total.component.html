@@ -152,11 +152,49 @@
     </div>
 
     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">
-
+      <kendo-panelbar>
+        <kendo-panelbar-item [title]="'本月各运维工程师工单数'" expanded="true">
+          <ng-template kendoPanelBarContent>
+            <kendo-chart #pieChart1 [seriesColors]="['orange', '#ffe']">
+              <kendo-chart-legend position="top"></kendo-chart-legend>
+              <kendo-chart-series-defaults type="donut">
+                <kendo-chart-series-defaults-labels format="0">
+                </kendo-chart-series-defaults-labels>
+              </kendo-chart-series-defaults>
+              <kendo-chart-series>
+                <kendo-chart-series-item type="donut"
+                                         [data]="pieData"
+                                         field="value"
+                                         categoryField="category">
+                </kendo-chart-series-item>
+              </kendo-chart-series>
+            </kendo-chart>
+          </ng-template>
+        </kendo-panelbar-item>
+      </kendo-panelbar>
     </div>
 
     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">
-
+      <kendo-panelbar>
+        <kendo-panelbar-item [title]="'本月各运维工程师工时数'" expanded="true">
+          <ng-template kendoPanelBarContent>
+            <kendo-chart #pieChart2 [seriesColors]="['orange', '#ffe']">
+              <kendo-chart-legend position="top"></kendo-chart-legend>
+              <kendo-chart-series-defaults type="donut">
+                <kendo-chart-series-defaults-labels format="0">
+                </kendo-chart-series-defaults-labels>
+              </kendo-chart-series-defaults>
+              <kendo-chart-series>
+                <kendo-chart-series-item type="donut"
+                                         [data]="pieData2"
+                                         field="value"
+                                         categoryField="category">
+                </kendo-chart-series-item>
+              </kendo-chart-series>
+            </kendo-chart>
+          </ng-template>
+        </kendo-panelbar-item>
+      </kendo-panelbar>
     </div>
 
     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">

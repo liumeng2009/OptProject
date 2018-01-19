@@ -32,6 +32,8 @@ export class TotalComponent implements OnInit{
     //this.getDoingList();
     this.getActionList();
     this.getOperationWeekList();
+    this.getMonthWorkerList();
+    this.getMonthWorkerTimeList();
   }
 
   private nostart:number=0;
@@ -258,6 +260,86 @@ export class TotalComponent implements OnInit{
         this.ajaxExceptionService.simpleOp(error);
       }
     );
+  }
+
+  public pieData: any = [
+    { category: 'Eaten', value:120 }
+  ]
+  @ViewChild('pieChart1') pieChart1: ChartComponent;
+  private getMonthWorkerList(){
+    this.pieData.splice(0,this.pieData.length);
+    let date=new Date();
+    let time=date.getTime();
+    this.totalService.getOperationListMonthWorker(time).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          for(let r of result.data){
+            if(this.pieData.length==0){
+              var insertObj={
+                category:r.user,
+                value:1
+              };
+              this.pieData.push(insertObj);
+            }
+            else{
+              let i=0;
+              for(let pd of this.pieData){
+                if(pd.category==r.user){
+                  pd.value++;
+                  break;
+                }
+                else{
+                  if(i==this.pieData.length-1){
+                    var insertObj={
+                      category:r.user,
+                      value:1
+                    }
+                    this.pieData.push(insertObj);
+                    break;
+                  }
+                }
+                i++;
+              }
+            }
+          }
+          this.pieChart1.resize();
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+  }
+
+  public pieData2: any = [
+    { category: 'Eaten', value:120 }
+  ]
+  @ViewChild('pieChart2') pieChart2: ChartComponent;
+  private getMonthWorkerTimeList(){
+    this.pieData2.splice(0,this.pieData2.length);
+    let date=new Date();
+    let time=date.getTime();
+    this.totalService.getOperationListMonthWorkerTime(time).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          for(let rd of result.data){
+            let objInsert={
+              category:rd.user,
+              //单位:小时
+              value:rd.count/1000/60/60
+            }
+            this.pieData2.push(objInsert);
+          }
+          this.pieChart2.resize();
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+
   }
 
   private tabChange($event){

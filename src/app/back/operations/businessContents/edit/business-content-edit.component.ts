@@ -97,6 +97,7 @@ export class BusinessContentEditComponent implements OnInit{
               if(r.operation==operation.op){
                 operation.checked=true;
                 operation.weight=r.weight;
+                operation.id=r.id;
                 break;
               }
             }

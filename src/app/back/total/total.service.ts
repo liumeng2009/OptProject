@@ -19,6 +19,8 @@ export class TotalService{
   private actionlisturl=new OptConfig().serverPath+'/api/action/list';
   private oplistweekurl=new OptConfig().serverPath+'/api/operation/list_week';
   private oplistmonthurl=new OptConfig().serverPath+'/api/operation/list_month';
+  private oplistmonthworkerurl=new OptConfig().serverPath+'/api/operation/list_month_worker';
+  private oplistmonthworkertimeurl=new OptConfig().serverPath+'/api/operation/list_month_worker_time';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
@@ -70,6 +72,28 @@ export class TotalService{
   getOperationListMonth(time):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url=this.oplistmonthurl+'/time/'+time+'?token='+token;
+    console.log(url);
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  getOperationListMonthWorker(time):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.oplistmonthworkerurl+'/time/'+time+'?token='+token;
+    console.log(url);
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  getOperationListMonthWorkerTime(time):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.oplistmonthworkertimeurl+'/time/'+time+'?token='+token;
     console.log(url);
     return this.http
       .get(url)
