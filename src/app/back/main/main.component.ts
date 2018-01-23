@@ -85,13 +85,12 @@ export class MainComponent implements OnInit{
 
   private topNumber={
     position:'relative',
-    top:'0px;'
+    top:'100px'
   };
   ngOnInit(){
     let $t=this;
     window.onscroll=function(){
-      let topNum=document.body.scrollTop;
-      //alert(topNum);
+      let topNum=document.documentElement.scrollTop;
       $t.topNumber.top=topNum+'px';
     }
 

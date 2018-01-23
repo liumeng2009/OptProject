@@ -55,17 +55,17 @@ export class LmTimePicker implements OnChanges{
   private initWheel(){
     if(this.timeNow.hour>-1&&this.timeNow.hour<24){
       this.selectedHour=this.timeNow.hour;
-      this.hourTop.top=((3-this.selectedHour)*30).toString()+'px';
+      this.hourTop.top=((2-this.selectedHour)*30).toString()+'px';
     }
 
     if(this.timeNow.minute>-1&&this.timeNow.minute<60){
       this.selectedMinute=this.timeNow.minute;
-      this.minuteTop.top=((3-this.selectedMinute)*30).toString()+'px'
+      this.minuteTop.top=((2-this.selectedMinute)*30).toString()+'px'
     }
 
     if(this.timeNow.second>-1&&this.timeNow.second<60){
       this.selectedSecond=this.timeNow.second;
-      this.secondTop.top=((3-this.selectedSecond)*30).toString()+'px'
+      this.secondTop.top=((2-this.selectedSecond)*30).toString()+'px'
     }
     //console.log(this.hourTop);
     //console.log(this.minuteTop);
@@ -155,13 +155,13 @@ export class LmTimePicker implements OnChanges{
       case 'hour':
         let hourtop= parseFloat(this.hourTop.top.replace('px',''));
         if(action=='add'){
-          if(hourtop<90){
+          if(hourtop<60){
             this.timeNow.hour=this.selectedHour=this.selectedHour-1;
             this.hourTop.top=(hourtop+30)+'px';
           }
         }
         else{
-          if(hourtop>(4-24)*30){
+          if(hourtop>(3-24)*30){
             this.timeNow.hour=this.selectedHour=this.selectedHour+1;
             this.hourTop.top=(hourtop-30)+'px';
           }
@@ -170,13 +170,13 @@ export class LmTimePicker implements OnChanges{
       case 'minute':
         let minutetop= parseFloat(this.minuteTop.top.replace('px',''));
         if(action=='add'){
-          if(minutetop<90){
+          if(minutetop<60){
             this.timeNow.minute=this.selectedMinute=this.selectedMinute-1;
             this.minuteTop.top=(minutetop+30)+'px';
           }
         }
         else{
-          if(minutetop>(4-60)*30){
+          if(minutetop>(3-60)*30){
             this.timeNow.minute=this.selectedMinute=this.selectedMinute+1;
             this.minuteTop.top=(minutetop-30)+'px';
           }
@@ -185,13 +185,13 @@ export class LmTimePicker implements OnChanges{
       case 'second':
         let secondtop= parseFloat(this.secondTop.top.replace('px',''));
         if(action=='add'){
-          if(secondtop<90){
+          if(secondtop<60){
             this.timeNow.second=this.selectedSecond=this.selectedSecond-1;
             this.secondTop.top=(secondtop+30)+'px';
           }
         }
         else{
-          if(secondtop>(4-60)*30){
+          if(secondtop>(3-60)*30){
             this.timeNow.second=this.selectedSecond=this.selectedSecond+1;
             this.secondTop.top=(secondtop-30)+'px';
           }
@@ -257,9 +257,9 @@ export class LmTimePicker implements OnChanges{
   }
 
   private initTopByTime(){
-    this.hourTop.top=(3-this.selectedHour)*30+'px';
-    this.minuteTop.top=(3-this.selectedMinute)*30+'px';
-    this.secondTop.top=(3-this.selectedSecond)*30+'px';
+    this.hourTop.top=(2-this.selectedHour)*30+'px';
+    this.minuteTop.top=(2-this.selectedMinute)*30+'px';
+    this.secondTop.top=(2-this.selectedSecond)*30+'px';
   }
 
   private submitTime(){

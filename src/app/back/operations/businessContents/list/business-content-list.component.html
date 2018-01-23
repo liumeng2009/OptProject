@@ -87,7 +87,7 @@
         {{column.title}}
         <span #anchorOp class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configOpToggle()"></span>
         <kendo-popup #popupOp [anchor]="anchorOp" popupClass="content" *ngIf="showOp">
-          <div style="width: 200px;max-height:500px;overflow-y: scroll">
+          <div style="width: 200px;max-height:300px;overflow-y: scroll">
             <form class="k-form" #opForm="ngForm">
               <fieldset>
                 <legend>操作列表</legend>
