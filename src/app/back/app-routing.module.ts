@@ -95,7 +95,7 @@ export const PanelbarRoutes:Routes=[
         {path:':id',component:BusinessContentEditComponent,data:{name:'编辑'}}
       ] }
     ]},
-    {path:'auth',component:AuthComponent,data:{name:'用户权限管理'},children:[
+    {path:'auth',component:AuthComponent,data:{name:'用户权限管理',hidden:true},children:[
       { path: 'user', component: UserComponent,data:{name:'用户管理'},children:[
         {path:'list',component:UserListComponent,data:{name:'列表'}},
         {path:'add',component:UserAddComponent,data:{name:'新增'}},

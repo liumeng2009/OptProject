@@ -20,6 +20,16 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import {ApiResultService} from "./apiResult.service";
 import {AjaxExceptionService} from "./ajaxExceptionService";
 
+import '../app-routing.module.ts';
+
+
+import {BasicSettingsComponent} from '../basicSettings/baseSettings.component';
+
+import {AddressComponent} from '../basicSettings/address/address.component';
+import {AddressListComponent} from '../basicSettings/address/list/address-list.component';
+import {AddressAddComponent} from '../basicSettings/address/add/address-add.component';
+import {AddressEditComponent} from '../basicSettings/address/edit/address-edit.component';
+
 
 @Component({
   selector:'main-area',
@@ -93,10 +103,10 @@ export class MainComponent implements OnInit{
       let topNum=document.documentElement.scrollTop;
       $t.topNumber.top=topNum+'px';
     }
-
-
-
     this.checkLogin();
+    //this.getUrlTree();
+
+
     let url=this.location.path();
     url=url.substring(1,url.length);
     this.selectedId=url;
@@ -208,8 +218,6 @@ export class MainComponent implements OnInit{
       });
   }
 
-
-
   private checkLogin(){
     this.mainService.getUserInfo()
       .then(
@@ -222,6 +230,22 @@ export class MainComponent implements OnInit{
           this.ajaxExceptionService.simpleOp(error);
         }
       );
+  }
+
+  private getUrlTree(){
+    this.mainService.getUrlTree().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        console.log(data);
+        let routeArray=this.router.config;
+        console.log(this);
+        routeArray[3].children.push(result.data);
+        this.router.resetConfig(routeArray);
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
   }
 
   private createBreadCrumb(){
