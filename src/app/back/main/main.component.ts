@@ -95,7 +95,7 @@ export class MainComponent implements OnInit{
 
   private topNumber={
     position:'relative',
-    top:'100px'
+    top:'0px'
   };
   ngOnInit(){
     let $t=this;

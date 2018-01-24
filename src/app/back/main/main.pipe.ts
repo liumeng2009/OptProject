@@ -30,8 +30,21 @@ export class MainPipe implements PipeTransform{
             }
           }
         }
+
+        //与菜单权限有关
+        if(routerConfig[i].data.hidden){
+          routerConfig.splice(i,1);
+        }
+
+
+
       }
     }
+
+
+
+
+
     return routerConfig;
   }
 }
