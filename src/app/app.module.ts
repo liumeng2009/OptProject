@@ -82,6 +82,10 @@ import {OrderAddComponent} from './back/operations/order/add/order-add.component
 import {OrderEditComponent} from './back/operations/order/edit/order-edit.component';
 import {OrderService} from './back/operations/order/order.service';
 
+import {FunctionComponent} from './back/auth/fucntion/function.component';
+import {FunctionListComponent} from './back/auth/fucntion/list/function-list.component';
+import {FunctionService} from "./back/auth/fucntion/function.service";
+
 
 //信息综述
 import {TotalComponent} from './back/total/total.component';
@@ -99,6 +103,7 @@ import {MissionService} from "./back/main/mission.service";
 import {ApiResultService} from './back/main/apiResult.service';
 import {AjaxExceptionService} from './back/main/ajaxExceptionService';
 import {SwitchService} from "./back/main/switchService";
+
 
 
 import {MainPipe} from './back/main/main.pipe';
@@ -165,6 +170,9 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     OrderAddComponent,
     OrderEditComponent,
 
+    FunctionComponent,
+    FunctionListComponent,
+
     TotalComponent,
 
     OtherComponent,
@@ -221,6 +229,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     OrderService,
     OperationService,
     TotalService,
+    FunctionService,
 
     MissionService,
     ApiResultService,

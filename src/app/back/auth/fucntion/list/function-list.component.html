@@ -1,0 +1,9 @@
+<div *ngFor="let d of gridData.data">
+  <h1>{{d.name}}</h1>
+  <ul>
+    <li *ngFor="let op of d.ops">
+      {{op.operate.name}}
+    </li>
+  </ul>
+</div>
+

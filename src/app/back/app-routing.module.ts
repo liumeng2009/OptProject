@@ -53,6 +53,9 @@ import {OrderEditComponent} from "./operations/order/edit/order-edit.component";
 import {OperationEditComponent} from "./operations/edit/operation_edit.component";
 import {OperationAddComponent} from "./operations/add/operation_add.component";
 
+import {FunctionComponent} from "./auth/fucntion/function.component";
+import {FunctionListComponent} from "./auth/fucntion/list/function-list.component";
+
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
   {path:'login',component:LoginComponent,data:{name:'登录'}},
@@ -95,11 +98,14 @@ export const PanelbarRoutes:Routes=[
         {path:':id',component:BusinessContentEditComponent,data:{name:'编辑'}}
       ] }
     ]},
-    {path:'auth',component:AuthComponent,data:{name:'用户权限管理',hidden:true},children:[
+    {path:'auth',component:AuthComponent,data:{name:'用户权限管理'},children:[
       { path: 'user', component: UserComponent,data:{name:'用户管理'},children:[
         {path:'list',component:UserListComponent,data:{name:'列表'}},
         {path:'add',component:UserAddComponent,data:{name:'新增'}},
         {path:':id',component:UserEditComponent,data:{name:'编辑'}}
+      ] },
+      { path: 'function', component: FunctionComponent,data:{name:'功能管理'},children:[
+        {path:'list',component:FunctionListComponent,data:{name:'列表'}}
       ] }
     ]}
   ]},

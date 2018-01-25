@@ -141,6 +141,9 @@ export class MainComponent implements OnInit{
     if(url=='admin/operations/op'){
       this.router.navigateByUrl('/admin/operations/op/list');
     }
+    if(url=='admin/auth/function'){
+      this.router.navigateByUrl('/admin/auth/function/list');
+    }
 
     //路由监视，导航到某些特殊路由时，需要做的一些特殊处理.
     this.router.events
@@ -172,6 +175,9 @@ export class MainComponent implements OnInit{
           }
           if(event.url=='/admin/operations/op'){
             this.router.navigateByUrl('/admin/operations/op/list');
+          }
+          if(event.url=='/admin/auth/function'){
+            this.router.navigateByUrl('/admin/auth/function/list');
           }
 
           //导航到首页，直接跳转到数据综述
