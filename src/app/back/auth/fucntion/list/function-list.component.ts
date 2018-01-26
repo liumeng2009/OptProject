@@ -56,6 +56,18 @@ export class FunctionListComponent implements OnInit{
         }
       );
   }
+
+  private getOperates(){
+    this.functionService.getOpList().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+  }
+
   private refresh(){
     this.gridData.data=[];
     this.gridData.total=0;

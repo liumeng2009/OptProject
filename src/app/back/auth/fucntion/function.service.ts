@@ -17,12 +17,23 @@ export class FunctionService{
   private headers = new Headers({'Content-Type': 'application/json'});
 
   private listurl=new OptConfig().serverPath+'/api/function/list';
+  private oplisturl=new OptConfig().serverPath+'/api/operate/list';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
   getList():Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url=this.listurl+'?token='+token;
+    console.log(url);
+    return this.http.get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
+  }
+
+  getOpList():Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.oplisturl+'?token='+token;
     console.log(url);
     return this.http.get(url)
       .toPromise()
