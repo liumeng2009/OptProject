@@ -1,12 +1,3 @@
-<div *ngFor="let d of gridData.data">
-  <h1>{{d.name}}</h1>
-  <ul>
-    <li *ngFor="let op of d.ops">
-      {{op.operate.name}}
-    </li>
-  </ul>
-</div>
-
 <kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" >
   <ng-template kendoGridToolbarTemplate>
     <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
@@ -14,12 +5,15 @@
     </button>
   </ng-template>
 
-  <kendo-grid-column field="name" title="功能名称">
+  <kendo-grid-column field="name" title="功能名称" [width]="100">
   </kendo-grid-column>
 
   <kendo-grid-column  title="操作项">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <
+      <label *ngFor="let ops of dataItem.viewOp" style="margin-right:20px;">
+        <input type="checkbox" id="{{ops.id}}" class="k-checkbox" [(ngModel)]="ops.checked" >
+        <label class="k-checkbox-label" for="{{ops.id}}">{{ops.name}}</label>
+      </label>
     </ng-template>
   </kendo-grid-column>
 
