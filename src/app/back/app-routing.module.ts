@@ -55,6 +55,8 @@ import {OperationAddComponent} from "./operations/add/operation_add.component";
 
 import {FunctionComponent} from "./auth/fucntion/function.component";
 import {FunctionListComponent} from "./auth/fucntion/list/function-list.component";
+import {RoleComponent} from "./auth/role/role.component";
+import {RoleListComponent} from "./auth/role/list/role-list.component";
 
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
@@ -106,6 +108,10 @@ export const PanelbarRoutes:Routes=[
       ] },
       { path: 'function', component: FunctionComponent,data:{name:'功能管理'},children:[
         {path:'list',component:FunctionListComponent,data:{name:'列表'}}
+      ] },
+      { path: 'role', component: RoleComponent,data:{name:'角色管理'},children:[
+        {path:'list',component:RoleListComponent,data:{name:'列表'}},
+        {path:'add',component:RoleAddComponent,data:{name:'新增'}}
       ] }
     ]}
   ]},

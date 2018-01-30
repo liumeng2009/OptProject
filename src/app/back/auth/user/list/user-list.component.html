@@ -25,9 +25,9 @@
     </ng-template>
   </kendo-grid-column>
 
-  <kendo-grid-column field="canLogin" title="允许登录">
+  <kendo-grid-column  title="角色">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <span *ngIf="dataItem.canLogin!=null">{{dataItem.canLogin?"是":"否"}}</span>
+      {{dataItem.role.name}}
     </ng-template>
   </kendo-grid-column>
 
