@@ -57,6 +57,7 @@ import {FunctionComponent} from "./auth/fucntion/function.component";
 import {FunctionListComponent} from "./auth/fucntion/list/function-list.component";
 import {RoleComponent} from "./auth/role/role.component";
 import {RoleListComponent} from "./auth/role/list/role-list.component";
+import {RoleAddComponent} from "./auth/role/add/role-add.component";
 
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},

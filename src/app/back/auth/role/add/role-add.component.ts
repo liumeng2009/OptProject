@@ -19,7 +19,7 @@ import {Gender} from "../../../../bean/gender";
   styleUrls:['./role-add.component.scss']
 })
 
-export class UserAddComponent implements OnInit{
+export class RoleAddComponent implements OnInit{
 
   user=new User(null,null,null,true,null,null,true);
 

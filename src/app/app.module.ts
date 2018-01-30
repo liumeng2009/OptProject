@@ -86,6 +86,11 @@ import {FunctionComponent} from './back/auth/fucntion/function.component';
 import {FunctionListComponent} from './back/auth/fucntion/list/function-list.component';
 import {FunctionService} from "./back/auth/fucntion/function.service";
 
+import {RoleComponent} from './back/auth/role/role.component';
+import {RoleListComponent} from './back/auth/role/list/role-list.component';
+import {RoleAddComponent} from './back/auth/role/add/role-add.component';
+import {RoleService} from "./back/auth/role/role.service";
+
 
 //信息综述
 import {TotalComponent} from './back/total/total.component';
@@ -173,6 +178,10 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     FunctionComponent,
     FunctionListComponent,
 
+    RoleComponent,
+    RoleListComponent,
+    RoleAddComponent,
+
     TotalComponent,
 
     OtherComponent,
@@ -230,6 +239,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     OperationService,
     TotalService,
     FunctionService,
+    RoleService,
 
     MissionService,
     ApiResultService,
