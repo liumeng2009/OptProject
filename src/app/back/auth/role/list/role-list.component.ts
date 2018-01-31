@@ -38,6 +38,7 @@ export class RoleListComponent implements OnInit{
 
   ngOnInit(){
     this.height=(window.document.body.clientHeight-70-56-50-20-27);
+    alert(123);
     this.getData();
   }
 
@@ -45,8 +46,10 @@ export class RoleListComponent implements OnInit{
     this.roleService.getRoleList()
       .then(
         data=>{
-          if(this.apiResultService.result(data)) {
-            this.gridData.data = this.apiResultService.result(data).data;
+          console.log(data);
+          let result=this.apiResultService.result(data);
+          if(result&&result.status==0){
+            this.gridData.data=result.data;
           }
           this.isLoading=false;
         },

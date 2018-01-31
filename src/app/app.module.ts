@@ -122,6 +122,7 @@ import '@progress/kendo-angular-intl/locales/zh/all';
 
 // Load the required calendar data for the de locale
 import '@progress/kendo-angular-intl/locales/zh/calendar';
+import {RoleEditComponent} from "./back/auth/role/edit/role-edit.component";
 
 
 @NgModule({
@@ -181,6 +182,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
     RoleComponent,
     RoleListComponent,
     RoleAddComponent,
+    RoleEditComponent,
 
     TotalComponent,
 

@@ -1,7 +1,7 @@
 import {Component,OnInit,ViewContainerRef} from '@angular/core';
 import {Router,ActivatedRoute,Params} from '@angular/router';
 
-import {UserService} from '../user.service';
+import {RoleService} from '../role.service';
 import {AlertData} from "../../../../bean/alertData";
 
 import {OptConfig} from '../../../../config/config';
@@ -12,12 +12,12 @@ import {User} from "../../../../bean/user";
 import {Gender} from "../../../../bean/gender";
 
 @Component({
-  selector:'user-edit',
-  templateUrl:'./user-edit.component.html',
-  styleUrls:['./user-edit.component.scss']
+  selector:'role-edit',
+  templateUrl:'./role-edit.component.html',
+  styleUrls:['./role-edit.component.scss']
 })
 
-export class UserEditComponent implements OnInit{
+export class RoleEditComponent implements OnInit{
 
   user=new User(null,null,null,null,null,null,true);
 
@@ -28,7 +28,7 @@ export class UserEditComponent implements OnInit{
 
 
   constructor(
-    private userService:UserService,
+    private roleService:RoleService,
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
@@ -45,7 +45,7 @@ export class UserEditComponent implements OnInit{
   }
 
   private getData(id:string){
-    this.userService.getUser(id).then(
+/*    this.roleService.getUser(id).then(
       data=>{
         let userObj=this.apiResultService.result(data);
         if(userObj){
@@ -65,11 +65,11 @@ export class UserEditComponent implements OnInit{
       error=>{
         this.ajaxExceptionService.simpleOp(error);
       }
-    );
+    );*/
   }
 
   private onSubmit(){
-    this.userService.create(this.user).then(
+/*    this.userService.create(this.user).then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
@@ -79,7 +79,7 @@ export class UserEditComponent implements OnInit{
     error=>{
       this.ajaxExceptionService.simpleOp(error);
     }
-    )
+    )*/
   }
   private femaleChange($event){
     console.log($event);
