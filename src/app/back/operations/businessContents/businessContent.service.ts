@@ -10,7 +10,7 @@ import {ResponseData} from '../../../bean/responseData';
 
 import {OptConfig} from '../../../config/config'
 
-import {BusinessContent} from '../../../bean/businessContent';
+import {BusinessContent,BusinessContentPage} from '../../../bean/businessContent';
 import {EquipType} from "../../../bean/equipType";
 import {EquipOp} from "../../../bean/equipOp";
 
@@ -57,7 +57,7 @@ export class BusinessContentService{
       .catch(this.handleError)
   }
 
-  create(businessContent:BusinessContent): Promise<ResponseData> {
+  create(businessContent:BusinessContentPage): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
     return this.http
       .post(this.saveurl+'?token='+token, businessContent, {headers: this.headers})
@@ -65,7 +65,7 @@ export class BusinessContentService{
       .then(this.extractData)
       .catch(this.handleError);
   }
-  edit(businessContent:BusinessContent): Promise<ResponseData> {
+  edit(businessContent:BusinessContentPage): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
     return this.http
       .post(this.editurl+'?token='+token, businessContent, {headers: this.headers})

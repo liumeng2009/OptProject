@@ -151,7 +151,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
         if(result&&result.status==0){
           this.equipOps=result.data;
           for(let i=0;i<this.equipOps.length;i++){
-              this.equipOps[i].name=result.data[i].equipOp.name;
+              this.equipOps[i].name=result.data[i].isAdvanced?(result.data[i].equipOp.name+'(系统级)'):(result.data[i].equipOp.name) ;
           }
           console.log(this.equipOps);
           if(_change){

@@ -10,7 +10,7 @@ import {OptConfig} from '../../../../config/config';
 
 import {ApiResultService} from '../../../main/apiResult.service';
 import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
-import {BusinessContent} from "../../../../bean/businessContent";
+import {BusinessContent,BusinessContentPage} from "../../../../bean/businessContent";
 import {Position} from "../../../../bean/position";
 import {Operation} from "../../../../bean/operation";
 import {EquipType} from "../../../../bean/equipType";
@@ -23,14 +23,20 @@ import {EquipType} from "../../../../bean/equipType";
 
 export class BusinessContentEditComponent implements OnInit{
   private types:EquipType[]=[];
-  private operations:Operation[]=[];
-  private oneChecked:boolean=this.operations[0]&&this.operations[0].checked
-    ||this.operations[1]&&this.operations[1].checked
-    ||this.operations[2]&&this.operations[2].checked
-    ||this.operations[3]&&this.operations[3].checked
-    ||this.operations[4]&&this.operations[4].checked;
+  private operationsDesk:Operation[]=[];
+  private operationsSys:Operation[]=[];
+  private oneChecked:boolean=this.operationsDesk[0]&&this.operationsDesk[0].checked
+    ||this.operationsDesk[1]&&this.operationsDesk[1].checked
+    ||this.operationsDesk[2]&&this.operationsDesk[2].checked
+    ||this.operationsDesk[3]&&this.operationsDesk[3].checked
+    ||this.operationsDesk[4]&&this.operationsDesk[4].checked
+    ||this.operationsSys[0]&&this.operationsSys[0].checked
+    ||this.operationsSys[1]&&this.operationsSys[1].checked
+    ||this.operationsSys[2]&&this.operationsSys[2].checked
+    ||this.operationsSys[3]&&this.operationsSys[3].checked
+    ||this.operationsSys[4]&&this.operationsSys[4].checked;
 
-  business=new BusinessContent(null,null,this.operations,null,null);
+  business=new BusinessContentPage(null,null,this.operationsDesk,this.operationsSys,null,null);
 
   constructor(
     private businessContentService:BusinessContentService,
@@ -74,8 +80,10 @@ export class BusinessContentEditComponent implements OnInit{
         let result=this.apiResultService.result(data);
         if(result.status==0){
           for(let d of result.data){
-            let op=new Operation(d.code,false,d.name,5,null,null);
-            this.operations.push(op);
+            let op=new Operation(d.code,false,d.name,false,5,null,null);
+            let op1=new Operation(d.code,false,d.name,true,5,null,null);
+            this.operationsDesk.push(op);
+            this.operationsSys.push(op1);
           }
         }
       },
@@ -93,8 +101,16 @@ export class BusinessContentEditComponent implements OnInit{
           this.business.type=result.data[0].type;
           this.business.equipment=result.data[0].equipment;
           for(let r of result.data){
-            for(let operation of this.business.operations){
-              if(r.operation==operation.op){
+            for(let operation of this.business.operationsDesk){
+              if(r.operation==operation.op&&!r.isAdvanced){
+                operation.checked=true;
+                operation.weight=r.weight;
+                operation.id=r.id;
+                break;
+              }
+            }
+            for(let operation of this.business.operationsSys){
+              if(r.operation==operation.op&&r.isAdvanced){
                 operation.checked=true;
                 operation.weight=r.weight;
                 operation.id=r.id;

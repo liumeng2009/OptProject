@@ -34,6 +34,9 @@ export class TotalComponent implements OnInit{
     this.getOperationWeekList();
     this.getMonthWorkerList();
     this.getMonthWorkerTimeList();
+
+    this.initMonths();
+
   }
 
   private nostart:number=0;
@@ -238,10 +241,12 @@ export class TotalComponent implements OnInit{
   private months:string[]=[];
   private monthOperationCounts:number[]=[];
   @ViewChild('monthChart') monthChart: ChartComponent;
-  private getOperationMonthList(){
+  private getOperationMonthList(month){
     this.months.splice(0,this.months.length);
     this.monthOperationCounts.splice(0,this.monthOperationCounts.length);
     let date=new Date();
+    date.setMonth(month-1);
+    alert(date);
     let time=date.getTime();
     this.totalService.getOperationListMonth(time).then(
       data=>{
@@ -347,7 +352,7 @@ export class TotalComponent implements OnInit{
       this.getOperationWeekList();
     }
     if($event.index==1){
-      this.getOperationMonthList();
+      this.getOperationMonthList(this.selectMonth);
     }
   }
 
@@ -372,4 +377,69 @@ export class TotalComponent implements OnInit{
   private refreshOperationWeekList(){
     this.getOperationWeekList();
   }
+
+  private searchMonths=[];
+  private selectMonth=1;
+
+  private initMonths(){
+    let date=new Date();
+
+    this.selectMonth=date.getMonth()+1;
+
+    for(let i=1;i<date.getMonth()+2;i++){
+      let monthname='';
+      switch(i){
+        case 1:
+          monthname='一月份';
+          break;
+        case 2:
+          monthname='二月份';
+          break;
+        case 3:
+          monthname='三月份';
+          break;
+        case 4:
+          monthname='四月份';
+          break;
+        case 5:
+          monthname='五月份';
+          break;
+        case 6:
+          monthname='六月份';
+          break;
+        case 7:
+          monthname='七月份';
+          break;
+        case 8:
+          monthname='八月份';
+          break;
+        case 9:
+          monthname='九月份';
+          break;
+        case 10:
+          monthname='十月份';
+          break;
+        case 11:
+          monthname='十一月份';
+          break;
+        case 12:
+          monthname='十二月份';
+          break;
+
+      }
+      let obj={
+        monthname:monthname,
+        month:i
+      }
+      this.searchMonths.push(obj);
+    }
+
+    console.log(this.searchMonths);
+  }
+
+  private monthChange($event){
+    alert($event);
+    this.getOperationMonthList(this.selectMonth);
+  }
+
 }

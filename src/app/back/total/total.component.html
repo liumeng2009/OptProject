@@ -127,8 +127,10 @@
             </kendo-chart>
           </ng-template>
         </kendo-tabstrip-tab>
-        <kendo-tabstrip-tab [title]="'本月工单情况'">
+        <kendo-tabstrip-tab [title]="'月工单情况'">
           <ng-template kendoTabContent>
+            <kendo-dropdownlist [data]="searchMonths" (valueChange)="monthChange($event)" [textField]="'monthname'" [valueField]="'month'" >
+            </kendo-dropdownlist>
             <kendo-chart #monthChart>
               <kendo-chart-title></kendo-chart-title>
               <kendo-chart-category-axis>

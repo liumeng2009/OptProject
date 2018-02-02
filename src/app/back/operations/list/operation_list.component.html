@@ -15,11 +15,15 @@
 
 
     <kendo-grid-column field="no" title="编号">
+      <ng-template kendoGridHeaderTemplate>
+        编号(<span>桌面级</span>/<span style="color:#ff6358">系统级</span>)
+      </ng-template>
       <ng-template kendoGridFilterCellTemplate>
         <input id="remark" class="k-textbox" placeholder="" [(ngModel)]="searchFilter.noFilter" (blur)="noFilterChange($event)" />
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.no}}
+        <span *ngIf="dataItem.businessContent.isAdvanced" style="color:#ff6358">{{dataItem.no}}</span>
+        <span  *ngIf="!dataItem.businessContent.isAdvanced">{{dataItem.no}}</span>
       </ng-template>
     </kendo-grid-column>
 

@@ -472,9 +472,10 @@ export class OrderAddComponent implements OnInit{
       data=>{
         this.equipOpLoading=false;
         let result=this.apiResultService.result(data);
+        console.log(result);
         if(result&&result.status==0){
           for(let d of result.data){
-            let equipOp=new EquipOp(d.id,d.equipOp?d.equipOp.name:'',d.operation);
+            let equipOp=new EquipOp(d.id,d.equipOp?(d.isAdvanced?(d.equipOp.name+'(系统级)'):(d.equipOp.name)):'',d.operation);
             this.equipOps.push(equipOp);
           }
           if(this.equipOps.length>0){
