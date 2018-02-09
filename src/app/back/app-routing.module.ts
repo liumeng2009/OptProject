@@ -114,7 +114,7 @@ export const PanelbarRoutes:Routes=[
       { path: 'role', component: RoleComponent,data:{name:'角色管理'},children:[
         {path:'list',component:RoleListComponent,data:{name:'列表'}},
         {path:'add',component:RoleAddComponent,data:{name:'新增'}},
-        {path:'edit',component:RoleEditComponent,data:{name:'编辑'}}
+        {path:':id',component:RoleEditComponent,data:{name:'编辑'}}
       ] }
     ]}
   ]},

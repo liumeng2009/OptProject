@@ -1,15 +1,17 @@
 import {Component,OnInit,ViewContainerRef} from '@angular/core';
 import {Router,ActivatedRoute,Params} from '@angular/router';
 
+import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
+
 import {RoleService} from '../role.service';
 import {AlertData} from "../../../../bean/alertData";
+import {FunctionService} from '../../fucntion/function.service'
 
 import {OptConfig} from '../../../../config/config';
 
 import {ApiResultService} from '../../../main/apiResult.service';
 import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
-import {User} from "../../../../bean/user";
-import {Gender} from "../../../../bean/gender";
+import {Role} from "../../../../bean/role";
 
 @Component({
   selector:'role-edit',
@@ -19,16 +21,11 @@ import {Gender} from "../../../../bean/gender";
 
 export class RoleEditComponent implements OnInit{
 
-  user=new User(null,null,null,null,null,null,true);
-
-  genders=[
-    new Gender('男',false),
-    new Gender('女',true)
-  ]
-
+  role=new Role(null,null,null);
 
   constructor(
     private roleService:RoleService,
+    private functionSerivce:FunctionService,
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
@@ -41,35 +38,47 @@ export class RoleEditComponent implements OnInit{
   ngOnInit(){
     this.route.params.subscribe((params: Params) =>{
       this.getData(params.id);
-    })
+    });
+    this.initAllAuth();
+
   }
 
   private getData(id:string){
-/*    this.roleService.getUser(id).then(
+    this.roleService.getRole(id).then(
       data=>{
-        let userObj=this.apiResultService.result(data);
-        if(userObj){
-          this.user.name=userObj.data.name;
-          this.user.password=userObj.data.password;
-          this.user.canLogin=userObj.data.canLogin;
-          this.user.gender=userObj.data.gender;
-          this.user.phone=userObj.data.phone;
-          this.user.email=userObj.data.email;
-          this.user.id=id;
-        }
-        else{
-          //编辑页面没有内容，说明内容获取出错，返回list页面
-          this.router.navigate(['../'],{relativeTo:this.route});
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.role=result.data;
+          console.log(this.role);
         }
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
       }
-    );*/
+    )
   }
 
+  private gridData:GridDataResult={
+    data:[],
+    total:0
+  };
+  private initAllAuth(){
+    this.functionSerivce.getList().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.gridData=result;
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+  }
+
+
   private onSubmit(){
-/*    this.userService.create(this.user).then(
+    this.roleService.edit(this.role).then(
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
@@ -79,14 +88,6 @@ export class RoleEditComponent implements OnInit{
     error=>{
       this.ajaxExceptionService.simpleOp(error);
     }
-    )*/
-  }
-  private femaleChange($event){
-    console.log($event);
-    this.user.gender=false;
-  }
-  private maleChange($event){
-    console.log($event);
-    this.user.gender=true;
+    )
   }
 }

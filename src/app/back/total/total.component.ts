@@ -34,7 +34,7 @@ export class TotalComponent implements OnInit{
     this.getOperationWeekList();
     this.getMonthWorkerList();
     this.getMonthWorkerTimeList();
-
+    this.getMonthCorporationCountList();
     this.initMonths();
 
   }
@@ -245,9 +245,8 @@ export class TotalComponent implements OnInit{
     this.months.splice(0,this.months.length);
     this.monthOperationCounts.splice(0,this.monthOperationCounts.length);
     let date=new Date();
-    date.setMonth(month-1);
-    alert(date);
-    let time=date.getTime();
+    let dateSearch=new Date(date.getFullYear(),month-1,1);
+    let time=dateSearch.getTime();
     this.totalService.getOperationListMonth(time).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -337,7 +336,31 @@ export class TotalComponent implements OnInit{
             }
             this.pieData2.push(objInsert);
           }
+          console.log(this.pieData2);
           this.pieChart2.resize();
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+
+  }
+
+  public pieData3: any = [
+    { category: 'Eaten', value:120 }
+  ]
+  @ViewChild('pieChart3') pieChart3: ChartComponent;
+  private getMonthCorporationCountList(){
+    this.pieData3.splice(0,this.pieData3.length);
+    let date=new Date();
+    let time=date.getTime();
+    this.totalService.getOperationListMonthCoprationCount(time).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.pieData3=result.data;
+          this.pieChart3.resize();
         }
       },
       error=>{
@@ -438,7 +461,7 @@ export class TotalComponent implements OnInit{
   }
 
   private monthChange($event){
-    alert($event);
+    this.selectMonth=$event;
     this.getOperationMonthList(this.selectMonth);
   }
 

@@ -221,6 +221,12 @@ export class MainComponent implements OnInit{
           else if(event.url.indexOf('/admin/operations/op/')>-1){
             this.selectedId='admin/operations/op';
           }
+          else if(event.url.indexOf('/admin/auth/function/')>-1){
+            this.selectedId='admin/auth/function';
+          }
+          else if(event.url.indexOf('/admin/auth/role/')>-1){
+            this.selectedId='admin/auth/role';
+          }
           else{
             this.selectedId=urlNow;
           }

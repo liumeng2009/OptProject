@@ -2,40 +2,46 @@
   <div class="col-xs-12 col-sm-12 offset-sm-12">
     <div class="card">
       <div class="card-block">
-        <form class="k-form"  (ngSubmit)="onSubmit()" #userForm="ngForm">
+        <form class="k-form"  (ngSubmit)="onSubmit()" #roleForm="ngForm">
           <label class="k-form-field">
-            <span for="name">用户名<span class="k-required">*</span></span>
-            <input id="name" class="k-textbox" placeholder="用户名" required disabled [(ngModel)]="user.name" name="username" />
+            <span for="name">角色名<span class="k-required">*</span></span>
+            <input id="name" class="k-textbox" placeholder="角色名" required [(ngModel)]="role.name" name="name" />
           </label>
           <label class="k-form-field">
-            <span for="password">密码<span class="k-required">*</span></span>
-            <input id="password" type="password" class="k-textbox" value="" placeholder="密码" required [(ngModel)]="user.password" name="password" />
+            <span for="name">备注<span class="k-required">*</span></span>
+            <input id="remark" class="k-textbox" placeholder="备注" required [(ngModel)]="role.remark" name="remark" />
           </label>
+          <div class="k-form-field">
+            <span style="font-weight:bolder">拥有权限：</span>
+            <kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" >
+              <ng-template kendoGridToolbarTemplate>
+                <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
+                  <span style="color:green" class="k-icon k-i-refresh"></span>
+                </button>
+              </ng-template>
 
-          <label class="k-form-field">
-            <span for="password">是否可以登录<span class="k-required">*</span></span>
-            <kendo-switch [(ngModel)]="user.canLogin" name="canLogin" id="canLogin" [onLabel]="'是'" [offLabel]="'否'" ></kendo-switch>
-          </label>
+              <kendo-grid-column field="name" title="功能名称" [width]="100">
+              </kendo-grid-column>
 
-          <label class="k-form-field">
-            <span for="gender">性别</span>
+              <kendo-grid-column  title="操作项">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <label *ngFor="let op of dataItem.ops" style="margin-right:20px;">
+                    <input type="checkbox" id="{{op.id}}" class="k-checkbox">
+                    <label class="k-checkbox-label" for="{{op.id}}">{{op.operate.name}}</label>
+                  </label>
+                </ng-template>
+              </kendo-grid-column>
 
-            <input type="radio" name="gender" id="female" class="k-radio" (change)="femaleChange($event)" checked="{{user.gender?'':'checked'}}" >
-            <label class="k-radio-label" for="female">女</label>
 
-            <input type="radio" name="gender" id="male" class="k-radio" (change)="maleChange($event)" checked="{{user.gender?'checked':''}}">
-            <label class="k-radio-label" for="male">男</label>
-          </label>
-          <label class="k-form-field">
-            <span for="phone">电话</span>
-            <input id="phone" class="k-textbox"  placeholder="电话号码" [(ngModel)]="user.phone" name="phone" />
-          </label>
-          <label class="k-form-field">
-            <span for="email">邮箱</span>
-            <input id="email" class="k-textbox"  placeholder="电子邮箱" [(ngModel)]="user.email" name="email" />
-          </label>
+              <ng-template kendoGridNoRecordsTemplate>
+                <div *ngIf="!isLoading">暂时还没有记录 <a href="javascript:;" (click)="refresh()">点击刷新</a>.</div>
+                <span  *ngIf="isLoading" class="k-icon k-i-loading" style="font-size: 32px;color:#ff6b58;left:50%;margin-left:-16px;margin-top: 50px;"></span>
+              </ng-template>
+            </kendo-grid>
+          </div>
+
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!userForm.form.valid">提交</button>
+            <button class="k-button k-primary" [disabled]="!roleForm.form.valid">提交</button>
             <button class="k-button">重置</button>
           </div>
         </form>

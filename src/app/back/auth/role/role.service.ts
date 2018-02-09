@@ -19,7 +19,9 @@ export class RoleService{
 
   private listurl=new OptConfig().serverPath+'/api/role/list';
   private addurl=new OptConfig().serverPath+'/api/role/add';
+  private editurl=new OptConfig().serverPath+'/api/role/edit';
   private deleteurl=new OptConfig().serverPath+'/api/role/delete';
+  private geturl=new OptConfig().serverPath+'/api/role';
 /*  private saveurl=new OptConfig().serverPath+'/api/user/reg';
   private editurl=new OptConfig().serverPath+'/api/user/edit';
   private deleteurl=new OptConfig().serverPath+'/api/user/delete';
@@ -36,10 +38,28 @@ export class RoleService{
       .catch(this.handleError)
   }
 
+  getRole(id):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.geturl+'/'+id+'?token='+token;
+    return this.http.get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
+  }
+
   create(role:any): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
     return this.http
       .post(this.addurl+'?token='+token, role, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  edit(role:any): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.editurl+'?token='+token, role, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

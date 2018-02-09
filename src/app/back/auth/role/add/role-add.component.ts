@@ -10,8 +10,7 @@ import {OptConfig} from '../../../../config/config';
 
 import {ApiResultService} from '../../../main/apiResult.service';
 import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
-import {User} from "../../../../bean/user";
-import {Gender} from "../../../../bean/gender";
+import {Role} from "../../../../bean/role";
 
 @Component({
   selector:'role-add',
@@ -21,15 +20,10 @@ import {Gender} from "../../../../bean/gender";
 
 export class RoleAddComponent implements OnInit{
 
-  user=new User(null,null,null,true,null,null,true);
-
-  genders=[
-    new Gender('男',false),
-    new Gender('女',true)
-  ]
+  role=new Role(null,null,null);
 
   constructor(
-    private userService:RoleService,
+    private roleService:RoleService,
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
@@ -44,24 +38,9 @@ export class RoleAddComponent implements OnInit{
   }
 
   private onSubmit(){
-    console.log(this.user);
-    this.userService.create(this.user).then(
+    console.log(this.role);
+    this.roleService.create(this.role).then(
       data=>{
-        /*
-        console.log(data);
-        if(data.status==0){
-          this.missionService.change.emit(new AlertData('success','保存成功'));
-          //this.toastr.success('保存成功!', 'Success!');
-
-        }
-        else if(data.status==500){
-          this.missionService.change.emit(new AlertData('danger',new OptConfig().unknownError));
-        }
-        else{
-          this.missionService.change.emit(new AlertData('danger',data.message));
-        }
-*/
-
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
           this.router.navigate(['../'],{relativeTo:this.route});
@@ -71,14 +50,5 @@ export class RoleAddComponent implements OnInit{
       this.ajaxExceptionService.simpleOp(error);
     }
     )
-  }
-
-  private femaleChange($event){
-    console.log($event);
-    this.user.gender=false;
-  }
-  private maleChange($event){
-    console.log($event);
-    this.user.gender=true;
   }
 }

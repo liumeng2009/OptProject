@@ -21,6 +21,7 @@ export class TotalService{
   private oplistmonthurl=new OptConfig().serverPath+'/api/operation/list_month';
   private oplistmonthworkerurl=new OptConfig().serverPath+'/api/operation/list_month_worker';
   private oplistmonthworkertimeurl=new OptConfig().serverPath+'/api/operation/list_month_worker_time';
+  private oplistmonthcorporationcounturl=new OptConfig().serverPath+'/api/operation/list_month_corporation_count';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
@@ -101,6 +102,17 @@ export class TotalService{
       .then(this.extractData)
       .catch(this.handleError);
   }
+
+  getOperationListMonthCoprationCount(time):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.oplistmonthcorporationcounturl+'/time/'+time+'?token='+token;
+    return this.http
+      .get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
 
   private extractData(res:Response){
     let body=res.json();

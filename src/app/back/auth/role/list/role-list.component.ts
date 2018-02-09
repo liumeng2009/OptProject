@@ -38,7 +38,6 @@ export class RoleListComponent implements OnInit{
 
   ngOnInit(){
     this.height=(window.document.body.clientHeight-70-56-50-20-27);
-    alert(123);
     this.getData();
   }
 
