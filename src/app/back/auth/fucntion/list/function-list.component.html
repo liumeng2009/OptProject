@@ -11,7 +11,7 @@
   <kendo-grid-column  title="操作项">
     <ng-template kendoGridCellTemplate let-dataItem>
       <label *ngFor="let ops of dataItem.viewOp" style="margin-right:20px;">
-        <input type="checkbox" id="{{ops.id}}" class="k-checkbox" [(ngModel)]="ops.checked" >
+        <input type="checkbox" id="{{ops.id}}" class="k-checkbox" [(ngModel)]="ops.checked" (change)="opChange($event,ops.id,dataItem.id,ops)" >
         <label class="k-checkbox-label" for="{{ops.id}}">{{ops.name}}</label>
       </label>
     </ng-template>

@@ -107,6 +107,45 @@ export class FunctionListComponent implements OnInit{
     return false;
   }
 
+  private opChange($event,opId,funcId,dataObj){
+    let chk=$event.target.checked;
+    if(chk){
+      this.functionService.createAuth({funcId:funcId,opId:opId}).then(
+        data=>{
+          let result=this.apiResultService.result(data);
+          if(result&&result.status===0){
+
+          }
+          else{
+            dataObj.checked=false;
+          }
+        },
+        error=>{
+          this.ajaxExceptionService.simpleOp(error);
+          dataObj.checked=false;
+        }
+      )
+    }
+    else{
+      this.functionService.deleteAuth({funcId:funcId,opId:opId}).then(
+        data=>{
+          let result=this.apiResultService.result(data);
+          if(result&&result.status===0){
+
+          }
+          else{
+            dataObj.checked=true;
+          }
+        },
+        error=>{
+          this.ajaxExceptionService.simpleOp(error);
+          dataObj.checked=true;
+        }
+      )
+    }
+
+  }
+
   private refresh(){
     this.gridData.data=[];
     this.gridData.total=0;

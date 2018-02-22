@@ -22,10 +22,11 @@ export class RoleService{
   private editurl=new OptConfig().serverPath+'/api/role/edit';
   private deleteurl=new OptConfig().serverPath+'/api/role/delete';
   private geturl=new OptConfig().serverPath+'/api/role';
-/*  private saveurl=new OptConfig().serverPath+'/api/user/reg';
-  private editurl=new OptConfig().serverPath+'/api/user/edit';
-  private deleteurl=new OptConfig().serverPath+'/api/user/delete';
-  private geturl=new OptConfig().serverPath+'/api/user/';*/
+
+
+  private authInRoleAddUrl=new OptConfig().serverPath+'/api/authInRole/add';
+  private authInRoleDeleteUrl=new OptConfig().serverPath+'/api/authInRole/delete';
+  private authInRoleListUrl=new OptConfig().serverPath+'/api/authInRole/list';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
@@ -72,6 +73,34 @@ export class RoleService{
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
+  }
+
+  authInRoleCreate(authInRole:any): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.authInRoleAddUrl+'?token='+token, authInRole, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  authInRoleDelete(authInRole:any): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.authInRoleDeleteUrl+'?token='+token, authInRole, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  authInRoleList(roleId:string):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.authInRoleListUrl+'/'+roleId+'?token='+token;
+    console.log(url);
+    return this.http.get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
   }
 
   private extractData(res:Response){

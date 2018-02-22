@@ -38,8 +38,9 @@ export class RoleEditComponent implements OnInit{
   ngOnInit(){
     this.route.params.subscribe((params: Params) =>{
       this.getData(params.id);
+      this.initAllAuth(params.id);
     });
-    this.initAllAuth();
+
 
   }
 
@@ -62,12 +63,44 @@ export class RoleEditComponent implements OnInit{
     data:[],
     total:0
   };
-  private initAllAuth(){
+  private initAllAuth(roleId){
     this.functionSerivce.getList().then(
       data=>{
         let result=this.apiResultService.result(data);
+        console.log(result);
         if(result&&result.status==0){
           this.gridData=result;
+          this.initOwnAuth(roleId)
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+  }
+
+  private initOwnAuth(roleId){
+    let t=this.gridData;
+    console.log(t);
+    this.roleService.authInRoleList(roleId).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          //与所有的权限做比对
+          let authOwn=result.data;
+          for(let bigKind of t.data){
+            let ops=bigKind.ops;
+            for(let op of ops){
+              op.checked=false;
+              for(let ao of authOwn){
+                if(ao.authId==op.id){
+                  op.checked=true;
+                }
+              }
+            }
+          }
+          console.log(this.gridData);
+
         }
       },
       error=>{
@@ -89,5 +122,49 @@ export class RoleEditComponent implements OnInit{
       this.ajaxExceptionService.simpleOp(error);
     }
     )
+  }
+
+  private authChange($event,authId){
+    let chk=$event.target.checked
+
+    this.route.params.subscribe((params: Params) =>{
+      let roleId=params.id;
+
+      if(chk){
+        this.roleService.authInRoleCreate({roleId:roleId,authId:authId}).then(
+          data=>{
+            let result=this.apiResultService.result(data);
+            if(result&&result.status==0){
+
+            }
+            else{
+              $event.target.checked=false;
+            }
+          },
+          error=>{
+            this.ajaxExceptionService.simpleOp(error);
+          }
+        )
+      }
+      else{
+        this.roleService.authInRoleDelete({roleId:roleId,authId:authId}).then(
+          data=>{
+            let result=this.apiResultService.result(data);
+            if(result&&result.status==0){
+
+            }
+            else{
+              $event.target.checked=true;
+            }
+          },
+          error=>{
+            this.ajaxExceptionService.simpleOp(error);
+          }
+        )
+      }
+
+
+
+    });
   }
 }

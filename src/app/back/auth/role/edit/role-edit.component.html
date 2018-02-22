@@ -13,7 +13,7 @@
           </label>
           <div class="k-form-field">
             <span style="font-weight:bolder">拥有权限：</span>
-            <kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" >
+            <kendo-grid [data]="gridData.data" [scrollable]="virtual" [height]="height" >
               <ng-template kendoGridToolbarTemplate>
                 <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
                   <span style="color:green" class="k-icon k-i-refresh"></span>
@@ -25,9 +25,9 @@
 
               <kendo-grid-column  title="操作项">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  <label *ngFor="let op of dataItem.ops" style="margin-right:20px;">
-                    <input type="checkbox" id="{{op.id}}" class="k-checkbox">
-                    <label class="k-checkbox-label" for="{{op.id}}">{{op.operate.name}}</label>
+                  <label *ngFor="let op of dataItem.ops" class="k-form-field" >
+                    <input type="checkbox" id="auth-{{op.id}}" name="auth-{{op.id}}" class="k-checkbox" [(ngModel)]="op.checked"  (change)="authChange($event,op.id)">
+                    <label class="k-checkbox-label" for="auth-{{op.id}}">{{op.operate.name}}</label>
                   </label>
                 </ng-template>
               </kendo-grid-column>
