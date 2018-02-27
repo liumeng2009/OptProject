@@ -82,7 +82,7 @@ export const PanelbarRoutes:Routes=[
         {path:'add',component:CorporationAddComponent,data:{name:'新增'}},
         {path:':id',component:CorporationEditComponent,data:{name:'编辑'}}
       ] },
-      { path: 'worker', component: WorkerComponent,data:{name:'工程师设置'} }
+      { path: 'worker', component: WorkerComponent,data:{name:'工程师设置',hidden:true} }
     ]},
     {path:'operations',data:{name:'工作管理'},children:[
       { path: 'op', component: OperationsComponent,data:{name:'工单'},children:[

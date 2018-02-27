@@ -18,6 +18,21 @@
           </label>
 
           <label class="k-form-field">
+            <span for="roleId">角色<span class="k-required">*</span></span>
+            <kendo-dropdownlist
+              name="roleId"
+              [data]="roles"
+              [textField]="'name'"
+              [valueField]="'id'"
+              [valuePrimitive]="true"
+              [(ngModel)]="user.roleId"
+              style="float:left"            >
+            </kendo-dropdownlist>
+            <span *ngIf="isRoleLoading" class="k-icon k-i-loading" style="font-size: 14px;color:#ff6b58;float:left;height:30px;line-height:14px;margin-left: 5px;"></span>
+            <div style="clear: both"></div>
+          </label>
+
+          <div class="k-form-field">
             <span for="gender">性别</span>
 
             <input type="radio" name="gender" id="female" class="k-radio" (change)="femaleChange($event)" checked="{{user.gender?'':'checked'}}" >
@@ -25,7 +40,7 @@
 
             <input type="radio" name="gender" id="male" class="k-radio" (change)="maleChange($event)" checked="{{user.gender?'checked':''}}">
             <label class="k-radio-label" for="male">男</label>
-          </label>
+          </div>
           <label class="k-form-field">
             <span for="phone">电话</span>
             <input id="phone" class="k-textbox"  placeholder="电话号码" [(ngModel)]="user.phone" name="phone" />

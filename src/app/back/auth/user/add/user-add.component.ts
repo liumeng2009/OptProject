@@ -12,6 +12,8 @@ import {ApiResultService} from '../../../main/apiResult.service';
 import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
 import {User} from "../../../../bean/user";
 import {Gender} from "../../../../bean/gender";
+import {RoleService} from "../../role/role.service";
+import {Role} from "../../../../bean/role";
 
 @Component({
   selector:'user-add',
@@ -21,7 +23,7 @@ import {Gender} from "../../../../bean/gender";
 
 export class UserAddComponent implements OnInit{
 
-  user=new User(null,null,null,true,null,null,true);
+  user=new User(null,null,null,true,null,null,true,null);
 
   genders=[
     new Gender('男',false),
@@ -30,6 +32,7 @@ export class UserAddComponent implements OnInit{
 
   constructor(
     private userService:UserService,
+    private roleService:RoleService,
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
@@ -40,7 +43,7 @@ export class UserAddComponent implements OnInit{
 
 
   ngOnInit(){
-
+    this.initRoles();
   }
 
   private onSubmit(){
@@ -70,6 +73,27 @@ export class UserAddComponent implements OnInit{
     error=>{
       this.ajaxExceptionService.simpleOp(error);
     }
+    )
+  }
+
+  private roles:Role[]=[];
+  private isRoleLoading:boolean=false;
+  private initRoles(){
+    this.roles.splice(0,this.roles.length);
+    this.isRoleLoading=true;
+    this.roleService.getRoleList().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.roles=result.data;
+          if(this.roles.length>0){
+            this.user.roleId=this.roles[0].id;
+          }
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
     )
   }
 

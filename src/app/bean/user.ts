@@ -7,6 +7,7 @@ export class User {
     public gender:Boolean,
     public phone:string,
     public email:string,
-    public canLogin:Boolean
+    public canLogin:Boolean,
+    public roleId:string
   ) {  }
 }

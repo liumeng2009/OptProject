@@ -10,6 +10,8 @@ import {ApiResultService} from '../../../main/apiResult.service';
 import {AjaxExceptionService} from '../../../main/ajaxExceptionService';
 import {User} from "../../../../bean/user";
 import {Gender} from "../../../../bean/gender";
+import {Role} from "../../../../bean/role";
+import {RoleService} from "../../role/role.service";
 
 @Component({
   selector:'user-edit',
@@ -19,7 +21,7 @@ import {Gender} from "../../../../bean/gender";
 
 export class UserEditComponent implements OnInit{
 
-  user=new User(null,null,null,null,null,null,true);
+  user=new User(null,null,null,null,null,null,true,null);
 
   genders=[
     new Gender('男',false),
@@ -29,6 +31,7 @@ export class UserEditComponent implements OnInit{
 
   constructor(
     private userService:UserService,
+    private roleService:RoleService,
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
@@ -39,6 +42,7 @@ export class UserEditComponent implements OnInit{
 
 
   ngOnInit(){
+    this.initRoles();
     this.route.params.subscribe((params: Params) =>{
       this.getData(params.id);
     })
@@ -48,14 +52,8 @@ export class UserEditComponent implements OnInit{
     this.userService.getUser(id).then(
       data=>{
         let userObj=this.apiResultService.result(data);
-        if(userObj){
-          this.user.name=userObj.data.name;
-          this.user.password=userObj.data.password;
-          this.user.canLogin=userObj.data.canLogin;
-          this.user.gender=userObj.data.gender;
-          this.user.phone=userObj.data.phone;
-          this.user.email=userObj.data.email;
-          this.user.id=id;
+        if(userObj&&userObj.status==0){
+          this.user=userObj.data;
         }
         else{
           //编辑页面没有内容，说明内容获取出错，返回list页面
@@ -88,5 +86,26 @@ export class UserEditComponent implements OnInit{
   private maleChange($event){
     console.log($event);
     this.user.gender=true;
+  }
+
+  private roles:Role[]=[];
+  private isRoleLoading:boolean=false;
+  private initRoles(){
+    this.roles.splice(0,this.roles.length);
+    this.isRoleLoading=true;
+    this.roleService.getRoleList().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.roles=result.data;
+          if(this.roles.length>0){
+            this.user.roleId=this.roles[0].id;
+          }
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
   }
 }

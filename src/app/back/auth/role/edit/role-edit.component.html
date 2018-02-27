@@ -20,14 +20,17 @@
                 </button>
               </ng-template>
 
-              <kendo-grid-column field="name" title="功能名称" [width]="100">
+              <kendo-grid-column field="name" title="功能名称" [width]="200">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{dataItem.name}}({{dataItem.code}})
+                </ng-template>
               </kendo-grid-column>
 
               <kendo-grid-column  title="操作项">
                 <ng-template kendoGridCellTemplate let-dataItem>
                   <label *ngFor="let op of dataItem.ops" class="k-form-field" >
                     <input type="checkbox" id="auth-{{op.id}}" name="auth-{{op.id}}" class="k-checkbox" [(ngModel)]="op.checked"  (change)="authChange($event,op.id)">
-                    <label class="k-checkbox-label" for="auth-{{op.id}}">{{op.operate.name}}</label>
+                    <label class="k-checkbox-label" for="auth-{{op.id}}">{{op.operate.name}}({{op.operate.code}})</label>
                   </label>
                 </ng-template>
               </kendo-grid-column>

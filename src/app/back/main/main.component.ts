@@ -240,6 +240,7 @@ export class MainComponent implements OnInit{
     this.mainService.getUserInfo()
       .then(
         data=>{
+          console.log(data);
           if(this.apiResultService.result(data)) {
             this.user =this.apiResultService.result(data).data;
           }
@@ -248,6 +249,11 @@ export class MainComponent implements OnInit{
           this.ajaxExceptionService.simpleOp(error);
         }
       );
+  }
+
+  //根据角色，来改变angular的路由配置
+  private fixRouteConfig(){
+
   }
 
   private getUrlTree(){
