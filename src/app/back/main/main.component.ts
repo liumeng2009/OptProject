@@ -241,8 +241,10 @@ export class MainComponent implements OnInit{
       .then(
         data=>{
           console.log(data);
-          if(this.apiResultService.result(data)) {
-            this.user =this.apiResultService.result(data).data;
+          let result=this.apiResultService.result(data);
+          if(result&&result.status==0){
+              this.user =result.data;
+              this.fixRouteConfig(result.data.role.auths);
           }
         },
         error=>{
@@ -252,8 +254,49 @@ export class MainComponent implements OnInit{
   }
 
   //根据角色，来改变angular的路由配置
-  private fixRouteConfig(){
+  private fixRouteConfig(auths){
+    //auths与route作比较，auths中没有的，从route中删除
+    //第一层
+    let cfg=this.router.config[3].children;
+    console.log(cfg);
+    for(let i=1;i<cfg.length;i++){
+      if(this.isExistInRouteConfig(cfg[i],auths)){
 
+      }
+      else{
+        //没有菜单权限，就把这个分支从config删除掉
+        cfg.splice(i,1);
+        i--;
+      }
+      //第二层
+      let cfgChildren=cfg[i].children;
+
+      for(let j=0;j<cfgChildren.length;j++){
+        if(this.isExistInRouteConfig(cfgChildren[j],auths)){
+
+        }
+        else{
+          //没有菜单权限，就把这个分支从config删除掉
+          cfgChildren.splice(j,1);
+          j--;
+        }
+      }
+
+
+
+    }
+  }
+
+  private isExistInRouteConfig(pathObj,auths){
+    for(let auth of auths){
+      if(pathObj.path=='business'){
+        console.log(auth.opInFunc.function.code+'       '+auth.opInFunc.operate.code);
+      }
+      if(pathObj.path==auth.opInFunc.function.code&&auth.opInFunc.operate.code=='menu'){
+        return true;
+      }
+    }
+    return false;
   }
 
   private getUrlTree(){

@@ -278,7 +278,7 @@ export class TotalComponent implements OnInit{
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.status==0){
-          for(let r of result.data){
+          /*for(let r of result.data){
             if(this.pieData.length==0){
               var insertObj={
                 category:r.user,
@@ -306,7 +306,10 @@ export class TotalComponent implements OnInit{
                 i++;
               }
             }
-          }
+          }*/
+          this.pieData=result.data;
+
+
           this.pieChart1.resize();
         }
       },
@@ -315,6 +318,7 @@ export class TotalComponent implements OnInit{
       }
     )
   }
+
 
   public pieData2: any = [
     { category: 'Eaten', value:120 }

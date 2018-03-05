@@ -1,4 +1,4 @@
-<kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" >
+<kendo-grid [data]="gridData" [height]="height" #funcGrid >
   <ng-template kendoGridToolbarTemplate>
     <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
       <span style="color:green" class="k-icon k-i-refresh"></span>
@@ -19,6 +19,24 @@
       </label>
     </ng-template>
   </kendo-grid-column>
+
+  <ng-template kendoGridDetailTemplate let-dataItem let-rowIndex="rowIndex">
+    <kendo-grid [data]="dataItem.children" [scrollable]="virtual">
+      <kendo-grid-column field="name" title="功能名称" [width]="200">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.name}}({{dataItem.code}})
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column  title="操作项">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <label *ngFor="let ops of dataItem.viewOp" style="margin-right:20px;">
+            <input type="checkbox" id="{{ops.id}}"  class="k-checkbox" [(ngModel)]="ops.checked" (change)="opChange($event,ops.id,dataItem.id,ops)" >
+            <label class="k-checkbox-label" for="{{ops.id}}">{{ops.name}}({{ops.code}})</label>
+          </label>
+        </ng-template>
+      </kendo-grid-column>
+    </kendo-grid>
+  </ng-template>
 
 
   <ng-template kendoGridNoRecordsTemplate>

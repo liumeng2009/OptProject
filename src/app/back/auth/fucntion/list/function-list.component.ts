@@ -1,8 +1,9 @@
-import {Component,OnInit} from '@angular/core';
+import {Component,OnInit,ViewChild} from '@angular/core';
 import {Router,ActivatedRoute} from '@angular/router';
 
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
+import {GridComponent} from '@progress/kendo-angular-grid';
 
 import {FunctionService} from "../function.service";
 import {ApiResultService} from "../../../main/apiResult.service";
@@ -41,6 +42,7 @@ export class FunctionListComponent implements OnInit{
     this.getData();
   }
 
+  @ViewChild('funcGrid') funcGrid: GridComponent;
   private getData(){
     this.isLoading=true;
     this.functionService.getList()
@@ -71,8 +73,32 @@ export class FunctionListComponent implements OnInit{
                       console.log(vo);
                     }
                   }
-                  this.gridData.data=functions;
+                  //this.gridData.data=functions;
+                  //console.log(this.gridData.data);
+                  //将functions对象，变成两层的父子关系
+                  let newFunctions=[];
+                  for(let f of functions){
+                    if(f.class==0){
+                      f.children=[];
+                      newFunctions.push(f);
+                    }
+                  }
+
+                  for(let f of functions){
+                    for(let nf of newFunctions){
+                      if(f.belong==nf.id){
+                        nf.children.push(f);
+                      }
+                    }
+                  }
+
+                  this.gridData.data=newFunctions;
+
                   console.log(this.gridData.data);
+                  setTimeout(()=>{
+                    for(let i=0;i<newFunctions.length;i++)
+                      this.funcGrid.expandRow(i);
+                  },0)
                   this.isLoading=false;
                 }
               },

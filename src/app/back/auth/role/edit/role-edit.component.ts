@@ -1,7 +1,8 @@
-import {Component,OnInit,ViewContainerRef} from '@angular/core';
+import {Component,OnInit,ViewContainerRef,ViewChild} from '@angular/core';
 import {Router,ActivatedRoute,Params} from '@angular/router';
 
 import {PageChangeEvent,GridDataResult} from '@progress/kendo-angular-grid';
+import {GridComponent} from '@progress/kendo-angular-grid';
 
 import {RoleService} from '../role.service';
 import {AlertData} from "../../../../bean/alertData";
@@ -63,13 +64,39 @@ export class RoleEditComponent implements OnInit{
     data:[],
     total:0
   };
+
+  @ViewChild('funcGrid') funcGrid: GridComponent;
   private initAllAuth(roleId){
     this.functionSerivce.getList().then(
       data=>{
         let result=this.apiResultService.result(data);
         console.log(result);
         if(result&&result.status==0){
-          this.gridData=result;
+          //this.gridData=result;
+          //将数组处理成两层结构的树
+          let newFunctions=[];
+          for(let f of result.data){
+            if(f.class==0){
+              f.children=[];
+              newFunctions.push(f);
+            }
+          }
+
+          for(let f of result.data){
+            for(let nf of newFunctions){
+              if(f.belong==nf.id){
+                nf.children.push(f);
+              }
+            }
+          }
+
+          this.gridData.data=newFunctions;
+
+          setTimeout(()=>{
+            for(let i=0;i<newFunctions.length;i++)
+              this.funcGrid.expandRow(i);
+          },0)
+
           this.initOwnAuth(roleId)
         }
       },
@@ -89,6 +116,7 @@ export class RoleEditComponent implements OnInit{
           //与所有的权限做比对
           let authOwn=result.data;
           for(let bigKind of t.data){
+            //第一层
             let ops=bigKind.ops;
             for(let op of ops){
               op.checked=false;
@@ -98,7 +126,22 @@ export class RoleEditComponent implements OnInit{
                 }
               }
             }
+            //第二层
+            for(let smallKind of bigKind.children){
+              let sops=smallKind.ops;
+              for(let op of sops){
+                op.checked=false;
+                for(let ao of authOwn){
+                  if(ao.authId==op.id){
+                    op.checked=true;
+                  }
+                }
+              }
+            }
+
           }
+
+
           console.log(this.gridData);
 
         }
