@@ -30,6 +30,8 @@ import {AddressListComponent} from '../basicSettings/address/list/address-list.c
 import {AddressAddComponent} from '../basicSettings/address/add/address-add.component';
 import {AddressEditComponent} from '../basicSettings/address/edit/address-edit.component';
 
+import {AddComponent} from './add.component'
+
 
 @Component({
   selector:'main-area',
@@ -244,7 +246,14 @@ export class MainComponent implements OnInit{
           let result=this.apiResultService.result(data);
           if(result&&result.status==0){
               this.user =result.data;
-              this.fixRouteConfig(result.data.role.auths);
+              //this.fixRouteConfig(result.data.role.auths);
+            this.router.config[3].children.push({
+              path:'add',
+              component:AddComponent,
+              data:{name:'测试'}
+            })
+            this.router.resetConfig(this.router.config);
+            console.log(this.router.config);
           }
         },
         error=>{

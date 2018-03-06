@@ -60,6 +60,8 @@ import {RoleListComponent} from "./auth/role/list/role-list.component";
 import {RoleAddComponent} from "./auth/role/add/role-add.component";
 import {RoleEditComponent} from "./auth/role/edit/role-edit.component";
 
+import {AddComponent} from './main/add.component';
+
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
   {path:'login',component:LoginComponent,data:{name:'登录'}},

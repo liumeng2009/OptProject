@@ -91,6 +91,9 @@ import {RoleListComponent} from './back/auth/role/list/role-list.component';
 import {RoleAddComponent} from './back/auth/role/add/role-add.component';
 import {RoleService} from "./back/auth/role/role.service";
 
+//测试Component
+import {AddComponent} from './back/main/add.component'
+
 
 //信息综述
 import {TotalComponent} from './back/total/total.component';
@@ -187,6 +190,8 @@ import {RoleEditComponent} from "./back/auth/role/edit/role-edit.component";
     TotalComponent,
 
     OtherComponent,
+
+    AddComponent,
 
     MainPipe,
     TimeShowPipe,

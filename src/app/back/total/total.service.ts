@@ -106,6 +106,7 @@ export class TotalService{
   getOperationListMonthCoprationCount(time):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     let url=this.oplistmonthcorporationcounturl+'/time/'+time+'?token='+token;
+    console.log(url);
     return this.http
       .get(url)
       .toPromise()
