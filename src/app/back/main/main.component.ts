@@ -246,14 +246,7 @@ export class MainComponent implements OnInit{
           let result=this.apiResultService.result(data);
           if(result&&result.status==0){
               this.user =result.data;
-              //this.fixRouteConfig(result.data.role.auths);
-            this.router.config[3].children.push({
-              path:'add',
-              component:AddComponent,
-              data:{name:'测试'}
-            })
-            this.router.resetConfig(this.router.config);
-            console.log(this.router.config);
+              this.fixRouteConfig(result.data.role.auths);
           }
         },
         error=>{

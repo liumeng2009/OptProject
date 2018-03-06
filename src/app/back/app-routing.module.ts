@@ -62,12 +62,14 @@ import {RoleEditComponent} from "./auth/role/edit/role-edit.component";
 
 import {AddComponent} from './main/add.component';
 
+import {AuthGuard} from './main/authGuard.service'
+
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
   {path:'login',component:LoginComponent,data:{name:'登录'}},
   {path:'reg',component:RegComponent,data:{name:'注册'}},
   {path:'admin',component:MainComponent,data:{name:'首页'},children:[
-    {path:'total',component:TotalComponent,data:{name:'数据综述'},},
+    {path:'total',component:TotalComponent,canActivate:[AuthGuard],data:{name:'数据综述'},},
     {path:'basic',component:BasicSettingsComponent,data:{name:'基本设置'},children:[
       { path: 'address' ,component: AddressComponent,data:{name:'地址设置'},children:[
         {path:'list',component:AddressListComponent,data:{name:'列表'}},
@@ -128,11 +130,11 @@ export const appRoutingProvider:any[]=[];
 export const panelbarRouting:ModuleWithProviders=RouterModule.forRoot(PanelbarRoutes);
 
 
-/*
+
 @NgModule({
-  imports:[RouterModule.forRoot(routes)],
+  imports:[RouterModule.forRoot(PanelbarRoutes)],
   exports:[RouterModule]
 })
 
 export class AppRoutingModule{}
-*/
+
