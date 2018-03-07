@@ -291,9 +291,6 @@ export class MainComponent implements OnInit{
 
   private isExistInRouteConfig(pathObj,auths){
     for(let auth of auths){
-      if(pathObj.path=='business'){
-        console.log(auth.opInFunc.function.code+'       '+auth.opInFunc.operate.code);
-      }
       if(pathObj.path==auth.opInFunc.function.code&&auth.opInFunc.operate.code=='menu'){
         return true;
       }

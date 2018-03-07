@@ -69,56 +69,56 @@ export const PanelbarRoutes:Routes=[
   {path:'login',component:LoginComponent,data:{name:'登录'}},
   {path:'reg',component:RegComponent,data:{name:'注册'}},
   {path:'admin',component:MainComponent,data:{name:'首页'},children:[
-    {path:'total',component:TotalComponent,canActivate:[AuthGuard],data:{name:'数据综述'},},
-    {path:'basic',component:BasicSettingsComponent,data:{name:'基本设置'},children:[
-      { path: 'address' ,component: AddressComponent,data:{name:'地址设置'},children:[
-        {path:'list',component:AddressListComponent,data:{name:'列表'}},
-        {path:'add',component:AddressAddComponent,data:{name:'新增'}},
-        {path:':id',component:AddressEditComponent,data:{name:'编辑'}}
+    {path:'total',component:TotalComponent,data:{name:'数据综述'},},
+    {path:'basic',component:BasicSettingsComponent,canActivate:[AuthGuard],data:{name:'基本设置'},children:[
+      { path: 'address' ,component: AddressComponent,canActivate:[AuthGuard],data:{name:'地址设置'},children:[
+        {path:'list',component:AddressListComponent,canActivate:[AuthGuard],data:{name:'列表'}},
+        {path:'add',component:AddressAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:':id',component:AddressEditComponent,canActivate:[AuthGuard],data:{name:'编辑'}}
       ] },
-      { path: 'group' ,component: GroupComponent,data:{name:'组织设置'},children:[
-        {path:'list',component:GroupListComponent,data:{name:'列表'}},
-        {path:'add',component:GroupAddComponent,data:{name:'新增'}},
-        {path:':id',component:GroupEditComponent,data:{name:'编辑'}}
+      { path: 'group' ,component: GroupComponent,canActivate:[AuthGuard],data:{name:'组织设置'},children:[
+        {path:'list',component:GroupListComponent,canActivate:[AuthGuard],data:{name:'列表'}},
+        {path:'add',component:GroupAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:':id',component:GroupEditComponent,canActivate:[AuthGuard],data:{name:'编辑'}}
       ] },
-      { path: 'corporation' ,component: CorporationComponent,data:{name:'公司设置'},children:[
-        {path:'list',component:CorporationListComponent,data:{name:'列表'}},
-        {path:'add',component:CorporationAddComponent,data:{name:'新增'}},
-        {path:':id',component:CorporationEditComponent,data:{name:'编辑'}}
+      { path: 'corporation' ,component: CorporationComponent,canActivate:[AuthGuard],data:{name:'公司设置'},children:[
+        {path:'list',component:CorporationListComponent,canActivate:[AuthGuard],data:{name:'列表'}},
+        {path:'add',component:CorporationAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:':id',component:CorporationEditComponent,canActivate:[AuthGuard],data:{name:'编辑'}}
       ] },
-      { path: 'worker', component: WorkerComponent,data:{name:'工程师设置',hidden:true} }
+      { path: 'worker', component: WorkerComponent,canActivate:[AuthGuard],data:{name:'工程师设置'} }
     ]},
-    {path:'operations',data:{name:'工作管理'},children:[
-      { path: 'op', component: OperationsComponent,data:{name:'工单'},children:[
-        {path:'list',component:OperationListComponent,data:{name:'列表'}},
-        {path:'add',component:OperationAddComponent,data:{name:'新增'}},
-        {path:'add/:orderid',component:OperationAddComponent,data:{name:'新增'}},
-        {path:':id',component:OperationEditComponent,data:{name:'编辑'}}
+    {path:'operations',canActivate:[AuthGuard],data:{name:'工作管理'},children:[
+      { path: 'op', component: OperationsComponent,canActivate:[AuthGuard],data:{name:'工单'},children:[
+        {path:'list',component:OperationListComponent,canActivate:[AuthGuard],data:{name:'列表'}},
+        {path:'add',component:OperationAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:'add/:orderid',component:OperationAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:':id',component:OperationEditComponent,canActivate:[AuthGuard],data:{name:'编辑'}}
       ] },
-      { path: 'order', component: OrderComponent,data:{name:'客户需求'},children:[
-        {path:'list',component:OrderListComponent,data:{name:'列表'}},
-        {path:'add',component:OrderAddComponent,data:{name:'新增'}},
-        {path:':id',component:OrderEditComponent,data:{name:'编辑'}}
+      { path: 'order', component: OrderComponent,canActivate:[AuthGuard],data:{name:'客户需求'},children:[
+        {path:'list',component:OrderListComponent,canActivate:[AuthGuard],data:{name:'列表'}},
+        {path:'add',component:OrderAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:':id',component:OrderEditComponent,canActivate:[AuthGuard],data:{name:'编辑'}}
       ] },
-      { path: 'business', component: BusinessContentComponent,data:{name:'业务内容设置'},children:[
-        {path:'list',component:BusinessContentListComponent,data:{name:'列表'}},
-        {path:'add',component:BusinessContentAddComponent,data:{name:'新增'}},
-        {path:':id',component:BusinessContentEditComponent,data:{name:'编辑'}}
+      { path: 'business', component: BusinessContentComponent,canActivate:[AuthGuard],data:{name:'业务内容设置'},children:[
+        {path:'list',component:BusinessContentListComponent,canActivate:[AuthGuard],data:{name:'列表'}},
+        {path:'add',component:BusinessContentAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:':id',component:BusinessContentEditComponent,canActivate:[AuthGuard],data:{name:'编辑'}}
       ] }
     ]},
-    {path:'auth',component:AuthComponent,data:{name:'用户权限管理'},children:[
-      { path: 'user', component: UserComponent,data:{name:'用户管理'},children:[
-        {path:'list',component:UserListComponent,data:{name:'列表'}},
-        {path:'add',component:UserAddComponent,data:{name:'新增'}},
-        {path:':id',component:UserEditComponent,data:{name:'编辑'}}
+    {path:'auth',component:AuthComponent,canActivate:[AuthGuard],data:{name:'用户权限管理'},children:[
+      { path: 'user', component: UserComponent,canActivate:[AuthGuard],data:{name:'用户管理'},children:[
+        {path:'list',component:UserListComponent,canActivate:[AuthGuard],data:{name:'列表'}},
+        {path:'add',component:UserAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:':id',component:UserEditComponent,canActivate:[AuthGuard],data:{name:'编辑'}}
       ] },
-      { path: 'function', component: FunctionComponent,data:{name:'功能管理'},children:[
-        {path:'list',component:FunctionListComponent,data:{name:'列表'}}
+      { path: 'function', component: FunctionComponent,canActivate:[AuthGuard],data:{name:'功能管理'},children:[
+        {path:'list',component:FunctionListComponent,canActivate:[AuthGuard],data:{name:'列表'}}
       ] },
-      { path: 'role', component: RoleComponent,data:{name:'角色管理'},children:[
-        {path:'list',component:RoleListComponent,data:{name:'列表'}},
-        {path:'add',component:RoleAddComponent,data:{name:'新增'}},
-        {path:':id',component:RoleEditComponent,data:{name:'编辑'}}
+      { path: 'role', component: RoleComponent,canActivate:[AuthGuard],data:{name:'角色管理'},children:[
+        {path:'list',component:RoleListComponent,canActivate:[AuthGuard],data:{name:'列表'}},
+        {path:'add',component:RoleAddComponent,canActivate:[AuthGuard],data:{name:'新增'}},
+        {path:':id',component:RoleEditComponent,canActivate:[AuthGuard],data:{name:'编辑'}}
       ] }
     ]}
   ]},

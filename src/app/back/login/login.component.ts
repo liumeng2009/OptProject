@@ -21,7 +21,7 @@ import {MissionService} from "../main/mission.service";
 
 export class LoginComponent implements OnInit{
 
-  private iconClass:string='k-icon k-i-lock';
+  private iconClass:string='k-icon k-i-lock fz-18';
   private isDisabled:boolean=false;
 
   constructor(
@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit{
 
   onSubmit():void{
     this.isDisabled=true;
-    this.iconClass='k-icon k-i-loading';
+    this.iconClass='k-icon k-i-loading fz-18';
     let urlTree=this.router.parseUrl(this.router.url);
     let queryParams=urlTree.queryParams;
     let rememberUrl=queryParams.redirectTo;
@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit{
             this.toastr.success('欢迎您,'+data.data.name,'登录成功');
             setTimeout(()=>{
               this.isDisabled=false;
-              this.iconClass='k-icon k-i-lock';
+              this.iconClass='k-icon k-i-lock fz-18';
               let date=new Date();
               date.setDate(date.getDate()+999);
               this.cookieService.put('optToken',data.data.token,{expires:date});
@@ -71,17 +71,16 @@ export class LoginComponent implements OnInit{
           }
           else{
             this.isDisabled=false;
-            this.iconClass='k-icon k-i-lock';
+            this.iconClass='k-icon k-i-lock fz-18';
             this.toastr.error(data.message,'登录失败');
             //this.errorMessage=data.message
           }
         },
         error=>{
           this.isDisabled=false;
-          this.iconClass='k-icon k-i-lock';
+          this.iconClass='k-icon k-i-lock fz-18';
           if(environment.production){
             this.toastr.error(new OptConfig().ajaxError,'登录失败');
-            //this.errorMessage=new OptConfig().ajaxError;
           }
           else {
             this.toastr.error(error,'登录失败');

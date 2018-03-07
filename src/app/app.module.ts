@@ -59,6 +59,7 @@ import {OperationEditComponent} from './back/operations/edit/operation_edit.comp
 import {OperationService} from './back/operations/operations.service';
 //权限组件
 import {AuthComponent} from './back/auth/auth.component';
+import {AuthService} from './back/auth/auth.service';
 
 //用户组件
 import {UserComponent} from './back/auth/user/user.component';
@@ -254,6 +255,8 @@ import {AuthGuard} from './back/main/authGuard.service';
     ApiResultService,
     AjaxExceptionService,
     SwitchService,
+
+    AuthService,
 
     appRoutingProvider,
     {

@@ -49,10 +49,12 @@ export class FunctionListComponent implements OnInit{
       .then(
         data=>{
           let functionResult=this.apiResultService.result(data);
+          console.log(functionResult);
           if(functionResult&&functionResult.status==0){
             let functions = this.apiResultService.result(data).data;
             this.functionService.getOpList().then(
               data=>{
+                console.log(data);
                 let result=this.apiResultService.result(data);
                 if(result&&result.status==0){
                   let operates=result.data;
