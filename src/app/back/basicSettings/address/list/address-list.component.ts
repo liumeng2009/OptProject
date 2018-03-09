@@ -96,6 +96,11 @@ export class AddressListComponent implements OnInit{
     this.getData(this.skip/this.pageSize);
   }
 
+  private pageAuth(){
+    let pageAuthCode='address';
+
+  }
+
   private add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
   }

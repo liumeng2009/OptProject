@@ -46,6 +46,8 @@ import {BusinessContentAddComponent} from './operations/businessContents/add/bus
 import {BusinessContentEditComponent} from './operations/businessContents/edit/business-content-edit.component';
 
 import {OtherComponent} from "./components/noFound/other.component";
+import {NoAuthComponent} from "./components/noAuth/noAuth.component";
+
 import {OrderComponent} from "./operations/order/order.component";
 import {OrderListComponent} from "./operations/order/list/order-list.component";
 import {OrderAddComponent} from "./operations/order/add/order-add.component";
@@ -63,6 +65,7 @@ import {RoleEditComponent} from "./auth/role/edit/role-edit.component";
 import {AddComponent} from './main/add.component';
 
 import {AuthGuard} from './main/authGuard.service'
+
 
 export const PanelbarRoutes:Routes=[
   {path:'',redirectTo:'/admin/total',pathMatch:'full',data:{name:'首页'}},
@@ -122,7 +125,9 @@ export const PanelbarRoutes:Routes=[
       ] }
     ]}
   ]},
+  {path:'needtoken',component:NoAuthComponent,data:{name:'没有权限访问该页面'}},
   {path:'**',component:OtherComponent,data:{name:'页面未找到'}}
+
 ];
 
 export const appRoutingProvider:any[]=[];

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
 import {Router} from '@angular/router';
-import {Location} from '@angular/common';
+
 
 import {ResponseData} from '../../bean/responseData';
 import {OptConfig} from "../../config/config";
@@ -28,7 +28,7 @@ export class ApiResultService {
       }
       return data;
     }
-    else if(data.status==10001){
+/*    else if(data.status==10001){
       this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));
       setTimeout(()=>{
         let urlTree=this.router.parseUrl(this.router.url);
@@ -58,7 +58,7 @@ export class ApiResultService {
 
         this.router.navigate(['/login'],{queryParams:queryParams});
       },2000);
-    }
+    }*/
     else if(data.status==500){
       this.missionService.change.emit(new AlertData('danger',new OptConfig().unknownError));
     }
@@ -67,9 +67,9 @@ export class ApiResultService {
     }
   }
 
-  private rememberUrl(){
+/*  private rememberUrl(){
     let url=this.location.path();
     return url;
-  }
+  }*/
 
 }

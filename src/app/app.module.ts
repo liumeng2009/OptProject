@@ -101,6 +101,7 @@ import {TotalComponent} from './back/total/total.component';
 import {TotalService} from './back/total/total.service';
 
 import {OtherComponent} from './back/components/noFound/other.component';
+import {NoAuthComponent} from './back/components/noAuth/noAuth.component';
 
 import {panelbarRouting,appRoutingProvider} from './back/app-routing.module';
 
@@ -193,6 +194,7 @@ import {AuthGuard} from './back/main/authGuard.service';
     TotalComponent,
 
     OtherComponent,
+    NoAuthComponent,
 
     AddComponent,
 

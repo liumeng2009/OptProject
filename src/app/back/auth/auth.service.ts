@@ -14,10 +14,19 @@ export class AuthService{
   private headers = new Headers({'Content-Type': 'application/json'});
 
   private checkauthurl=new OptConfig().serverPath+'/api/authinrole/check';
+  private checktokenurl=new OptConfig().serverPath+'/api/user/checktoken';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
   checkAuth(routeConfig:any):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    return this.http.get(this.checktokenurl+'?token='+token)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
+  }
+
+  checkToken():Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
     return this.http.post(this.checkauthurl+'?token='+token, routeConfig, {headers: this.headers})
       .toPromise()

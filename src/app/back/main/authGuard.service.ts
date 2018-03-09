@@ -2,10 +2,15 @@ import {Injectable} from '@angular/core'
 import {CanActivate, Router,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  CanActivateChild} from '@angular/router'
+  CanActivateChild,
+  ActivatedRoute
+} from '@angular/router'
+import {Location} from '@angular/common';
 import {AuthService} from '../auth/auth.service';
 import {AjaxExceptionService} from "./ajaxExceptionService";
 import {ApiResultService} from "./apiResult.service";
+import {AlertData} from "../../bean/alertData";
+import {MissionService} from "./mission.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate{
@@ -13,7 +18,11 @@ export class AuthGuard implements CanActivate{
   constructor(
     private authService:AuthService,
     private ajaxExceptionService:AjaxExceptionService,
-    private apiResultService:ApiResultService
+    private apiResultService:ApiResultService,
+    private router:Router,
+    private route:ActivatedRoute,
+    private missionService:MissionService,
+    private location:Location
   ){
 
   }
@@ -54,16 +63,46 @@ export class AuthGuard implements CanActivate{
     return this.authService.checkAuth({func:func,op:op}).then(
       data=>{
         let result=this.apiResultService.result(data);
-        if(result&&result.status==0){
-          console.log('功能：'+func+'操作'+op+'可以进入');
-          return true;
+        if(result&&result.status){
+          if(result.status==0){
+            return true;
+          }
+          else if(result.status==10001||result.status==10003){
+            //token都不符合
+            this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));
+            setTimeout(()=>{
+              let urlTree=this.router.parseUrl(this.router.url);
+              let queryParams=urlTree.queryParams;
+              let rememberUrl=this.rememberUrl();
+              if(queryParams.redirectTo){
+
+              }
+              else{
+                queryParams.redirectTo=rememberUrl;
+              }
+              this.router.navigate(['/login'],{queryParams:queryParams});
+            },2000);
+          }
+          else if(result.status==40010){
+            //token没有权限
+            this.missionService.change.emit(new AlertData('danger',data.message+'没有访问权限！'));
+            this.router.navigate(['./needtoken'],{relativeTo:this.route});
+          }
+          else{
+
+          }
         }
-        return false;
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
-        return false;
+        this.router.navigate(['./needtoken'],{relativeTo:this.route});
       }
     )
   }
+
+  private rememberUrl(){
+    let url=this.location.path();
+    return url;
+  }
+
 }
