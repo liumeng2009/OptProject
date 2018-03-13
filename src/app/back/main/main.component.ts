@@ -268,6 +268,7 @@ export class MainComponent implements OnInit{
       else{
         //没有菜单权限，就把这个分支从config删除掉
         cfg.splice(i,1);
+        console.log('删除了'+cfg[i]);
         i--;
       }
       //第二层
@@ -280,6 +281,7 @@ export class MainComponent implements OnInit{
         else{
           //没有菜单权限，就把这个分支从config删除掉
           cfgChildren.splice(j,1);
+          console.log('删除了'+cfgChildren[j]);
           j--;
         }
       }

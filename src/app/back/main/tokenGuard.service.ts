@@ -30,20 +30,19 @@ export class TokenGuard implements CanActivate{
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
     return this.authService.checkToken().then(
       data=>{
+        console.log(route);
+        console.log(state);
         let result=this.apiResultService.result(data);
-        if(result&&result.status){
-          if(result.status==0){
+        if(result&&result.status==0){
             return true;
-          }
-          else(result.status==10001||result.status==10003){
-            //token都不符合
-            this.gotoLoginPage(data);
-
-          }
+        }
+        else{
+          this.gotoLoginPage(data);
         }
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
+        this.gotoLoginPage('');
       }
     )
   }
@@ -55,18 +54,20 @@ export class TokenGuard implements CanActivate{
 
   private gotoLoginPage(data){
     this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));
-    setTimeout(()=>{
-      let urlTree=this.router.parseUrl(this.router.url);
-      let queryParams=urlTree.queryParams;
-      let rememberUrl=this.rememberUrl();
-      if(queryParams.redirectTo){
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
+    let rememberUrl=this.rememberUrl();
+    if(queryParams.redirectTo){
 
-      }
-      else{
-        queryParams.redirectTo=rememberUrl;
-      }
+    }
+    else{
+      queryParams.redirectTo=rememberUrl;
+    }
+    if(queryParams.redirectTo!=''&&queryParams.redirectTo.indexOf('login')<0){
       this.router.navigate(['/login'],{queryParams:queryParams});
-    },2000);
+    }
+    else{
+      this.router.navigate(['/login']);
+    }
   }
-
 }

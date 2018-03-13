@@ -20,7 +20,7 @@ export class AuthService{
 
   checkAuth(routeConfig:any):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-    return this.http.get(this.checktokenurl+'?token='+token)
+    return this.http.post(this.checkauthurl+'?token='+token,routeConfig,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
@@ -28,7 +28,7 @@ export class AuthService{
 
   checkToken():Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-    return this.http.post(this.checkauthurl+'?token='+token, routeConfig, {headers: this.headers})
+    return this.http.get(this.checktokenurl+'?token='+token)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)

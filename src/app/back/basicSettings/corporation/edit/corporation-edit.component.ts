@@ -233,9 +233,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
       data=>{
         this.apiResultService.result(data);
         if(data.status==0){
-          //this.missionService.change.emit(new AlertData('success','保存成功'));
-          //this.toastr.success('保存成功!', 'Success!');
-          this.router.navigate(['../'],{relativeTo:this.route});
+          this.router.navigate(['../list'],{relativeTo:this.route});
         }
       },
       error=>{

@@ -130,6 +130,7 @@ import '@progress/kendo-angular-intl/locales/zh/calendar';
 import {RoleEditComponent} from "./back/auth/role/edit/role-edit.component";
 
 import {AuthGuard} from './back/main/authGuard.service';
+import {TokenGuard} from './back/main/tokenGuard.service';
 
 
 @NgModule({
@@ -265,7 +266,8 @@ import {AuthGuard} from './back/main/authGuard.service';
       provide:LOCALE_ID,useValue:'zh-CN'
     },
     MouseWheel,
-    AuthGuard
+    AuthGuard,
+    TokenGuard
   ],
   bootstrap: [AppComponent]
 })

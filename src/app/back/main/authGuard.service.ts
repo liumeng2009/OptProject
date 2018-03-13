@@ -63,34 +63,14 @@ export class AuthGuard implements CanActivate{
     return this.authService.checkAuth({func:func,op:op}).then(
       data=>{
         let result=this.apiResultService.result(data);
-        if(result&&result.status){
-          if(result.status==0){
-            return true;
-          }
-          else if(result.status==10001||result.status==10003){
-            //token都不符合
-            this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));
-            setTimeout(()=>{
-              let urlTree=this.router.parseUrl(this.router.url);
-              let queryParams=urlTree.queryParams;
-              let rememberUrl=this.rememberUrl();
-              if(queryParams.redirectTo){
-
-              }
-              else{
-                queryParams.redirectTo=rememberUrl;
-              }
-              this.router.navigate(['/login'],{queryParams:queryParams});
-            },2000);
-          }
-          else if(result.status==40010){
-            //token没有权限
-            this.missionService.change.emit(new AlertData('danger',data.message+'没有访问权限！'));
-            this.router.navigate(['./needtoken'],{relativeTo:this.route});
-          }
-          else{
-
-          }
+        if(result&&result.status==0){
+          console.log(func+op+'可以进入');
+          return true;
+        }
+        else{
+          //token没有权限
+          this.missionService.change.emit(new AlertData('danger',data.message+'没有访问权限！'));
+          this.router.navigate(['./needtoken'],{relativeTo:this.route});
         }
       },
       error=>{
