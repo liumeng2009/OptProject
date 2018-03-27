@@ -31,6 +31,7 @@ import {AddressAddComponent} from '../basicSettings/address/add/address-add.comp
 import {AddressEditComponent} from '../basicSettings/address/edit/address-edit.component';
 
 import {AddComponent} from './add.component'
+import {SwitchService} from "./switchService";
 
 
 @Component({
@@ -60,7 +61,8 @@ export class MainComponent implements OnInit{
     private toastr:ToastsManager,
     private vcr:ViewContainerRef,
     private apiResultService:ApiResultService,
-    private ajaxExceptionService:AjaxExceptionService
+    private ajaxExceptionService:AjaxExceptionService,
+    private switchService:SwitchService
   ){
     this.routerCopy=router;
 
@@ -69,6 +71,8 @@ export class MainComponent implements OnInit{
     let toastrOption={
       showCloseButton:true
     }
+
+    this.switchService.setIsIntoMain(true);
 
     //操作信息的消息接收
     this.mySubscription=missionService.change.subscribe((alertData:AlertData)=>{
@@ -245,8 +249,13 @@ export class MainComponent implements OnInit{
           console.log(data);
           let result=this.apiResultService.result(data);
           if(result&&result.status==0){
-              this.user =result.data;
-              this.fixRouteConfig(result.data.role.auths);
+            this.user =result.data;
+            this.switchService.setUser(this.user);
+            //console.log('更新存储的身份信息');
+            setTimeout(()=>{
+              this.missionService.hasAuth.emit('hasauth');
+            },0)
+            this.fixRouteConfig(result.data.role.auths);
           }
         },
         error=>{

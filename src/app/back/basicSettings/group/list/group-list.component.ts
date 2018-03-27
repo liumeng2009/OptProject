@@ -16,6 +16,7 @@ import {MissionService} from '../../../main/mission.service';
 import {ApiResultService} from '../../../main/apiResult.service';
 import {AjaxExceptionService} from "../../../main/ajaxExceptionService";
 import {ResultFunc} from "rxjs/observable/GenerateObservable";
+import {SwitchService} from "../../../main/switchService";
 
 
 @Component({
@@ -62,12 +63,68 @@ export class GroupListComponent implements OnInit{
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
     private dialogService:DialogService,
-    private missionService:MissionService
+    private missionService:MissionService,
+    private switchService:SwitchService
   ){};
 
   ngOnInit(){
-    this.height=(window.document.body.clientHeight-70-56-50-20-20);
+    this.auth();
+    this.height=(window.document.body.clientHeight-70-56-50-20-27);
     this.getData(1);
+  }
+
+  //从user对象中，找出对应该页面的auths数组
+  private subscription;
+  private pageAuths=[];
+  private showAddBtn:boolean=false;
+  private showListEditBtn:boolean=false;
+  private showListDeleteBtn:boolean=false;
+  private auth(){
+    let user=this.switchService.getUser();
+    if(user){
+      //main组件早已经加载完毕的情况
+      this.pageAuths=this.initAuth('group');
+      this.initComponentAuth();
+    }
+    else{
+      //和main组件一同加载的情况
+      this.subscription=this.missionService.hasAuth.subscribe(()=>{
+        this.pageAuths=this.initAuth('group');
+        this.initComponentAuth();
+      });
+    }
+  }
+  private initAuth(functioncode){
+    let resultArray=[];
+    let user=this.switchService.getUser();
+    if(user&&user.role&&user.role.auths){
+      let auths=user.role.auths;
+      console.log(auths);
+      for(let auth of auths){
+        if(auth.opInFunc
+          &&auth.opInFunc.function
+          &&auth.opInFunc.function.code
+          &&auth.opInFunc.function.code==functioncode
+        ){
+          resultArray.push(auth);
+        }
+      }
+    }
+    return resultArray;
+  }
+  //根据auth数组，判断页面一些可操作组件的可用/不可用状态
+  private initComponentAuth(){
+    for(let auth of this.pageAuths){
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='add'){
+        this.showAddBtn=true;
+      }
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
+        this.showListEditBtn=true;
+      }
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='delete'){
+        this.showListDeleteBtn=true;
+      }
+    }
   }
 
   private getData(pageid){

@@ -8,8 +8,8 @@
 
     <kendo-grid-column field="id" title="选取成为运维工程师">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <input type="checkbox" class="k-checkbox" id="{{dataItem.id}}" [(ngModel)]="dataItem.worker" (change)="clickChange($event)" >
-        <label class="k-checkbox-label" for="{{dataItem.id}}"></label>
+        <input type="checkbox" *ngIf="showAddChk" class="k-checkbox" id="{{dataItem.id}}" [(ngModel)]="dataItem.worker" (change)="clickChange($event)" >
+        <label class="k-checkbox-label" *ngIf="showAddChk" for="{{dataItem.id}}"></label>
       </ng-template>
     </kendo-grid-column>
 

@@ -6,7 +6,7 @@
     [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
 
     <ng-template kendoGridToolbarTemplate>
-      <button kendoButton  (click)="add()" [primary]="true">新增</button>
+      <button kendoButton  (click)="add()" [primary]="true" *ngIf="showAddBtn">新增</button>
 
       <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
         <span style="color:green" class="k-icon k-i-refresh"></span>
@@ -19,18 +19,18 @@
         {{column.title}}
         <span #anchor class="k-icon k-i-gear" style="color:green;cursor:pointer;font-size:14px;line-height:13px;" (click)="configTypeToggle()"></span>
         <kendo-popup #popup [anchor]="anchor" popupClass="content" *ngIf="show">
-          <div style="width: 200px;">
+          <div style="width: 200px;max-height:300px;overflow-y: scroll;">
             <form class="k-form" #typeForm="ngForm">
               <fieldset>
                 <legend>类型列表</legend>
                 <table class="table table-hover">
                   <tr *ngFor="let et of equiptypes">
                     <td>{{et.name}}</td>
-                    <td><button type="button" class="k-button" (click)="deletetype(et.id)">删除</button></td>
+                    <td  *ngIf="showListEditBtn"><button type="button" class="k-button" (click)="deletetype(et.id)">删除</button></td>
                   </tr>
                 </table>
               </fieldset>
-              <fieldset>
+              <fieldset *ngIf="showListEditBtn">
                 <legend>新增类型</legend>
                 <label class="k-form-field">
                   <span>类型名称：<span class="k-required">*</span></span>
@@ -94,11 +94,11 @@
                 <table class="table table-hover">
                   <tr *ngFor="let eo of equipops">
                     <td>{{eo.name}}</td>
-                    <td><button type="button" class="k-button" (click)="deleteop(eo.id)">删除</button></td>
+                    <td  *ngIf="showListEditBtn"><button type="button" class="k-button" (click)="deleteop(eo.id)">删除</button></td>
                   </tr>
                 </table>
               </fieldset>
-              <fieldset>
+              <fieldset  *ngIf="showListEditBtn">
                 <legend>新增故障</legend>
                 <label class="k-form-field">
                   <span>故障名称：<span class="k-required">*</span></span>
@@ -136,8 +136,9 @@
 
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-        <button kendoButton (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
-        <button kendoButton (click)="deleteRow(dataItem.id)" >删除</button>
+        <button kendoButton (click)="editRow(dataItem.id)" *ngIf="showListEditBtn" [primary]="true">编辑</button>
+        <button kendoButton (click)="editRow(dataItem.id)" *ngIf="!showListEditBtn" [primary]="true">查看</button>
+        <button kendoButton (click)="deleteRow(dataItem.id)"  *ngIf="showListDeleteBtn" >删除</button>
       </ng-template>
     </kendo-grid-column>
 

@@ -1,6 +1,6 @@
 import {Component,OnInit,ViewContainerRef} from '@angular/core';
 import {Location} from '@angular/common';
-import {Router} from '@angular/router';
+import {Router,ActivatedRoute} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 
 @Component({
@@ -11,16 +11,29 @@ import {Title} from '@angular/platform-browser';
 
 export class NoAuthComponent implements OnInit{
 
+  private second:number=5;
   constructor(
     private title:Title,
-    private lo:Location
+    private router:Router,
+    private route:ActivatedRoute
   ){
 
   };
   ngOnInit(){
     this.title.setTitle('没有权限访问该页面');
+    this.goSecond();
   }
-  private goBack(){
-    this.lo.back();
+
+  private goSecond(){
+    setInterval(()=>{
+      this.second--;
+      if(this.second==0){
+        this.router.navigate(['../admin/total'],{relativeTo:this.route});
+      }
+    },1000);
+  }
+
+  private goMain(){
+    this.router.navigate(['../admin/total'],{relativeTo:this.route});
   }
 }

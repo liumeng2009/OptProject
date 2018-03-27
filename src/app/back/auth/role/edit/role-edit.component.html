@@ -62,8 +62,7 @@
           </div>
 
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!roleForm.form.valid">提交</button>
-            <button class="k-button">重置</button>
+            <button class="k-button k-primary" *ngIf="showSaveBtn" [disabled]="!roleForm.form.valid">提交</button>
           </div>
         </form>
       </div>

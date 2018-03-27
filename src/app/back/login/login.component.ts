@@ -12,6 +12,7 @@ import {LoginService} from './login.service'
 import {OptConfig} from "../../config/config";
 import {environment} from "../../../environments/environment";
 import {MissionService} from "../main/mission.service";
+import {SwitchService} from "../main/switchService";
 
 @Component({
   selector:'login-area',
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit{
     private title:Title,
     private toastr:ToastsManager,
     private vcr:ViewContainerRef,
-    private missionService:MissionService
+    private missionService:MissionService,
+    private switchService:SwitchService
   ){
     this.toastr.setRootViewContainerRef(vcr);
   };
@@ -40,6 +42,7 @@ export class LoginComponent implements OnInit{
   ngOnInit(){
     //告诉main组件，不要显示toast了
     this.missionService.remove.emit('remove');
+    this.switchService.setIsIntoMain(false);
     this.title.setTitle('登录');
   }
 

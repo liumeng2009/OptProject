@@ -24,8 +24,8 @@
             </kendo-numerictextbox>
           </label>
           <div class="text-left">
-            <button type="submit" class="k-button k-primary" [disabled]="!buildingForm.form.valid">提交</button>
-            <button type="reset" class="k-button">重置</button>
+            <button type="submit" *ngIf="showEditBtn" class="k-button k-primary" [disabled]="!buildingForm.form.valid">提交</button>
+            <button type="reset" *ngIf="showEditBtn" class="k-button">重置</button>
           </div>
         </form>
       </div>

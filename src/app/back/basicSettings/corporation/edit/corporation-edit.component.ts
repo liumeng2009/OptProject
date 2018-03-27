@@ -72,7 +72,8 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     private corpBuildingService:CorpBuildingService,
     private addressService:AddressService,
     private dialogService:DialogService,
-    private switchService:SwitchService
+    private switchService:SwitchService,
+    private missionService:MissionService
   ){
 
   }
@@ -96,6 +97,8 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
   }
 
   ngOnInit(){
+    this.auth();
+
     this.route.params.subscribe((params: Params) =>{
       this.getData(params.id);
     })
@@ -114,6 +117,65 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     this.positions.push(posSouth);
     this.positions.push(posNorth);
   }
+
+
+  //从user对象中，找出对应该页面的auths数组
+  private subscription;
+  private pageAuths=[];
+  private showEditBtn:boolean=false;
+  //表单内部的grid
+  private showListAddBtn:boolean=false;
+  private showListEditBtn:boolean=false;
+  private showListDeleteBtn:boolean=false;
+  private auth(){
+    let user=this.switchService.getUser();
+    if(user){
+      //main组件早已经加载完毕的情况
+      this.pageAuths=this.initAuth('corporation');
+      this.initComponentAuth();
+    }
+    else{
+      //和main组件一同加载的情况
+      this.subscription=this.missionService.hasAuth.subscribe(()=>{
+        this.pageAuths=this.initAuth('corporation');
+        this.initComponentAuth();
+      });
+    }
+  }
+  private initAuth(functioncode){
+    let resultArray=[];
+    let user=this.switchService.getUser();
+    if(user&&user.role&&user.role.auths){
+      let auths=user.role.auths;
+      console.log(auths);
+      for(let auth of auths){
+        if(auth.opInFunc
+          &&auth.opInFunc.function
+          &&auth.opInFunc.function.code
+          &&auth.opInFunc.function.code==functioncode
+        ){
+          resultArray.push(auth);
+        }
+      }
+    }
+    return resultArray;
+  }
+  //根据auth数组，判断页面一些可操作组件的可用/不可用状态
+  private initComponentAuth(){
+    for(let auth of this.pageAuths){
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
+        this.showEditBtn=true;
+        this.showListEditBtn=true;
+        this.showListAddBtn=true;
+      }
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='delete'){
+        this.showListDeleteBtn=true;
+      }
+    }
+  }
+
+
+
   private setGroupData(){
     this.isLoading=true;
     this.groupService.getGroupList(null)
@@ -171,7 +233,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
       );
   }
 
-  private buildingChange(event){
+  private buildingChange(event,rowIndex){
     this.floors.splice(0,this.floors.length);
     let minfloor=event.minfloor;
     let maxfloor=event.maxfloor;
@@ -181,6 +243,9 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
       let floor=new Floor(i.toString(),i);
       this.floors.push(floor);
     }
+    this.corpBuildings[rowIndex].floor=this.floors[0];
+
+
   }
 
   private setCorpBuildingData(){
@@ -192,6 +257,35 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
           if(this.apiResultService.result(data)) {
             this.corpBuildings= this.apiResultService.result(data).data;
             console.log(this.corpBuildings);
+
+            //处理一下floor和building的格式
+            for(let cb of this.corpBuildings){
+              let floorNum=cb.floor;
+              let floorObj=new Floor(floorNum.toString(),parseInt(floorNum.toString()));
+              cb.floor=floorObj;
+
+              switch(cb.position.toString()){
+                case 'A':
+                  cb.position=new Position('全部区域',cb.position.toString());
+                  break;
+                case 'E':
+                  cb.position=new Position('东区',cb.position.toString());
+                  break;
+                case 'S':
+                  cb.position=new Position('南区',cb.position.toString());
+                  break;
+                case 'W':
+                  cb.position=new Position('西区',cb.position.toString());
+                  break;
+                case 'N':
+                  cb.position=new Position('北区',cb.position.toString());
+                  break;
+                default:
+                  cb.position=new Position('全部区域',cb.position.toString());
+                  break;
+
+              }
+            }
           }
           this.isCorpBuildingLoading=false;
         },
@@ -267,8 +361,8 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     if(this.buildings.length>0){
       let floor=new Floor('全部',0);
       this.floors.push(floor);
-      let minfloor=this.buildings[0].minfloor;
-      let maxfloor=this.buildings[0].maxfloor;
+      let minfloor=dataItem.building.minfloor;
+      let maxfloor=dataItem.building.maxfloor;
       for(var i=minfloor;i<maxfloor+1;i++){
         let floor=new Floor(i.toString(),i);
         this.floors.push(floor);
@@ -279,27 +373,27 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     this.closeEditor(sender);
 
     let floorObj;
-    if(dataItem.floor==0){
+    if(dataItem.floor.value==0){
       floorObj=new Floor('全部',0);
     }
     else{
-      floorObj=new Floor(dataItem.floor.toString(),dataItem.floor);
+      floorObj=new Floor(dataItem.floor.name.toString(),dataItem.floor.value);
     }
 
     let positionObj;
-    if(dataItem.position=='A'){
+    if(dataItem.position.value=='A'){
       positionObj=new Position('全部区域','A')
     }
-    else if(dataItem.position=='E'){
+    else if(dataItem.position.value=='E'){
       positionObj=new Position('东区','E')
     }
-    else if(dataItem.position=='S'){
+    else if(dataItem.position.value=='S'){
       positionObj=new Position('南区','S')
     }
-    else if(dataItem.position=='W'){
+    else if(dataItem.position.value=='W'){
       positionObj=new Position('西区','W')
     }
-    else if(dataItem.position=='N'){
+    else if(dataItem.position.value=='N'){
       positionObj=new Position('北区','N')
     }
     else{

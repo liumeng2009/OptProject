@@ -12,6 +12,8 @@ import {User} from "../../../../bean/user";
 import {Gender} from "../../../../bean/gender";
 import {Role} from "../../../../bean/role";
 import {RoleService} from "../../role/role.service";
+import {SwitchService} from "../../../main/switchService";
+import {MissionService} from "../../../main/mission.service";
 
 @Component({
   selector:'user-edit',
@@ -35,17 +37,66 @@ export class UserEditComponent implements OnInit{
     private router:Router,
     private route:ActivatedRoute,
     private apiResultService:ApiResultService,
-    private ajaxExceptionService:AjaxExceptionService
+    private ajaxExceptionService:AjaxExceptionService,
+    private switchService:SwitchService,
+    private missionService:MissionService
   ){
 
   };
 
 
   ngOnInit(){
+    this.auth();
     this.initRoles();
     this.route.params.subscribe((params: Params) =>{
       this.getData(params.id);
     })
+  }
+
+  //从user对象中，找出对应该页面的auths数组
+  private subscription;
+  private pageAuths=[];
+  private showSaveBtn:boolean=false;
+  private auth(){
+    let user=this.switchService.getUser();
+    if(user){
+      //main组件早已经加载完毕的情况
+      this.pageAuths=this.initAuth('user');
+      this.initComponentAuth();
+    }
+    else{
+      //和main组件一同加载的情况
+      this.subscription=this.missionService.hasAuth.subscribe(()=>{
+        this.pageAuths=this.initAuth('user');
+        this.initComponentAuth();
+      });
+    }
+  }
+  private initAuth(functioncode){
+    let resultArray=[];
+    let user=this.switchService.getUser();
+    if(user&&user.role&&user.role.auths){
+      let auths=user.role.auths;
+      console.log(auths);
+      for(let auth of auths){
+        if(auth.opInFunc
+          &&auth.opInFunc.function
+          &&auth.opInFunc.function.code
+          &&auth.opInFunc.function.code==functioncode
+        ){
+          resultArray.push(auth);
+        }
+      }
+    }
+    return resultArray;
+  }
+  //根据auth数组，判断页面一些可操作组件的可用/不可用状态
+  private initComponentAuth(){
+    for(let auth of this.pageAuths){
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
+        this.showSaveBtn=true;
+      }
+    }
   }
 
   private getData(id:string){

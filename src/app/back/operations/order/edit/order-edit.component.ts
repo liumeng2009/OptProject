@@ -23,6 +23,7 @@ import {GroupService} from "../../../basicSettings/group/group.service";
 import {Group} from "../../../../bean/group";
 import {LmTime} from "../../../components/lmtimepicker/lmtime";
 import {OperationService} from "../../operations.service";
+import {SwitchService} from "../../../main/switchService";
 
 @Component({
   selector:'order-edit',
@@ -47,15 +48,81 @@ export class OrderEditComponent implements OnInit{
     private corporationService:CorporationService,
     private corpBuildingService:CorpBuildingService,
     private dialogService:DialogService,
-    private operationService:OperationService
+    private operationService:OperationService,
+    private switchService:SwitchService,
+    private missionService:MissionService
   ){
   };
 
 
   ngOnInit(){
+    this.auth();
     this.route.params.subscribe((params: Params) =>{
       this.getData(params.id);
     })
+  }
+
+  //从user对象中，找出对应该页面的auths数组
+  private subscription;
+  private pageAuths=[];
+  private pageChildrenAuths=[];
+  private showSaveBtn:boolean=false;
+  private showChildrenAddBtn:boolean=false;
+  private showChildrenListEditBtn:boolean=false;
+  private showChildrenListDeleteBtn:boolean=false;
+  private auth(){
+    let user=this.switchService.getUser();
+    if(user){
+      //main组件早已经加载完毕的情况
+      this.pageAuths=this.initAuth('order');
+      this.pageChildrenAuths=this.initAuth('operation');
+      this.initComponentAuth();
+    }
+    else{
+      //和main组件一同加载的情况
+      this.subscription=this.missionService.hasAuth.subscribe(()=>{
+        this.pageAuths=this.initAuth('order');
+        this.pageChildrenAuths=this.initAuth('operation');
+        this.initComponentAuth();
+      });
+    }
+  }
+  private initAuth(functioncode){
+    let resultArray=[];
+    let user=this.switchService.getUser();
+    if(user&&user.role&&user.role.auths){
+      let auths=user.role.auths;
+      console.log(auths);
+      for(let auth of auths){
+        if(auth.opInFunc
+          &&auth.opInFunc.function
+          &&auth.opInFunc.function.code
+          &&auth.opInFunc.function.code==functioncode
+        ){
+          resultArray.push(auth);
+        }
+      }
+    }
+    return resultArray;
+  }
+  //根据auth数组，判断页面一些可操作组件的可用/不可用状态
+  private initComponentAuth(){
+    for(let auth of this.pageAuths){
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
+        this.showSaveBtn=true;
+      }
+    }
+    for(let auth of this.pageChildrenAuths){
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='add'){
+        this.showChildrenAddBtn=true;
+      }
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
+        this.showChildrenListEditBtn=true;
+      }
+      if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='delete'){
+        this.showChildrenListDeleteBtn=true;
+      }
+    }
   }
 
   private groupLoading:boolean=false;
@@ -115,7 +182,7 @@ export class OrderEditComponent implements OnInit{
   private initCorpBuilding(callback){
     this.corpBuildingLoading=true;
     this.corpBuildings.splice(0,this.corpBuildings.length);
-    this.corpBuildingService.getCorporationList(this.order.corporation).then(
+    this.corpBuildingService.getCorporationList(this.order.corporation.id).then(
       data=>{
         this.corpBuildingLoading=false;
         let result=this.apiResultService.result(data);
@@ -229,9 +296,9 @@ export class OrderEditComponent implements OnInit{
           this.initGroup(()=>{
             this.order.group=result.data.corporation.groupId;
             this.initCorporation(()=>{
-              this.order.corporation=result.data.corporation.id;
+              this.order.corporation=result.data.corporation;
               this.initCorpBuilding(()=>{
-                this.order.custom_position=result.data.corpBuilding.id;
+                this.order.custom_position=result.data.corpBuilding;
               })
             });
           });
@@ -271,6 +338,71 @@ export class OrderEditComponent implements OnInit{
 
   private onTimeChange($event){
 
+  }
+  private onGroupChange($event){
+    this.corporationLoading=true;
+    this.corporations.splice(0,this.corporations.length);
+    this.corporationService.getCorporationList(null,this.order.group).then(
+      data=>{
+        this.corporationLoading=false;
+        let result=this.apiResultService.result(data);
+        console.log(result);
+        if(result.status==0){
+          for(let data of result.data){
+            let corp=new Corporation(data.id,data.name,data.description,data.group,data.status);
+            this.corporations.push(corp);
+          }
+          this.order.corporation=this.corporations[0];
+          this.onCorporationChange(null);
+        }
+      },
+      error=>{
+        this.corporationLoading=false;
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+  }
+  private onCorporationChange($event){
+    this.corpBuildingLoading=true;
+    this.corpBuildings.splice(0,this.corpBuildings.length);
+    this.corpBuildingService.getCorporationList(this.order.corporation.id).then(
+      data=>{
+        this.corpBuildingLoading=false;
+        let result=this.apiResultService.result(data);
+        console.log(result);
+        if(result.status==0){
+          for(let d of result.data){
+            switch(d.position){
+              case 'E':
+                d.position='东';
+                break;
+              case 'W':
+                d.position='西';
+                break;
+              case 'S':
+                d.position='南';
+                break;
+              case 'N':
+                d.position='北';
+                break;
+              case 'A':
+                d.position='全部';
+                break;
+              default:
+                d.position='不明确'
+            }
+
+            let corpBuild=new CorpBuilding(d.id,d.corporationId,d.building,d.floor,d.position,d.status,(d.building?d.building.name:null)+d.floor+'层'+d.position);
+            this.corpBuildings.push(corpBuild);
+          }
+        }
+        this.order.custom_position=this.corpBuildings[0];
+      },
+      error=>{
+        this.corpBuildingLoading=false;
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
   }
 
   private add(){

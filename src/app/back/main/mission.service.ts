@@ -7,11 +7,13 @@ export class MissionService {
   remove:EventEmitter<string>;
   showActionDialog:EventEmitter<string>;
   showAddProcess:EventEmitter<string>;
+  hasAuth:EventEmitter<string>;
 
   constructor(){
     this.change = new EventEmitter();
     this.remove=new EventEmitter();
     this.showActionDialog=new EventEmitter();
     this.showAddProcess=new EventEmitter();
+    this.hasAuth=new EventEmitter();
   }
 }

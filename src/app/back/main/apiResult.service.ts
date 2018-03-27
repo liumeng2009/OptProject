@@ -14,7 +14,8 @@ import {MissionService} from './mission.service';
 export class ApiResultService {
   constructor(
     private missionService:MissionService,
-    private router:Router
+    private router:Router,
+    private location:Location
   ){
 
   }
@@ -26,6 +27,12 @@ export class ApiResultService {
       }
       return data;
     }
+    else if(data.status==10003||data.status==10001){
+      this.missionService.change.emit(new AlertData('danger',data.message+'即将跳转到登录页面！'));
+      setTimeout(()=>{
+        this.gotoLoginPage();
+      },2000)
+    }
 /*    else if(data.status==500){
       this.missionService.change.emit(new AlertData('danger',new OptConfig().unknownError));
     }*/
@@ -33,4 +40,28 @@ export class ApiResultService {
       this.missionService.change.emit(new AlertData('danger',data.message));
     }
   }
+  private rememberUrl(){
+    let url=this.location.path();
+    return url;
+  }
+  private gotoLoginPage(){
+    //this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));
+    let urlTree=this.router.parseUrl(this.router.url);
+    let queryParams=urlTree.queryParams;
+    let rememberUrl=this.rememberUrl();
+    if(queryParams.redirectTo){
+
+    }
+    else{
+      queryParams.redirectTo=rememberUrl;
+    }
+    if(queryParams.redirectTo!=''&&queryParams.redirectTo.indexOf('login')<0){
+      this.router.navigate(['/login'],{queryParams:queryParams});
+    }
+    else{
+      this.router.navigate(['/login']);
+    }
+  }
+
+
 }

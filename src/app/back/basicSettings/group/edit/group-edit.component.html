@@ -8,7 +8,7 @@
     <input id="description" class="k-textbox" value="" placeholder="组织描述" required [(ngModel)]="group.description" name="description" />
   </label>
   <div class="text-left">
-    <button class="k-button k-primary" type="submit" [disabled]="!groupForm.form.valid">提交</button>
-    <button class="k-button" type="reset">重置</button>
+    <button class="k-button k-primary" *ngIf="showEditBtn" type="submit" [disabled]="!groupForm.form.valid">提交</button>
+    <button class="k-button" type="reset"  *ngIf="showEditBtn">重置</button>
   </div>
 </form>

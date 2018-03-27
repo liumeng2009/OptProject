@@ -44,7 +44,7 @@
                 [valueField]="'id'"
                 [(ngModel)]="order.group"
                 [valuePrimitive]="true"
-                (valueChange)="initCorporation($event)"
+                (valueChange)="onGroupChange($event)"
               >
               </kendo-dropdownlist>
               <span class="k-icon k-i-loading loading loading-position" *ngIf="groupLoading"></span>
@@ -57,8 +57,7 @@
                 [textField]="'name'"
                 [valueField]="'id'"
                 [(ngModel)]="order.corporation"
-                [valuePrimitive]="true"
-                (valueChange)="initCorpBuilding($event)"
+                (valueChange)="onCorporationChange($event)"
               >
               </kendo-dropdownlist>
               <span class="k-icon k-i-loading loading loading-position" *ngIf="corporationLoading"></span>
@@ -92,7 +91,7 @@
             <kendo-grid [data]="operations" [scrollable]="virtual">
 
               <ng-template kendoGridToolbarTemplate>
-                <button kendoButton type="button"  (click)="add()" [primary]="true">新增</button>
+                <button kendoButton type="button" *ngIf="showChildrenAddBtn"  (click)="add()" [primary]="true">新增</button>
 
                 <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
                   <span style="color:green" class="k-icon k-i-refresh"></span>
@@ -126,8 +125,9 @@
 
                 </ng-template>
                 <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                  <button kendoButton type="button" (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
-                  <button kendoButton type="button" (click)="deleteRow(dataItem.id)" >删除</button>
+                  <button kendoButton type="button" *ngIf="showChildrenListEditBtn" (click)="editRow(dataItem.id)" [primary]="true">编辑</button>
+                  <button kendoButton type="button" *ngIf="!showChildrenListEditBtn" (click)="editRow(dataItem.id)" [primary]="true">查看</button>
+                  <button kendoButton type="button" *ngIf="showChildrenListDeleteBtn" (click)="deleteRow(dataItem.id)" >删除</button>
                 </ng-template>
               </kendo-grid-column>
 
@@ -144,8 +144,7 @@
 
 
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!orderForm.form.valid">提交</button>
-            <button class="k-button">重置</button>
+            <button class="k-button k-primary" *ngIf="showSaveBtn" [disabled]="!orderForm.form.valid">提交</button>
           </div>
         </form>
       </div>

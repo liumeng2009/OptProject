@@ -35,7 +35,7 @@
             >
 
               <ng-template kendoGridToolbarTemplate>
-                <button kendoGridAddCommand type="button" >新增</button>
+                <button kendoGridAddCommand type="button" class="k-primary"  *ngIf="showListAddBtn" >新增</button>
                 <button kendoButton type="button" style="float:right" class="k-button"  (click)="refreshCorpBuilding()" title="刷新数据">
                   <span style="color:green" class="k-icon k-i-refresh"></span>
                 </button>
@@ -48,6 +48,7 @@
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
+                             let-rowIndex="rowIndex"
                              let-formGroup="formGroup"
                 >
                   <kendo-dropdownlist
@@ -56,7 +57,7 @@
                     valueField="id"
                     [(ngModel)]="dataItem.buildingId"
                     name="buildingId"
-                    (selectionChange)="buildingChange($event)"
+                    (selectionChange)="buildingChange($event,rowIndex)"
                     [formControl]="formGroup.get('buildingId')"
                   >
 
@@ -66,7 +67,7 @@
 
               <kendo-grid-column field="floor" title="楼层">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  {{dataItem.floor==0?'全部':dataItem.floor}}
+                  {{dataItem.floor.value==0?'全部':dataItem.floor.name}}
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
@@ -88,11 +89,7 @@
 
               <kendo-grid-column field="position" title="所在楼层区域">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  <span *ngIf="dataItem.position=='A'">全部区域</span>
-                  <span *ngIf="dataItem.position=='E'">东区</span>
-                  <span *ngIf="dataItem.position=='S'">南区</span>
-                  <span *ngIf="dataItem.position=='W'">西区</span>
-                  <span *ngIf="dataItem.position=='N'">北区</span>
+                  {{dataItem.position.name}}
                 </ng-template>
                 <ng-template kendoGridEditTemplate
                              let-dataItem="dataItem"
@@ -112,10 +109,10 @@
 
               <kendo-grid-command-column title="操作" width="220">
                 <ng-template kendoGridCellTemplate let-isNew="isNew">
-                  <button type="button" kendoGridEditCommand class="k-primary">编辑</button>
-                  <button type="button" kendoGridRemoveCommand>删除</button>
-                  <button type="button" class="k-primary" kendoGridSaveCommand [disabled]="formGroup?.invalid">{{ isNew ? '保存' : '更新' }}</button>
-                  <button type="button" kendoGridCancelCommand>{{ isNew ? '取消' : '取消' }}</button>
+                  <button type="button" *ngIf="showListEditBtn" kendoGridEditCommand class="k-primary">编辑</button>
+                  <button type="button" *ngIf="showListDeleteBtn" kendoGridRemoveCommand>删除</button>
+                  <button type="button" *ngIf="showListEditBtn" class="k-primary" kendoGridSaveCommand [disabled]="formGroup?.invalid">{{ isNew ? '保存' : '更新' }}</button>
+                  <button type="button" *ngIf="showListEditBtn" kendoGridCancelCommand>{{ isNew ? '取消' : '取消' }}</button>
                 </ng-template>
               </kendo-grid-command-column>
               <ng-template kendoGridNoRecordsTemplate>
@@ -125,8 +122,8 @@
           </div>
 
           <div class="text-left">
-            <button class="k-button k-primary" type="submit" (click)="onSubmit()" [disabled]="!corporationForm.form.valid">提交</button>
-            <button class="k-button" type="reset">重置</button>
+            <button class="k-button k-primary" *ngIf="showEditBtn" type="submit" [disabled]="!corporationForm.form.valid">提交</button>
+            <button class="k-button" *ngIf="showEditBtn" type="reset">重置</button>
           </div>
         </form>
       </div>

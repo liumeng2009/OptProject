@@ -50,8 +50,7 @@
             <input id="email" class="k-textbox"  placeholder="电子邮箱" [(ngModel)]="user.email" name="email" />
           </label>
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!userForm.form.valid">提交</button>
-            <button class="k-button">重置</button>
+            <button class="k-button k-primary" *ngIf="showSaveBtn" [disabled]="!userForm.form.valid">提交</button>
           </div>
         </form>
       </div>

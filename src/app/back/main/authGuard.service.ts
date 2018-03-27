@@ -11,6 +11,7 @@ import {AjaxExceptionService} from "./ajaxExceptionService";
 import {ApiResultService} from "./apiResult.service";
 import {AlertData} from "../../bean/alertData";
 import {MissionService} from "./mission.service";
+import {SwitchService} from "./switchService";
 
 @Injectable()
 export class AuthGuard implements CanActivate{
@@ -22,7 +23,8 @@ export class AuthGuard implements CanActivate{
     private router:Router,
     private route:ActivatedRoute,
     private missionService:MissionService,
-    private location:Location
+    private location:Location,
+    private switchService:SwitchService
   ){
 
   }
@@ -53,7 +55,7 @@ export class AuthGuard implements CanActivate{
       case ':id':
         //编辑
         func=route.parent.routeConfig.path;
-        op='edit';
+        op='list';
         break;
       default:
         func=route.routeConfig.path;
@@ -68,14 +70,23 @@ export class AuthGuard implements CanActivate{
           return true;
         }
         else{
+          let isIntoMain=this.switchService.getIsIntoMain();
+          if(isIntoMain){
+
+          }
+          else{
+            //需要一个额外的提示了
+            this.router.navigate(['./needtoken'],{relativeTo:this.route});
+          }
           //token没有权限
-          this.missionService.change.emit(new AlertData('danger',data.message+'没有访问权限！'));
-          this.router.navigate(['./needtoken'],{relativeTo:this.route});
+          //this.missionService.change.emit(new AlertData('danger',data.message+'没有访问权限！'));
+          //this.router.navigate(['./needtoken'],{relativeTo:this.route});
         }
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
-        this.router.navigate(['./needtoken'],{relativeTo:this.route});
+        //this.missionService.change.emit(new AlertData('danger',data.message+'没有访问权限！'));
+        //this.router.navigate(['./needtoken'],{relativeTo:this.route});
       }
     )
   }

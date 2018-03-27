@@ -106,7 +106,7 @@
 
 
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!businessForm.form.valid||oneChecked">提交</button>
+            <button class="k-button k-primary" *ngIf="showSaveBtn" [disabled]="!businessForm.form.valid||oneChecked">提交</button>
           </div>
         </form>
       </div>

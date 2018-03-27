@@ -28,7 +28,7 @@ export class TokenGuard implements CanActivate{
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
-    return this.authService.checkToken().then(
+/*    return this.authService.checkToken().then(
       data=>{
         console.log(route);
         console.log(state);
@@ -37,14 +37,20 @@ export class TokenGuard implements CanActivate{
             return true;
         }
         else{
-          this.gotoLoginPage(data);
+          console.log('5秒后跳转到login页面');
+          setTimeout(()=>{
+            this.gotoLoginPage(data);
+          },5000);
         }
       },
       error=>{
         this.ajaxExceptionService.simpleOp(error);
-        this.gotoLoginPage('');
+        //this.gotoLoginPage('');
       }
-    )
+    )*/
+
+    return true;
+
   }
 
   private rememberUrl(){
@@ -53,7 +59,7 @@ export class TokenGuard implements CanActivate{
   }
 
   private gotoLoginPage(data){
-    this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));
+    //this.missionService.change.emit(new AlertData('danger',data.message+'需要重新登陆！'));
     let urlTree=this.router.parseUrl(this.router.url);
     let queryParams=urlTree.queryParams;
     let rememberUrl=this.rememberUrl();

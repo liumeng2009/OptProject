@@ -98,7 +98,7 @@
             <span style="font-weight:bolder">进程：</span>
 
             <div>
-              <button class="k-button k-primary " type="button" (click)="addProcess()" >新增进程</button>
+              <button class="k-button k-primary " *ngIf="showAddProcessBtn" type="button" (click)="addProcess()" >新增进程</button>
               <button class="k-button" type="button" (click)="updateProcess()" >刷新</button>
             </div>
             <div #surface [ngStyle]="surfaceHeight">
@@ -109,8 +109,7 @@
 
 
           <div class="text-left">
-            <button class="k-button k-primary" [disabled]="!operationForm.form.valid">提交</button>
-            <button class="k-button">重置</button>
+            <button class="k-button k-primary" *ngIf="showSaveBtn" [disabled]="!operationForm.form.valid">提交</button>
           </div>
         </form>
       </div>
@@ -287,8 +286,8 @@
 
 <ng-template #actionEditDeleteTemplate>
   <button kendoButton (click)="cancelAction()"  >取消</button>
-  <button kendoButton (click)="editAction()" [primary]="true" [icon]="saveActionIcon" [disabled]="isHiddenSaveAction">保存</button>
-  <button kendoButton (click)="deleteAction()" [icon]="deleteActionIcon" [disabled]="isHiddenDeleteAction">
+  <button kendoButton *ngIf="showProcessSaveBtn" (click)="editAction()" [primary]="true" [icon]="saveActionIcon" [disabled]="isHiddenSaveAction">保存</button>
+  <button kendoButton *ngIf="showProcessDeleteBtn" (click)="deleteAction()" [icon]="deleteActionIcon" [disabled]="isHiddenDeleteAction">
     删除
   </button>
 </ng-template>
