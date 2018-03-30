@@ -5,7 +5,7 @@
     [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
 
     <ng-template kendoGridToolbarTemplate>
-      <button kendoButton  (click)="add()" [primary]="true" *ngIf="showAddBtn" >新增</button>
+      <button kendoButton  (click)="add()" [primary]="true" [icon]="'plus'" *ngIf="showAddBtn" ></button>
       <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
         <span style="color:green" class="k-icon k-i-refresh"></span>
       </button>
@@ -67,14 +67,15 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="id" title="操作"  [width]="130">
+    <kendo-grid-column field="id" title="操作"  [width]="150">
       <ng-template kendoGridFilterCellTemplate>
 
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-        <button kendoButton (click)="editRow(dataItem.id)" [primary]="true"  *ngIf="showListEditBtn">编辑</button>
-        <button kendoButton (click)="editRow(dataItem.id)" [primary]="true"  *ngIf="!showListEditBtn">查看</button>
-        <button kendoButton (click)="deleteRow(dataItem.id)"  *ngIf="showListDeleteBtn" >删除</button>
+        <button kendoButton (click)="editRow(dataItem.id)"  [icon]="'edit'"  *ngIf="showListEditBtn"></button>
+        <button kendoButton (click)="editRow(dataItem.id)"  [icon]="'zoom'"  *ngIf="!showListEditBtn"></button>
+        <button kendoButton (click)="deleteRow(dataItem.id)"  [icon]="'delete'"  *ngIf="showListDeleteBtn" ></button>
+        <button kendoButton (click)="print(dataItem.id)" [icon]="'print'"></button>
       </ng-template>
     </kendo-grid-column>
 

@@ -336,8 +336,17 @@ export class OrderEditComponent implements OnInit{
     )
   }
 
-  private onTimeChange($event){
+  private dateChange($event){
+    let dateInfo=$event;
+    let timeInfo=this.time;
+    dateInfo.setHours(timeInfo.hour,timeInfo.minute,timeInfo.second,0);
+    this.order.incoming_date_timestamp=dateInfo.getTime();
+  }
 
+  private onTimeChange($event){
+    let dateInfo=this.today;
+    dateInfo.setHours($event.hour,$event.minute,$event.second,0);
+    this.order.incoming_date_timestamp=dateInfo.getTime();
   }
   private onGroupChange($event){
     this.corporationLoading=true;
