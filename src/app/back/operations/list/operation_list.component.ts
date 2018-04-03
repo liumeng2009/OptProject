@@ -350,6 +350,7 @@ export class OperationListComponent  implements OnInit {
     this.getData(this.skip/this.pageSize+1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
   private print(id){
-    alert(id);
+    //this.operationService.printOperation(id);
+    window.open('http://127.0.0.1:3000/page/operation/3');
   }
 }
