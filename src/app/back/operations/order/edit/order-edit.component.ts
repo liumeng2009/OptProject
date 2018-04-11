@@ -75,14 +75,14 @@ export class OrderEditComponent implements OnInit{
     if(user){
       //main组件早已经加载完毕的情况
       this.pageAuths=this.initAuth('order');
-      this.pageChildrenAuths=this.initAuth('operation');
+      this.pageChildrenAuths=this.initAuth('op');
       this.initComponentAuth();
     }
     else{
       //和main组件一同加载的情况
       this.subscription=this.missionService.hasAuth.subscribe(()=>{
         this.pageAuths=this.initAuth('order');
-        this.pageChildrenAuths=this.initAuth('operation');
+        this.pageChildrenAuths=this.initAuth('op');
         this.initComponentAuth();
       });
     }
@@ -229,6 +229,7 @@ export class OrderEditComponent implements OnInit{
       data=>{
         let result=this.apiResultService.result(data);
         if(result&&result.data){
+          console.log(result);
           this.order.custom_name=result.data.custom_name;
           this.order.custom_phone=result.data.custom_phone;
           this.order.remark=result.data.remark;
