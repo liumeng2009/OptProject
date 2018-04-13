@@ -19,6 +19,9 @@ import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { IntlModule } from '@progress/kendo-angular-intl';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ChartsModule } from '@progress/kendo-angular-charts';
+
+import { QuillModule } from 'ngx-quill'
+
 //验证组件
 import{CustomFormsModule} from 'ng2-validation';
 //toast组件
@@ -213,6 +216,7 @@ import {TokenGuard} from './back/main/tokenGuard.service';
     FormsModule,
     ReactiveFormsModule,
 
+    QuillModule,
 
     BrowserAnimationsModule,
     IntlModule,

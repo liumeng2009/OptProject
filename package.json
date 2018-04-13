@@ -46,7 +46,8 @@
     "ng2-toastr": "^4.1.2",
     "ng2-validation": "^4.2.0",
     "rxjs": "^5.4.2",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "ngx-quill": "1.6.0"
   },
   "devDependencies": {
     "@angular/cli": "1.1.2",
