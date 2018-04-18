@@ -58,3 +58,30 @@ ul.nav{
     float:left;
   }
 }
+
+.avatar{
+  cursor:pointer;
+  img{
+    width: 36px;
+    height: 36px;
+    border-radius: 100%;
+    margin: 7px 10px 7px 10px;
+    border: #ccc 1px solid;
+  }
+  .username{
+    line-height: 50px;
+  }
+  .down{
+
+  }
+}
+.popup{
+  .pop-menu{
+    li{
+      width:100%;
+      padding:4px 10px;
+    }
+  }
+}
+
+

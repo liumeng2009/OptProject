@@ -472,4 +472,14 @@ export class MainComponent implements OnInit{
     }
     window.history.go(historyGo);
   }
+
+  private showUserMenu:boolean=false;
+  private onToggleUserMenu(){
+    if(this.showUserMenu){
+      this.showUserMenu=false;
+    }
+    else{
+      this.showUserMenu=true;
+    }
+  }
 }

@@ -7,27 +7,29 @@
       <li>
         <a class="" href="#">消息</a>
       </li>
-      <li>
-        <a (click)="logout()"  href="javascript:void(0);" title="退出">
-<!--          <span class="glyphicon glyphicon-off "></span>-->
-          切换用户
-        </a>
+      <li #anchor class="avatar" (click)="onToggleUserMenu()" >
+        <img [src]="imageUrl('avata_128')">
+        <span class="username">{{user?.name}}</span>
+        <span class="k-icon k-i-arrow-60-down down"></span>
+        <kendo-popup [popupClass]="'pop-body'" class="popup" *ngIf="showUserMenu" [anchor]="anchor">
+          <span style="display: block">
+            <span class="k-icon k-i-gear"></span>
+            设置
+          </span>
+          <span style="display: block">
+            <span class="k-icon k-i-logout"></span>
+            退出
+          </span>
+        </kendo-popup>
       </li>
     </ul>
+
   </div>
 </nav>
 <div class="container-fluid" *ngIf="user" style="padding-top: 70px;padding-bottom: 50px;">
   <div class="row">
     <div class="col-xs-4 col-sm-4 col-lg-2 col-md-3">
       <div [ngStyle]="topNumber">
-        <div>
-          <div class="teamMate">
-            <img [src]="imageUrl('avata_128')" alt="{{user.name}}">
-                            <span class="mate-info">
-                              <h2>{{user.name}}</h2>
-                            </span>
-          </div>
-        </div>
         <kendo-panelbar (stateChange)="stateChange($event)" [selectable]="false" >
           <kendo-panelbar-item
             *ngFor="let route of (router.config[3].children | urlshow)"
