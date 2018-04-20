@@ -77,11 +77,19 @@ ul.nav{
 }
 .popup{
   .pop-menu{
-    li{
-      width:100%;
-      padding:4px 10px;
+    .pop-menu-per{
+      display: block;
+      padding:8px 15px 8px 10px;
+      i{
+        line-height:14px;
+        margin-right:2px;
+      }
+    }
+    .pop-menu-per:hover{
+      background-color: #eee;
     }
   }
+
 }
 
 

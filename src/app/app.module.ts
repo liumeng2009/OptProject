@@ -71,6 +71,9 @@ import {UserAddComponent} from './back/auth/user/add/user-add.component';
 import {UserEditComponent} from "./back/auth/user/edit/user-edit.component";
 import {UserService} from './back/auth/user/user.service';
 
+import {SettingComponent} from './back/auth/setting/setting.component';
+import {SettingService} from './back/auth/setting/setting.service';
+
 import {WorkerComponent} from './back/basicSettings/worker/worker.component';
 import {WorkerService} from './back/basicSettings/worker/worker.service';
 
@@ -88,6 +91,7 @@ import {OrderService} from './back/operations/order/order.service';
 
 import {FunctionComponent} from './back/auth/fucntion/function.component';
 import {FunctionListComponent} from './back/auth/fucntion/list/function-list.component';
+import {FunctionAddComponent} from './back/auth/fucntion/add/function-add.component';
 import {FunctionService} from "./back/auth/fucntion/function.service";
 
 import {RoleComponent} from './back/auth/role/role.component';
@@ -177,6 +181,9 @@ import {TokenGuard} from './back/main/tokenGuard.service';
     UserAddComponent,
     UserEditComponent,
 
+    SettingComponent,
+
+
     BusinessContentComponent,
     BusinessContentListComponent,
     BusinessContentAddComponent,
@@ -189,6 +196,7 @@ import {TokenGuard} from './back/main/tokenGuard.service';
 
     FunctionComponent,
     FunctionListComponent,
+    FunctionAddComponent,
 
     RoleComponent,
     RoleListComponent,
@@ -250,6 +258,7 @@ import {TokenGuard} from './back/main/tokenGuard.service';
     CorporationService,
     CorpBuildingService,
     UserService,
+    SettingService,
     WorkerService,
     BusinessContentService,
     OrderService,

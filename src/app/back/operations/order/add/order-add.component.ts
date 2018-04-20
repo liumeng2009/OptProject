@@ -245,11 +245,11 @@ export class OrderAddComponent implements OnInit{
     let date=new Date(this.order.incoming_date);
     date.setHours(this.time.hour,this.time.minute,this.time.second,0);
     let lm=new LmTime(this.time.hour,this.time.minute,this.time.second);
-    this.order.incoming_date_timestamp=Date.parse(date.toString());
+    this.order.incoming_time=Date.parse(date.toString());
 
     for(let need of this.needs){
       for(let i=0;i<need.no;i++){
-        let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_date_timestamp,date,lm,
+        let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_time,date,lm,
           this.order.custom_position,this.order.corporation,false,0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
           0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,false,false,false,'',0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
           null,null,true

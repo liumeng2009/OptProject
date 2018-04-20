@@ -413,6 +413,9 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
   }
 
+  private editCallDateChange($event){
+    this.actionDetail.call_date=new Date($event);
+  }
   private editArriveDateChange($event){
     this.actionDetail.start_date=new Date($event);
   }

@@ -1,4 +1,4 @@
-import {Component,OnInit,ViewContainerRef,HostListener} from '@angular/core';
+import {Component,OnInit,ViewContainerRef,HostListener,ElementRef,ViewEncapsulation,ViewChild } from '@angular/core';
 import {Router,ActivatedRoute,NavigationEnd} from '@angular/router'
 import {Location} from '@angular/common';
 import {Title} from '@angular/platform-browser';
@@ -199,7 +199,7 @@ export class MainComponent implements OnInit{
 
           //当到达login界面时，取消toast的消息订阅
           if(event.url=='/login'){
-            alert('解除解除解除解除');
+            //alert('解除解除解除解除');
             this.mySubscription.unsubscribe();
           }
 
@@ -414,8 +414,6 @@ export class MainComponent implements OnInit{
     //路由的data属性中，有selected属性，这个属性是为了载入时，正确显示菜单选中状态的。当路由发生改变，需要把这个属性删除。只有笨办法，遍历路由树。
     this.searchAndDeleteNodePropertySelected(this.router.config);
 
-    console.log(data);
-
     return false;
   }
 
@@ -473,6 +471,10 @@ export class MainComponent implements OnInit{
     window.history.go(historyGo);
   }
 
+  private gotoUserPage(){
+    this.router.navigate(["/admin/auth/setting"])
+  }
+
   private showUserMenu:boolean=false;
   private onToggleUserMenu(){
     if(this.showUserMenu){
@@ -482,4 +484,39 @@ export class MainComponent implements OnInit{
       this.showUserMenu=true;
     }
   }
+
+  private showMessageArea:boolean=false;
+  private onToggleMessageArea(){
+    if(this.showMessageArea){
+      this.showMessageArea=false;
+    }
+    else{
+      this.showMessageArea=true;
+    }
+  }
+
+  @ViewChild('anchor') public anchorOp: ElementRef;
+  @ViewChild('popup', { read: ElementRef }) public popupOp: ElementRef;
+  private contains(target: any): boolean {
+    return this.anchorOp.nativeElement.contains(target) ||
+      (this.popupOp ? this.popupOp.nativeElement.contains(target): false);
+  }
+
+  @ViewChild('messageArea') public messagearea: ElementRef;
+  @ViewChild('popupMessage', { read: ElementRef }) public popupmessage: ElementRef;
+  private containsMessage(target: any): boolean {
+    return this.messagearea.nativeElement.contains(target) ||
+      (this.popupmessage ? this.popupmessage.nativeElement.contains(target): false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  public documentClick(event: any): void {
+    if (!this.contains(event.target)) {
+      this.showUserMenu=false;
+    }
+    if (!this.containsMessage(event.target)) {
+      this.showMessageArea=false;
+    }
+  }
+
 }

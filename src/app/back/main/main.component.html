@@ -1,25 +1,27 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <ul class="nav navbar-nav" style="float:right">
-      <li>
-        <a class="" href="#">个人设置</a>
-      </li>
-      <li>
-        <a class="" href="#">消息</a>
+      <li #messageArea style="margin-right: 100px;cursor: pointer"  (click)="onToggleMessageArea()" >
+        <span style="line-height:50px;">消息</span>
+        <kendo-popup [popupClass]="'pop-body'"  #popupMessage class="popup" *ngIf="showMessageArea" [anchor]="messageArea">
+            即时通讯模块
+        </kendo-popup>
       </li>
       <li #anchor class="avatar" (click)="onToggleUserMenu()" >
         <img [src]="imageUrl('avata_128')">
         <span class="username">{{user?.name}}</span>
         <span class="k-icon k-i-arrow-60-down down"></span>
-        <kendo-popup [popupClass]="'pop-body'" class="popup" *ngIf="showUserMenu" [anchor]="anchor">
-          <span style="display: block">
-            <span class="k-icon k-i-gear"></span>
-            设置
-          </span>
-          <span style="display: block">
-            <span class="k-icon k-i-logout"></span>
-            退出
-          </span>
+        <kendo-popup [popupClass]="'pop-body'"  #popup class="popup" *ngIf="showUserMenu" [anchor]="anchor">
+          <div class="pop-menu">
+            <span class="pop-menu-per" (click)="gotoUserPage()">
+              <i class="k-icon k-i-settings"></i>
+              个人信息设置
+            </span>
+            <span class="pop-menu-per" (click)="logout()">
+              <i class="k-icon k-i-unlink-horizontal"></i>
+              切换用户
+            </span>
+          </div>
         </kendo-popup>
       </li>
     </ul>
@@ -30,13 +32,14 @@
   <div class="row">
     <div class="col-xs-4 col-sm-4 col-lg-2 col-md-3">
       <div [ngStyle]="topNumber">
+
         <kendo-panelbar (stateChange)="stateChange($event)" [selectable]="false" >
           <kendo-panelbar-item
             *ngFor="let route of (router.config[3].children | urlshow)"
             [id]="'admin/'+route.path"
-            [title]="route.data.name ? route.data.name : 'home'"
+            [title]="(route.data.name ? route.data.name : 'home')"
             [selected]="'admin/'+route.path == selectedId"
-            [expanded]="route.data.expanded"
+            [expanded]="selectedId.indexOf(route.path)>-1"
           >
             <kendo-panelbar-item
               *ngFor="let child of route.children"

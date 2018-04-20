@@ -9,7 +9,7 @@ export class Order {
     public custom_name:string,
     public custom_phone: string,
     public incoming_date:string,
-    public incoming_date_timestamp:number,
+    public incoming_time:number,
     public hour:number,
     public minute:number,
     public second:number,

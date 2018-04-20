@@ -224,6 +224,18 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
   private orderSelect($event){
     console.log($event);
     this.operation.order=$event;
+    //将incomingDate赋值给工单的建立时间
+    //从orders里面找
+    for(let o of this.orders){
+      if(o.id==$event){
+        let date=new Date(o.incoming_time);
+        this.operation.incoming_date=date;
+        this.operation.incoming_date_time=new LmTime(date.getHours(),date.getMinutes(),date.getSeconds());
+      }
+    }
+
+
+
   }
 
   private onOperationCreateTimeChange($event){

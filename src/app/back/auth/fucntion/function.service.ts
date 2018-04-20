@@ -17,6 +17,9 @@ export class FunctionService{
   private headers = new Headers({'Content-Type': 'application/json'});
 
   private listurl=new OptConfig().serverPath+'/api/function/list';
+  private parentlisturl=new OptConfig().serverPath+'/api/function/parent_list';
+  private addurl=new OptConfig().serverPath+'/api/function/add';
+
   private oplisturl=new OptConfig().serverPath+'/api/operate/list';
 
   private authCreateUrl=new OptConfig().serverPath+'/api/opinfunc/add';
@@ -57,6 +60,25 @@ export class FunctionService{
     let token=this.cookieService.get('optToken');
     return this.http
       .post(this.authDeleteUrl+'?token='+token, auth, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  getParentList():Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.parentlisturl+'?token='+token;
+    console.log(url);
+    return this.http.get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
+  }
+
+  create(functionObj:any): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.addurl+'?token='+token, functionObj, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

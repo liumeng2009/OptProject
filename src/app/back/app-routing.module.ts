@@ -66,6 +66,8 @@ import {AddComponent} from './main/add.component';
 
 import {AuthGuard} from './main/authGuard.service'
 import {TokenGuard} from './main/tokenGuard.service'
+import {SettingComponent} from "./auth/setting/setting.component";
+import {FunctionAddComponent} from "./auth/fucntion/add/function-add.component";
 
 
 export const PanelbarRoutes:Routes=[
@@ -117,13 +119,15 @@ export const PanelbarRoutes:Routes=[
         {path:':id',component:UserEditComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'编辑'}}
       ] },
       { path: 'function', component: FunctionComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'功能管理'},children:[
-        {path:'list',component:FunctionListComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'列表'}}
+        {path:'list',component:FunctionListComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'列表'}},
+        {path:'add',component:FunctionAddComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'新增'}}
       ] },
       { path: 'role', component: RoleComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'角色管理'},children:[
         {path:'list',component:RoleListComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'列表'}},
         {path:'add',component:RoleAddComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'新增'}},
         {path:':id',component:RoleEditComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'编辑'}}
-      ] }
+      ] },
+      { path: 'setting', component: SettingComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'个人信息设置'}}
     ]}
   ]},
   {path:'needtoken',component:NoAuthComponent,data:{name:'没有权限访问该页面'}},

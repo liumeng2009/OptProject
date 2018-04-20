@@ -303,8 +303,8 @@ export class OrderEditComponent implements OnInit{
               })
             });
           });
-          this.order.incoming_date_timestamp=result.data.incoming_time;
-          let dateEdit=new Date(this.order.incoming_date_timestamp);
+          this.order.incoming_time=result.data.incoming_time;
+          let dateEdit=new Date(this.order.incoming_time);
           this.today=new Date(dateEdit.getFullYear(),dateEdit.getMonth(),dateEdit.getDate());
           this.time=new LmTime(dateEdit.getHours(),dateEdit.getMinutes(),dateEdit.getSeconds());
 
@@ -341,13 +341,13 @@ export class OrderEditComponent implements OnInit{
     let dateInfo=$event;
     let timeInfo=this.time;
     dateInfo.setHours(timeInfo.hour,timeInfo.minute,timeInfo.second,0);
-    this.order.incoming_date_timestamp=dateInfo.getTime();
+    this.order.incoming_time=dateInfo.getTime();
   }
 
   private onTimeChange($event){
     let dateInfo=this.today;
     dateInfo.setHours($event.hour,$event.minute,$event.second,0);
-    this.order.incoming_date_timestamp=dateInfo.getTime();
+    this.order.incoming_time=dateInfo.getTime();
   }
   private onGroupChange($event){
     this.corporationLoading=true;

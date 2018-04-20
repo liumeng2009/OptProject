@@ -222,6 +222,7 @@
     <div class="k-form-field">
         <label style="margin-left: 11px;"  [for]="incoming_date" >指派时间：</label>
         <kendo-datepicker #incoming_date style="margin-left: 4px;" [value]="actionDetail.call_date" name="call_time" [format]="'yyyy年MM月dd日'"
+                          (valueChange)="editCallDateChange($event)"
         >
           <kendo-datepicker-messages
             today="今天"
