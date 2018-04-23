@@ -66,6 +66,22 @@ export class UserService{
       .then(this.extractData)
       .catch(this.handleError)
   }
+  getUserSimple():Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.geturl+'?simple=true&token='+token;
+    return this.http.get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
+  }
+  edit(user:User): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.editurl+'?token='+token, user, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
 
   private extractData(res:Response){
     let body=res.json();

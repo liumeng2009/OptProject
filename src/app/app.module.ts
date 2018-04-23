@@ -19,6 +19,7 @@ import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { IntlModule } from '@progress/kendo-angular-intl';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ChartsModule } from '@progress/kendo-angular-charts';
+import { UploadModule } from '@progress/kendo-angular-upload';
 
 import { QuillModule } from 'ngx-quill'
 
@@ -242,6 +243,7 @@ import {TokenGuard} from './back/main/tokenGuard.service';
     DateInputsModule,
     LabelModule,
     ChartsModule,
+    UploadModule,
 
     ToastModule.forRoot(),
 
