@@ -35,12 +35,13 @@
 </div>
 <div kendoDialogContainer></div>
 <ng-template #itemListRef>
-  <div style="width:400px;height:300px">
+  <div style="width:500px;height:400px">
     <img [src]="imageUrl('avata_128')" style="width:200px;height:200px;border:#ccc 1px solid;margin-bottom: 8px;">
 
     <kendo-upload
       [saveUrl]="uploadSaveUrl"
       [withCredentials]="false"
+      [multiple]="false"
     >
       <kendo-upload-messages
         select="选择文件"
