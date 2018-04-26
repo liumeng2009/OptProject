@@ -2,6 +2,7 @@ import {Component,OnInit,ViewChild,TemplateRef} from '@angular/core';
 import {Router,ActivatedRoute,Params} from '@angular/router';
 
 import {DialogService,DialogRef,DialogCloseResult,DialogResult} from '@progress/kendo-angular-dialog';
+import { FileRestrictions } from '@progress/kendo-angular-upload';
 
 import {UserService} from '../user/user.service';
 import {AlertData} from "../../../bean/alertData";
@@ -88,6 +89,21 @@ export class SettingComponent implements OnInit{
   }
   private header=new Headers({'Content-Type': 'multipart/form-data'});
   private uploadSaveUrl=new OptConfig().serverPath+'/api/user/uploadAvatar';
+
+  private myRestrictions: FileRestrictions = {
+  allowedExtensions: ['.jpg', '.png','.jpeg']
+};
+
+  private uploadResult($event){
+    console.log($event);
+  }
+  private successResult($event){
+    console.log($event);
+
+  }
+  private errorResult($event){
+    console.log($event);
+  }
 
 
 }

@@ -42,9 +42,14 @@
       [saveUrl]="uploadSaveUrl"
       [withCredentials]="false"
       [multiple]="false"
+      [restrictions]="myRestrictions"
+      (success)="successResult($event)"
+      (error)="errorResult($event)"
     >
       <kendo-upload-messages
         select="选择文件"
+        headerStatusUploaded="完成"
+        invalidFileExtension="文件格式无效"
       >
       </kendo-upload-messages>
     </kendo-upload>
