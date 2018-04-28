@@ -233,12 +233,16 @@ export class OrderAddComponent implements OnInit{
   }
 
   @ViewChild('itemListRef')tpl: TemplateRef<any>;
+  @ViewChild('itemQK')tplQK: TemplateRef<any>;
+  @ViewChild('actionTemplate') actionTemplate: TemplateRef<any>;
+  @ViewChild('actionQKTemplate') actionQKTemplate: TemplateRef<any>;
 
   @ViewChild('gridWorkerOrder') grid: GridComponent;
 
   private workerOrders:WorkOrder[]=[];
+  private dialogQK;
   private dialog;
-  private onOrderSubmit(actionTemplate: TemplateRef<any>){
+  private onOrderSubmit(){
     console.log(this.order);
     this.workerOrders.splice(0,this.workerOrders.length);
     this.order.needs=JSON.stringify(this.needs);
@@ -247,29 +251,142 @@ export class OrderAddComponent implements OnInit{
     let lm=new LmTime(this.time.hour,this.time.minute,this.time.second);
     this.order.incoming_time=Date.parse(date.toString());
 
-    for(let need of this.needs){
-      for(let i=0;i<need.no;i++){
-        let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_time,date,lm,
-          this.order.custom_position,this.order.corporation,false,0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
-          0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,false,false,false,'',0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
-          null,null,true
-        );
-        this.workerOrders.push(workOrder);
+    //初始化快速分配工单时间模块
+    this.qk.qk_call_date=date;
+    this.qk.qk_call_time=new LmTime(date.getHours(),date.getMinutes(),date.getSeconds());
+    this.qk.qk_start_date=date;
+    this.qk.qk_start_time=new LmTime(date.getHours(),date.getMinutes(),date.getSeconds());
+    this.qk.qk_end_date=date;
+    let dateStamp=date.getTime();
+    dateStamp+=1000*60*60;
+    let dateAddOneHour=new Date(dateStamp);
+    this.qk.qk_end_time=new LmTime(dateAddOneHour.getHours(),dateAddOneHour.getMinutes(),dateAddOneHour.getSeconds());
+
+    this.dialogQK=this.dialogService.open({
+      title: "需要快速分配工单时间吗？",
+      content: this.tplQK,
+      actions:this.actionQKTemplate
+    });
+  }
+  private cancelQK(){
+    this.qk.visible=false;
+    this.dialogQK.close();
+    console.log(this.qk);
+    this.openWorkerOrderGrid()
+  }
+  private okQK(){
+    this.qk.visible=true;
+    this.dialogQK.close();
+    this.openWorkerOrderGrid()
+  }
+
+  private openWorkerOrderGrid(){
+    console.log(this.order);
+    this.workerOrders.splice(0,this.workerOrders.length);
+    this.order.needs=JSON.stringify(this.needs);
+    let date=new Date(this.order.incoming_date);
+    date.setHours(this.time.hour,this.time.minute,this.time.second,0);
+    let lm=new LmTime(this.time.hour,this.time.minute,this.time.second);
+    this.order.incoming_time=Date.parse(date.toString());
+    if(this.qk.visible){
+      //需要自动生成各工单的时间轴
+      //根据qk对象，计算所有工单的时间轴
+      let needsLength=0;
+      for(let i=0;i<this.needs.length;i++){
+        for(let j=0;j<this.needs[i].no;j++){
+          needsLength++;
+        }
+      }
+
+      let qkCall=this.qk.qk_call_date;
+      qkCall.setHours(this.qk.qk_call_time.hour);
+      qkCall.setMinutes(this.qk.qk_call_time.minute);
+      qkCall.setSeconds(this.qk.qk_call_time.second);
+
+      let qkStart=this.qk.qk_start_date;
+      qkStart.setHours(this.qk.qk_start_time.hour);
+      qkStart.setMinutes(this.qk.qk_start_time.minute);
+      qkStart.setSeconds(this.qk.qk_start_time.second);
+
+      let qkEnd=this.qk.qk_end_date;
+      qkEnd.setHours(this.qk.qk_end_time.hour);
+      qkEnd.setMinutes(this.qk.qk_end_time.minute);
+      qkEnd.setSeconds(this.qk.qk_end_time.second);
+
+      let restStart=this.qk.qk_start_date;
+      restStart.setHours(this.rest_start_time.hour);
+      restStart.setMinutes(this.rest_start_time.minute);
+      restStart.setSeconds(this.rest_start_time.second);
+
+      let restEnd=this.qk.qk_start_date;
+      restEnd.setHours(this.rest_end_time.hour);
+      restEnd.setMinutes(this.rest_end_time.minute);
+      restEnd.setSeconds(this.rest_end_time.second);
+
+      let qkCallStamp=qkCall.getTime();
+      let qkStartStamp=qkStart.getTime();
+      let qkEndStamp=qkEnd.getTime();
+      let restStartStamp=restStart.getTime();
+      let restEndStamp=restEnd.getTime();
+      //如果这段时间中间没有经过中午休息时间
+      if(qkEndStamp<restStartStamp||qkStartStamp>restEndStamp){
+        let allStamp=qkEndStamp-qkStartStamp;
+        let perStamp=allStamp/needsLength;
+
+        let startIndex=0;
+        for(let need of this.needs){
+          for(let i=0;i<need.no;i++){
+
+            let loopCallStamp=qkCallStamp;
+            let loopCallDate=new Date(loopCallStamp);
+            let loopCallTime=new LmTime(loopCallDate.getHours(),loopCallDate.getMinutes(),loopCallDate.getSeconds());
+
+            let loopStartStamp=qkStartStamp+startIndex*perStamp;
+            let loopStartDate=new Date(loopStartStamp);
+            let loopStartTime=new LmTime(loopStartDate.getHours(),loopStartDate.getMinutes(),loopStartDate.getSeconds());
+
+
+            let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_time,date,lm,
+              this.order.custom_position,this.order.corporation,false,0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
+              0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,false,false,false,'',0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
+              null,null,true
+            );
+            this.workerOrders.push(workOrder);
+          }
+        }
+
+      }
+
+
+
+
+
+    }
+    else{
+      for(let need of this.needs){
+        for(let i=0;i<need.no;i++){
+          let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_time,date,lm,
+            this.order.custom_position,this.order.corporation,false,0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
+            0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,false,false,false,'',0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
+            null,null,true
+          );
+          this.workerOrders.push(workOrder);
+        }
       }
     }
+
 
 
     this.dialog=this.dialogService.open({
       title: "需要快速添加工单吗？",
       content: this.tpl,
-      actions:actionTemplate
+      actions:this.actionTemplate
     });
 
     setTimeout(()=>{
       for(let i=0;i<this.workerOrders.length;i++)
         this.grid.expandRow(i);
     },0);
-
   }
 
   private cancel(){
@@ -699,4 +816,20 @@ export class OrderAddComponent implements OnInit{
       rowData.showFinishDate=false;
     }
   }
+
+  //快速分配工单时间模块
+  private qk={
+    visible:false,
+    qk_call_date:new Date(),
+    qk_call_time:new LmTime(0,0,0),
+    qk_start_date:new Date(),
+    qk_start_time:new LmTime(0,0,0),
+    qk_end_date:new Date(),
+    qk_end_time:new LmTime(0,0,0)
+  }
+
+  private rest_start_time=new LmTime(12,0,0);
+  private rest_end_time=new LmTime(13,30,0);
+
+
 }

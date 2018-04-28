@@ -323,7 +323,10 @@
     </ng-template>
   </kendo-grid>
 </ng-template>
-
+<ng-template #actionQKTemplate>
+  <button kendoButton (click)="cancelQK()"  [icon]="'close'" >我来自定义各工单时间</button>
+  <button kendoButton (click)="okQK()" [primary]="true"   [icon]="'check'" >帮我快速生成各工单时间</button>
+</ng-template>
 <ng-template #actionTemplate>
   <button kendoButton (click)="cancel()">取消</button>
   <button kendoButton (click)="no()" [primary]="true" [icon]="SaveOrderLoading" [disabled]="isHiddenSaveOrderButton" >否，我自己来建立工单</button>
@@ -331,3 +334,57 @@
     保存，根据用户需求快速建立工单
   </button>
 </ng-template>
+
+<ng-template #itemQK>
+  <form class="k-form">
+    <fieldset>
+      <legend>快速分配工单时间（仅支持一天之内）</legend>
+      <div class="k-form-field">
+        <span style="font-weight: bolder;">指派时间点</span>
+        <kendo-datepicker #qk_call_date [value]="qk.qk_call_date" [(ngModel)]="qk.qk_call_date" name="call_date" [format]="'yyyy年MM月dd日'" style="float:left;"
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+        <lmtimepicker name="call_date_time" [timeNow]="qk.qk_call_time" style="margin-left: 20px;float:left"  ></lmtimepicker>
+        <div style="clear: both"></div>
+      </div>
+      <div class="k-form-field">
+        <span style="font-weight: bolder;">起始时间点</span>
+        <kendo-datepicker #qk_start_date  [value]="qk.qk_start_date"  [(ngModel)]="qk.qk_start_date" name="call_date" [format]="'yyyy年MM月dd日'" style="float:left;"
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+        <lmtimepicker name="call_date_time"  [timeNow]="qk.qk_start_time"  style="margin-left: 20px;float:left"  ></lmtimepicker>
+        <div style="clear: both"></div>
+      </div>
+
+      <div class="k-form-field">
+        <span style="font-weight: bolder;">结束时间点</span>
+        <kendo-datepicker #qk_end_date  [value]="qk.qk_end_date"  [(ngModel)]="qk.qk_end_date" name="call_date" [format]="'yyyy年MM月dd日'"  style="float:left;"
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+        <lmtimepicker name="qk_end_time"  [timeNow]="qk.qk_end_time"  style="margin-left: 20px;float:left" ></lmtimepicker>
+        <div style="clear: both"></div>
+      </div>
+      <div class="k-form-field">
+        <span style="font-weight: bolder;">中途休息时段</span>
+        <lmtimepicker name="call_date_time" [timeNow]="rest_start_time"  style="float:left;" ></lmtimepicker>
+        <lmtimepicker name="call_date_time" [timeNow]="rest_end_time"  style="float:left;margin-left: 20px;" ></lmtimepicker>
+        <div style="clear: both"></div>
+      </div>
+    </fieldset>
+  </form>
+</ng-template>
+
+
+
