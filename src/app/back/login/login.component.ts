@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit{
   ){
     this.toastr.setRootViewContainerRef(vcr);
   };
-  user=new User(null,null,null,null,null,null,null,null);
+  user=new User(null,null,null,null,null,null,null,null,null,null);
 
   ngOnInit(){
     //告诉main组件，不要显示toast了

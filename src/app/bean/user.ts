@@ -8,6 +8,8 @@ export class User {
     public phone:string,
     public email:string,
     public canLogin:Boolean,
-    public roleId:string
+    public roleId:string,
+    public avatar:string,
+    public avatarUseImg:number
   ) {  }
 }

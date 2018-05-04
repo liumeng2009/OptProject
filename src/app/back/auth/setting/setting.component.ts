@@ -16,6 +16,7 @@ import {AjaxExceptionService} from '../../main/ajaxExceptionService';
 import {MissionService} from "../../main/mission.service";
 import {SwitchService} from "../../main/switchService";
 import {CookieService} from "angular2-cookie/core";
+import {Avatar} from "../../../bean/avatar";
 
 @Component({
   selector:'setting',
@@ -30,11 +31,12 @@ export class SettingComponent implements OnInit{
     private apiResultService:ApiResultService,
     private ajaxExceptionService:AjaxExceptionService,
     private dialogService:DialogService,
-    private cookieService:CookieService
+    private cookieService:CookieService,
+    private missionService:MissionService
   ){
   };
 
-  private user:User=new User(null,null,null,null,null,null,null,null);
+  private user:User=new User(null,null,null,null,null,null,null,null,null,null);
   ngOnInit(){
     this.getData();
     let token=this.cookieService.get('optToken');
@@ -55,11 +57,17 @@ export class SettingComponent implements OnInit{
     )
   }
 
-  private baseImageUrl: string = "./assets/image/";
-
-  private imageUrl(imageName: string) :string {
-    return this.baseImageUrl + imageName + ".jpg";
+  private baseImageUrl: string = new OptConfig().serverPath+ "/uploads/";
+  private avatarImagePath=this.baseImageUrl+'avatar/dongman/6.jpg';
+  private getAvatarImageUrl(avatar){
+    if(avatar){
+      return this.baseImageUrl+avatar;
+    }
+    else{
+      return this.avatarImagePath;
+    }
   }
+
 
   private onSubmit(){
     this.userService.edit(this.user).then(
@@ -91,14 +99,20 @@ export class SettingComponent implements OnInit{
   private uploadSaveUrl=new OptConfig().serverPath+'/api/user/uploadAvatar';
 
   private myRestrictions: FileRestrictions = {
-  allowedExtensions: ['.jpg', '.png','.jpeg']
-};
+    allowedExtensions: ['.jpg', '.png','.jpeg']
+  };
 
-  private uploadResult($event){
-    console.log($event);
-  }
   private successResult($event){
     console.log($event);
+    let res=$event.response;
+    let json=res.json();
+    if(json&&json.data&&json.data.avatar){
+      let avatarNow=json.data.avatar;
+      let avatarType=json.data.avatarUseImg?json.data.avatarUseImg:0;
+      this.user.avatar=avatarNow;
+      this.missionService.changeAvatar.emit(new Avatar(avatarNow,avatarType));
+    }
+
 
   }
   private errorResult($event){

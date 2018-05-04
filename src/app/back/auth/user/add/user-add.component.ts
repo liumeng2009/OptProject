@@ -23,7 +23,7 @@ import {Role} from "../../../../bean/role";
 
 export class UserAddComponent implements OnInit{
 
-  user=new User(null,null,null,true,null,null,true,null);
+  user=new User(null,null,null,true,null,null,true,null,null,null);
 
   genders=[
     new Gender('男',false),

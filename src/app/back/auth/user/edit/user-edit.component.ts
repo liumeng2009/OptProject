@@ -23,7 +23,7 @@ import {MissionService} from "../../../main/mission.service";
 
 export class UserEditComponent implements OnInit{
 
-  user=new User(null,null,null,null,null,null,true,null);
+  user=new User(null,null,null,null,null,null,true,null,null,null);
 
   genders=[
     new Gender('男',false),

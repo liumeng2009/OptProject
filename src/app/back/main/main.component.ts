@@ -32,6 +32,7 @@ import {AddressEditComponent} from '../basicSettings/address/edit/address-edit.c
 
 import {AddComponent} from './add.component'
 import {SwitchService} from "./switchService";
+import {Avatar} from "../../bean/avatar";
 
 
 @Component({
@@ -47,6 +48,7 @@ export class MainComponent implements OnInit{
   private breadcrumb:Bread[]=[]
 
   private mySubscription;
+  private avatarSubscription;
 
   private showPage='hidden';
 
@@ -95,6 +97,11 @@ export class MainComponent implements OnInit{
         this.mySubscription.unsubscribe();
       }
     });
+
+    this.avatarSubscription=missionService.changeAvatar.subscribe((avatarNew:Avatar)=>{
+      this.user.avatar=avatarNew.path;
+      this.user.avatarUseImg=avatarNew.type;
+    })
 
 
   }
@@ -199,8 +206,8 @@ export class MainComponent implements OnInit{
 
           //当到达login界面时，取消toast的消息订阅
           if(event.url=='/login'){
-            //alert('解除解除解除解除');
             this.mySubscription.unsubscribe();
+            this.avatarSubscription.unsubscribe();
           }
 
 
@@ -428,7 +435,17 @@ export class MainComponent implements OnInit{
     }
   }
 
-  private baseImageUrl: string = "./assets/image/";
+  private baseImageUrl: string = new OptConfig().serverPath+ "/uploads/";
+  private avatarImagePath=this.baseImageUrl+'avatar/dongman/6.jpg';
+  private getAvatarImageUrl(avatar){
+    if(avatar){
+      return this.baseImageUrl+avatar;
+    }
+    else{
+      return this.avatarImagePath;
+    }
+  }
+
 
   private imageUrl(imageName: string) :string {
     return this.baseImageUrl + imageName + ".jpg";

@@ -80,7 +80,10 @@ export class OrderAddComponent implements OnInit{
 
   private time=new LmTime(0,0,0);
 
+  private workOrderGridHeight=0;
+
   ngOnInit(){
+    this.workOrderGridHeight=(window.document.body.clientHeight - 70 - 56 -17);
     this.order.incoming_date=this.today.toDateString();
     this.initGroup();
     this.initTmpNeed();
@@ -276,6 +279,7 @@ export class OrderAddComponent implements OnInit{
   }
   private okQK(){
     this.qk.visible=true;
+    console.log(this.qk);
     this.dialogQK.close();
     this.openWorkerOrderGrid()
   }
@@ -298,27 +302,28 @@ export class OrderAddComponent implements OnInit{
         }
       }
 
-      let qkCall=this.qk.qk_call_date;
+      let qkCall=new Date(this.qk.qk_call_date.getFullYear(),this.qk.qk_call_date.getMonth(),this.qk.qk_call_date.getDate());
       qkCall.setHours(this.qk.qk_call_time.hour);
       qkCall.setMinutes(this.qk.qk_call_time.minute);
       qkCall.setSeconds(this.qk.qk_call_time.second);
 
-      let qkStart=this.qk.qk_start_date;
+      let qkStart=new Date(this.qk.qk_start_date.getFullYear(),this.qk.qk_start_date.getMonth(),this.qk.qk_start_date.getDate());
       qkStart.setHours(this.qk.qk_start_time.hour);
       qkStart.setMinutes(this.qk.qk_start_time.minute);
       qkStart.setSeconds(this.qk.qk_start_time.second);
 
-      let qkEnd=this.qk.qk_end_date;
+      let qkEnd=new Date(this.qk.qk_end_date.getFullYear(),this.qk.qk_end_date.getMonth(),this.qk.qk_end_date.getDate());
       qkEnd.setHours(this.qk.qk_end_time.hour);
       qkEnd.setMinutes(this.qk.qk_end_time.minute);
       qkEnd.setSeconds(this.qk.qk_end_time.second);
 
-      let restStart=this.qk.qk_start_date;
+
+      let restStart=new Date(this.qk.qk_start_date.getFullYear(),this.qk.qk_start_date.getMonth(),this.qk.qk_start_date.getDate());
       restStart.setHours(this.rest_start_time.hour);
       restStart.setMinutes(this.rest_start_time.minute);
       restStart.setSeconds(this.rest_start_time.second);
 
-      let restEnd=this.qk.qk_start_date;
+      let restEnd=new Date(this.qk.qk_start_date.getFullYear(),this.qk.qk_start_date.getMonth(),this.qk.qk_start_date.getDate());
       restEnd.setHours(this.rest_end_time.hour);
       restEnd.setMinutes(this.rest_end_time.minute);
       restEnd.setSeconds(this.rest_end_time.second);
@@ -345,22 +350,85 @@ export class OrderAddComponent implements OnInit{
             let loopStartDate=new Date(loopStartStamp);
             let loopStartTime=new LmTime(loopStartDate.getHours(),loopStartDate.getMinutes(),loopStartDate.getSeconds());
 
+            let loopEndStamp=loopStartStamp+perStamp-60*1000;
+            let loopEndDate=new Date(loopEndStamp);
+            let loopEndTime=new LmTime(loopEndDate.getHours(),loopEndDate.getMinutes(),loopEndDate.getSeconds());
+
 
             let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_time,date,lm,
-              this.order.custom_position,this.order.corporation,false,0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
-              0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,false,false,false,'',0,date,new LmTime(date.getHours(),date.getMinutes(),date.getSeconds()),
+              this.order.custom_position,this.order.corporation,false,loopStartStamp,loopStartDate,loopStartTime,
+              loopEndStamp,loopEndDate,loopEndTime,this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,true,true,true,'',loopCallStamp,loopCallDate,loopCallTime,
               null,null,true
             );
             this.workerOrders.push(workOrder);
+
+            startIndex++;
           }
         }
 
       }
+      else{
+        //中间跨越了休息时间
+        let allStamp=qkEndStamp-qkStartStamp-(restEndStamp-restStartStamp);
+        let amStamp=restStartStamp-qkStartStamp;
+        let pmStamp=qkEndStamp-restEndStamp;
+
+        let maxPerStamp=this.calMaxPerStamp(allStamp,amStamp,pmStamp,needsLength);
+
+        let amCount=amStamp/maxPerStamp;
+        let pmCount=pmStamp/maxPerStamp;
+
+        let amIndex=0;
+        let pmIndex=0;
+        for(let need of this.needs){
+          for(let i=0;i<need.no;i++){
+            if(amIndex<amCount-1){
+              let loopCallStamp=qkCallStamp;
+              let loopCallDate=new Date(loopCallStamp);
+              let loopCallTime=new LmTime(loopCallDate.getHours(),loopCallDate.getMinutes(),loopCallDate.getSeconds());
+
+              let loopStartStamp=qkStartStamp+amIndex*maxPerStamp;
+              let loopStartDate=new Date(loopStartStamp);
+              let loopStartTime=new LmTime(loopStartDate.getHours(),loopStartDate.getMinutes(),loopStartDate.getSeconds());
+
+              let loopEndStamp=loopStartStamp+maxPerStamp-60*1000;
+              let loopEndDate=new Date(loopEndStamp);
+              let loopEndTime=new LmTime(loopEndDate.getHours(),loopEndDate.getMinutes(),loopEndDate.getSeconds());
 
 
+              let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_time,date,lm,
+                this.order.custom_position,this.order.corporation,false,loopStartStamp,loopStartDate,loopStartTime,
+                loopEndStamp,loopEndDate,loopEndTime,this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,true,true,true,'',loopCallStamp,loopCallDate,loopCallTime,
+                null,null,true
+              );
+              this.workerOrders.push(workOrder);
+              amIndex++;
+            }
+            else{
+              let loopCallStamp=qkCallStamp;
+              let loopCallDate=new Date(loopCallStamp);
+              let loopCallTime=new LmTime(loopCallDate.getHours(),loopCallDate.getMinutes(),loopCallDate.getSeconds());
+
+              let loopStartStamp=restEndStamp+pmIndex*maxPerStamp;
+              let loopStartDate=new Date(loopStartStamp);
+              let loopStartTime=new LmTime(loopStartDate.getHours(),loopStartDate.getMinutes(),loopStartDate.getSeconds());
+
+              let loopEndStamp=loopStartStamp+maxPerStamp-60*1000;
+              let loopEndDate=new Date(loopEndStamp);
+              let loopEndTime=new LmTime(loopEndDate.getHours(),loopEndDate.getMinutes(),loopEndDate.getSeconds());
 
 
-
+              let workOrder=new WorkOrder('','',this.order.custom_name,this.order.custom_phone,this.order.incoming_time,date,lm,
+                this.order.custom_position,this.order.corporation,false,loopStartStamp,loopStartDate,loopStartTime,
+                loopEndStamp,loopEndDate,loopEndTime,this.workers.length>0?this.workers[0].id:'',need.type,need.equipment,need.op,true,true,true,true,'',loopCallStamp,loopCallDate,loopCallTime,
+                null,null,true
+              );
+              this.workerOrders.push(workOrder);
+              pmIndex++;
+            }
+          }
+        }
+      }
     }
     else{
       for(let need of this.needs){
@@ -383,10 +451,20 @@ export class OrderAddComponent implements OnInit{
       actions:this.actionTemplate
     });
 
+    console.log(this.workerOrders);
+
     setTimeout(()=>{
       for(let i=0;i<this.workerOrders.length;i++)
         this.grid.expandRow(i);
     },0);
+  }
+
+  private calMaxPerStamp(allStamp,amStamp,pmStamp,count){
+    let initPerStamp=allStamp/count;
+    while(amStamp/initPerStamp+pmStamp/initPerStamp<count){
+      initPerStamp=initPerStamp-60*1000;
+    }
+    return initPerStamp;
   }
 
   private cancel(){
