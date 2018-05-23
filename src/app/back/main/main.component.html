@@ -8,7 +8,7 @@
         </kendo-popup>
       </li>
       <li #anchor class="avatar" (click)="onToggleUserMenu()" >
-        <img [src]="getAvatarImageUrl(user?.avatar)">
+        <img [src]="getAvatarImageUrl(user)">
         <span class="username">{{user?.name}}</span>
         <span class="k-icon k-i-arrow-60-down down"></span>
         <kendo-popup [popupClass]="'pop-body'"  #popup class="popup" *ngIf="showUserMenu" [anchor]="anchor">

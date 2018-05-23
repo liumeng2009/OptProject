@@ -77,8 +77,8 @@ export class BusinessContentAddComponent implements OnInit{
         let result=this.apiResultService.result(data);
         if(result.status==0){
           for(let d of result.data){
-            let op=new Operation(d.code,false,d.name,false,5,null,null);
-            let op1=new Operation(d.code,false,d.name,true,5,null,null);
+            let op=new Operation(d.code,false,d.name,false,5,null,null,false);
+            let op1=new Operation(d.code,false,d.name,true,5,null,null,false);
             this.operationsDesk.push(op);
             this.operationsSys.push(op1);
           }

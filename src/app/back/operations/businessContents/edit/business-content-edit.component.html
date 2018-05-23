@@ -20,87 +20,100 @@
             <span for="equipment">操作<span class="k-required">*</span></span>
           </label>
           <div class="k-form-field">
-            <div class="row">
-              <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <h4>桌面级</h4>
-              </div>
-              <div  class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <h4>系统级</h4>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <kendo-grid [data]="operationsDesk">
-                  <kendo-grid-column field="op" title="选择" width="150">
-                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                      <input type="checkbox" class="k-checkbox" id="desk{{dataItem.op}}" name="desk{{dataItem.op}}" [(ngModel)]="business.operationsDesk[rowIndex].checked" value="{{dataItem.op}}" >
-                      <label class="k-checkbox-label" for="desk{{dataItem.op}}">{{dataItem.name}}{{business.operationsDesk[rowIndex].checked}}</label>
-                      <input type="hidden" name="hfd{{dataItem.op}}" [(ngModel)]="business.operationsDesk[rowIndex].id" >
-                    </ng-template>
-                  </kendo-grid-column>
+            <kendo-tabstrip [keepTabContent]="true">
+              <kendo-tabstrip-tab [title]="'桌面级'" [selected]="true">
+                <ng-template kendoTabContent>
+                  <kendo-grid [data]="operationsDesk">
+                    <kendo-grid-column field="op" title="选择" width="150">
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        <input type="checkbox" class="k-checkbox" id="desk{{dataItem.op}}" name="desk{{dataItem.op}}" [(ngModel)]="business.operationsDesk[rowIndex].checked" value="{{dataItem.op}}" >
+                        <label class="k-checkbox-label" for="desk{{dataItem.op}}">{{dataItem.name}}</label>
+                        <input type="hidden" name="hfd{{dataItem.op}}" [(ngModel)]="business.operationsDesk[rowIndex].id" >
+                      </ng-template>
+                    </kendo-grid-column>
 
-                  <kendo-grid-column field="weight" title="设置权重值" >
-                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                      <table>
-                        <tr>
-                          <td width="50">
-                            <label>{{business.operationsDesk[rowIndex].weight}}</label>
-                          </td>
-                          <td>
-                            <kendo-slider
-                              [min]="1"
-                              [max]="10"
-                              [smallStep]="1"
-                              [(ngModel)] = "business.operationsDesk[rowIndex].weight"
-                              id="DeskSlide{{dataItem.name}}"
-                              name="DeskWeight{{dataItem.name}}"
-                              disabled="{{!business.operationsDesk[rowIndex].checked}}"
-                            ></kendo-slider>
-                          </td>
-                        </tr>
-                      </table>
-                    </ng-template>
-                  </kendo-grid-column>
+                    <kendo-grid-column field="sequence" title="故障名前置">
+                      <ng-template  kendoGridCellTemplate let-dataItem  let-rowIndex="rowIndex">
+                        <kendo-switch name="sequence{{dataItem.op}}"  [(ngModel)]="business.operationsDesk[rowIndex].sequence"
+                                      [onLabel]="'是'"
+                                      [offLabel]="'否'"
+                        ></kendo-switch>
+                      </ng-template>
+                    </kendo-grid-column>
 
-                </kendo-grid>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <kendo-grid [data]="operationsSys">
-                  <kendo-grid-column field="op" title="选择" width="150">
-                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                      <input type="checkbox" class="k-checkbox" id="sys{{dataItem.op}}" name="sys{{dataItem.op}}" [(ngModel)]="business.operationsSys[rowIndex].checked" value="{{dataItem.op}}" >
-                      <label class="k-checkbox-label" for="sys{{dataItem.op}}">{{dataItem.name}}{{business.operationsSys[rowIndex].checked}}</label>
-                      <input type="hidden" name="hfd{{dataItem.op}}" [(ngModel)]="business.operationsSys[rowIndex].id" >
-                    </ng-template>
-                  </kendo-grid-column>
+                    <kendo-grid-column field="weight" title="设置权重值" >
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        <table>
+                          <tr>
+                            <td width="50">
+                              <label>{{business.operationsDesk[rowIndex].weight}}</label>
+                            </td>
+                            <td>
+                              <kendo-slider
+                                [min]="1"
+                                [max]="10"
+                                [smallStep]="1"
+                                [(ngModel)] = "business.operationsDesk[rowIndex].weight"
+                                id="DeskSlide{{dataItem.name}}"
+                                name="DeskWeight{{dataItem.name}}"
+                                disabled="{{!business.operationsDesk[rowIndex].checked}}"
+                              ></kendo-slider>
+                            </td>
+                          </tr>
+                        </table>
+                      </ng-template>
+                    </kendo-grid-column>
 
-                  <kendo-grid-column field="weight" title="设置权重值" >
-                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                      <table>
-                        <tr>
-                          <td width="50">
-                            <label>{{business.operationsSys[rowIndex].weight}}</label>
-                          </td>
-                          <td>
-                            <kendo-slider
-                              [min]="1"
-                              [max]="10"
-                              [smallStep]="1"
-                              [(ngModel)] = "business.operationsSys[rowIndex].weight"
-                              id="SysSlide{{dataItem.name}}"
-                              name="SysWeight{{dataItem.name}}"
-                              disabled="{{!business.operationsSys[rowIndex].checked}}"
-                            ></kendo-slider>
-                          </td>
-                        </tr>
-                      </table>
-                    </ng-template>
-                  </kendo-grid-column>
+                  </kendo-grid>
+                </ng-template>
+              </kendo-tabstrip-tab>
+              <kendo-tabstrip-tab [title]="'系统级'">
+                <ng-template kendoTabContent>
+                  <kendo-grid [data]="operationsSys">
+                    <kendo-grid-column field="op" title="选择" width="150">
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        <input type="checkbox" class="k-checkbox" id="sys{{dataItem.op}}" name="sys{{dataItem.op}}" [(ngModel)]="business.operationsSys[rowIndex].checked" value="{{dataItem.op}}" >
+                        <label class="k-checkbox-label" for="sys{{dataItem.op}}">{{dataItem.name}}</label>
+                        <input type="hidden" name="hfd{{dataItem.op}}" [(ngModel)]="business.operationsSys[rowIndex].id" >
+                      </ng-template>
+                    </kendo-grid-column>
 
-                </kendo-grid>
-              </div>
-            </div>
+                    <kendo-grid-column field="sequence" title="故障名前置">
+                      <ng-template  kendoGridCellTemplate let-dataItem  let-rowIndex="rowIndex">
+                        <kendo-switch name="sequence{{dataItem.op}}"  [(ngModel)]="business.operationsSys[rowIndex].sequence"
+                                      [onLabel]="'是'"
+                                      [offLabel]="'否'"
+                        ></kendo-switch>
+                      </ng-template>
+                    </kendo-grid-column>
 
+                    <kendo-grid-column field="weight" title="设置权重值" >
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        <table>
+                          <tr>
+                            <td width="50">
+                              <label>{{business.operationsSys[rowIndex].weight}}</label>
+                            </td>
+                            <td>
+                              <kendo-slider
+                                [min]="1"
+                                [max]="10"
+                                [smallStep]="1"
+                                [(ngModel)] = "business.operationsSys[rowIndex].weight"
+                                id="SysSlide{{dataItem.name}}"
+                                name="SysWeight{{dataItem.name}}"
+                                disabled="{{!business.operationsSys[rowIndex].checked}}"
+                              ></kendo-slider>
+                            </td>
+                          </tr>
+                        </table>
+                      </ng-template>
+                    </kendo-grid-column>
 
-
+                  </kendo-grid>
+                </ng-template>
+              </kendo-tabstrip-tab>
+            </kendo-tabstrip>
           </div>
 
 

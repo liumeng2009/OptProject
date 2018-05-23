@@ -125,6 +125,15 @@
       </ng-template>
     </kendo-grid-column>
 
+    <kendo-grid-column field="sequence" title="故障名前置">
+      <ng-template kendoGridFilterCellTemplate>
+
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span>{{dataItem.sequence==1?'是':'否'}}</span>
+      </ng-template>
+    </kendo-grid-column>
+
     <kendo-grid-column field="weight" title="权重">
       <ng-template kendoGridFilterCellTemplate>
 

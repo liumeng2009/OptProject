@@ -130,8 +130,8 @@ export class BusinessContentEditComponent implements OnInit{
         let result=this.apiResultService.result(data);
         if(result.status==0){
           for(let d of result.data){
-            let op=new Operation(d.code,false,d.name,false,5,null,null);
-            let op1=new Operation(d.code,false,d.name,true,5,null,null);
+            let op=new Operation(d.code,false,d.name,false,5,null,null,false);
+            let op1=new Operation(d.code,false,d.name,true,5,null,null,false);
             this.operationsDesk.push(op);
             this.operationsSys.push(op1);
           }
@@ -147,6 +147,7 @@ export class BusinessContentEditComponent implements OnInit{
     this.businessContentService.getBusiness(id).then(
       data=>{
         let result=this.apiResultService.result(data);
+        console.log(result);
         if(result&&result.status==0){
           this.business.type=result.data[0].type;
           this.business.equipment=result.data[0].equipment;
@@ -156,6 +157,7 @@ export class BusinessContentEditComponent implements OnInit{
                 operation.checked=true;
                 operation.weight=r.weight;
                 operation.id=r.id;
+                operation.sequence=r.sequence==1?true:false;
                 break;
               }
             }
@@ -164,6 +166,7 @@ export class BusinessContentEditComponent implements OnInit{
                 operation.checked=true;
                 operation.weight=r.weight;
                 operation.id=r.id;
+                operation.sequence=r.sequence==1?true:false;
                 break;
               }
             }

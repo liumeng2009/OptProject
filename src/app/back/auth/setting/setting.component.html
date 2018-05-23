@@ -4,7 +4,7 @@
       <div class="card-block">
         <form class="k-form"  (ngSubmit)="onSubmit()" #userForm="ngForm">
           <label class="k-form-field">
-            <img [src]="getAvatarImageUrl(user?.avatar)" (click)="changeAvatar()" style="width:200px;height:200px;border:#ccc 1px solid;border-radius: 100%;cursor: pointer;">
+            <img [src]="getAvatarImageUrl(user)" (click)="changeAvatar()" style="width:200px;height:200px;border:#ccc 1px solid;border-radius: 100%;cursor: pointer;">
           </label>
           <label class="k-form-field">
             <span for="name">姓名（登录时使用）<span class="k-required">*</span></span>
@@ -36,7 +36,18 @@
 <div kendoDialogContainer></div>
 <ng-template #itemListRef>
   <div style="width:500px;height:400px">
-    <img [src]="getAvatarImageUrl(user?.avatar)" style="width:200px;height:200px;border:#ccc 1px solid;margin-bottom: 8px;">
+
+    <kendo-tabstrip>
+      <kendo-tabstrip-tab *ngFor="let sa of sysAvatars; let i = index" [title]="sa.name" [selected]="i==0?true:false">
+        <ng-template kendoTabContent >
+          <ul class="avatar-list">
+            <li *ngFor="let img of sa.imgs">
+              <img src="{{serverpath+img}}" (click)="changeSysAvatar(img)" >
+            </li>
+          </ul>
+        </ng-template>
+      </kendo-tabstrip-tab>
+    </kendo-tabstrip>
 
     <kendo-upload
       [saveUrl]="uploadSaveUrl"

@@ -1,0 +1,15 @@
+.avatar-list{
+  li{
+    list-style: none;
+    float:left;
+    img{
+      width:64px;
+      height:64px;
+      border:#fff 1px solid;
+      cursor: pointer;
+    }
+    img:hover{
+      border:#ff6358 1px solid;
+    }
+  }
+}

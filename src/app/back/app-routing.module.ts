@@ -132,7 +132,6 @@ export const PanelbarRoutes:Routes=[
   ]},
   {path:'needtoken',component:NoAuthComponent,data:{name:'没有权限访问该页面'}},
   {path:'**',component:OtherComponent,data:{name:'页面未找到'}}
-
 ];
 
 export const appRoutingProvider:any[]=[];

@@ -6,6 +6,7 @@ export class Operation {
     public isAdvanced:boolean,
     public weight: number,
     public remark:string,
-    public id:string
+    public id:string,
+    public sequence:boolean
   ) {  }
 }

@@ -435,15 +435,24 @@ export class MainComponent implements OnInit{
     }
   }
 
-  private baseImageUrl: string = new OptConfig().serverPath+ "/uploads/";
-  private avatarImagePath=this.baseImageUrl+'avatar/dongman/6.jpg';
-  private getAvatarImageUrl(avatar){
-    if(avatar){
-      return this.baseImageUrl+avatar;
+  private baseImageUrl: string = new OptConfig().serverPath;
+  private avatarImagePath=this.baseImageUrl+'/uploads/avatar/dongman/6.jpg';
+  private getAvatarImageUrl(user){
+    if(user){
+      if(user.avatar){
+        if(user.avatarUseImg==1){
+          //说明是上传的图片
+          return this.baseImageUrl+'/uploads/'+user.avatar;
+        }
+        else{
+          return this.baseImageUrl+user.avatar
+        }
+      }
+      else{
+        return this.avatarImagePath;
+      }
     }
-    else{
-      return this.avatarImagePath;
-    }
+
   }
 
 

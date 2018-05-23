@@ -23,6 +23,9 @@ export class UserService{
   private deleteurl=new OptConfig().serverPath+'/api/user/delete';
   private geturl=new OptConfig().serverPath+'/api/user/';
 
+  private sysavatarurl=new OptConfig().serverPath+'/api/user/sysAvatar/list'
+  private setsysavatarurl=new OptConfig().serverPath+'/api/user/sysAvatar/set'
+
   constructor(private http:Http,private cookieService:CookieService){}
 
   getUserList(pageid):Promise<ResponseData>{
@@ -78,6 +81,24 @@ export class UserService{
     let token=this.cookieService.get('optToken');
     return this.http
       .post(this.editurl+'?token='+token, user, {headers: this.headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
+  sysAvatar():Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let url=this.sysavatarurl+'?token='+token;
+    console.log(url);
+    return this.http.get(url)
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError)
+  }
+  setSysAvatar(img):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    return this.http
+      .post(this.setsysavatarurl+'?token='+token, img, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

@@ -57,11 +57,17 @@ export class SettingComponent implements OnInit{
     )
   }
 
-  private baseImageUrl: string = new OptConfig().serverPath+ "/uploads/";
-  private avatarImagePath=this.baseImageUrl+'avatar/dongman/6.jpg';
-  private getAvatarImageUrl(avatar){
-    if(avatar){
-      return this.baseImageUrl+avatar;
+  private baseImageUrl: string = new OptConfig().serverPath;
+  private avatarImagePath=this.baseImageUrl+'/uploads/avatar/动漫/6.jpg';
+  private getAvatarImageUrl(user){
+    if(user.avatar){
+      if(user.avatarUseImg==1){
+        //说明是上传的图片
+        return this.baseImageUrl+'/uploads/'+user.avatar;
+      }
+      else{
+        return this.baseImageUrl+user.avatar
+      }
     }
     else{
       return this.avatarImagePath;
@@ -85,12 +91,29 @@ export class SettingComponent implements OnInit{
 
   @ViewChild('itemListRef')tpl: TemplateRef<any>;
   private dialog;
+  private sysAvatars=[];
+  private serverpath=new OptConfig().serverPath;
   private changeAvatar(actionTemplate: TemplateRef<any>){
     this.dialog=this.dialogService.open({
       title: "替换头像",
       content: this.tpl,
       actions:actionTemplate,
     });
+
+    this.userService.sysAvatar().then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          //把路径补充完整
+          this.sysAvatars=result.data;
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
+
+
   }
   private cancel(){
     this.dialog.close();
@@ -110,13 +133,31 @@ export class SettingComponent implements OnInit{
       let avatarNow=json.data.avatar;
       let avatarType=json.data.avatarUseImg?json.data.avatarUseImg:0;
       this.user.avatar=avatarNow;
+      this.user.avatarUseImg=1;
       this.missionService.changeAvatar.emit(new Avatar(avatarNow,avatarType));
+      this.dialog.close();
     }
-
-
   }
   private errorResult($event){
     console.log($event);
+  }
+
+  private changeSysAvatar(img){
+    this.userService.setSysAvatar({img:img}).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          //this.getData();
+          this.user.avatar=img;
+          this.user.avatarUseImg=0;
+          this.missionService.changeAvatar.emit(new Avatar(img,0));
+          this.dialog.close();
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    )
   }
 
 
