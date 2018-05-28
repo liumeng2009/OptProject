@@ -35,16 +35,26 @@ export class LmTimePicker implements OnChanges{
 
   ngOnChanges(changes:SimpleChanges){
     console.log(changes);
+    console.log(this.txtValueSubmit);
 
-    if(changes['timeNow']){
-      let vm=changes['timeNow'].currentValue;
-      //this.txtValueSubmit=this.txtValue=vm.hour+'时'+vm.minute+'分'+vm.second+'秒';
-      if(vm&&vm.hour&&vm.minute&&vm.second){
-        this.timeNow.hour=vm.hour;
-        this.timeNow.minute=vm.minute;
-        this.timeNow.second=vm.second;
-        this.makeTextValue(true);
-        this.initWheel();
+    if(this.txtValueSubmit!=''){
+      this.timeNow.hour=this.selectedHour;
+      this.timeNow.minute=this.selectedMinute;
+      this.timeNow.second=this.selectedSecond;
+      this.makeTextValue(true);
+      this.initWheel();
+    }
+    else{
+      if(changes['timeNow']){
+        let vm=changes['timeNow'].currentValue;
+        //this.txtValueSubmit=this.txtValue=vm.hour+'时'+vm.minute+'分'+vm.second+'秒';
+        if(vm&&vm.hour&&vm.minute&&vm.second){
+          this.timeNow.hour=vm.hour;
+          this.timeNow.minute=vm.minute;
+          this.timeNow.second=vm.second;
+          this.makeTextValue(true);
+          this.initWheel();
+        }
       }
     }
     if(changes['disabled'])
@@ -52,7 +62,7 @@ export class LmTimePicker implements OnChanges{
 
   }
 
-  maskChange(event){
+  maskChanged(event){
     console.log(event);
     let str=event.toString();
     let strHour=parseInt(str.substring(0,2).trim()==''?'0':str.substring(0,2)) ;
@@ -260,11 +270,17 @@ export class LmTimePicker implements OnChanges{
     switch(type){
       case 'hour':
         this.timeNow.hour=this.selectedHour=event;
+        this.timeNow.minute=this.selectedMinute;
+        this.timeNow.second=this.selectedSecond;
         break;
       case 'minute':
+        this.timeNow.hour=this.selectedHour;
         this.timeNow.minute=this.selectedMinute=event;
+        this.timeNow.second=this.selectedSecond;
         break;
       case 'second':
+        this.timeNow.hour=this.selectedHour;
+        this.timeNow.minute=this.selectedMinute;
         this.timeNow.second=this.selectedSecond=event;
         break;
       default:
