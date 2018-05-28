@@ -1,5 +1,6 @@
 <span class="k-widget k-datepicker k-header {{showMask&&showMask.toString()=='true'?'k-state-disabled':''}} " style="position:relative" #container >
-  <kendo-maskedtextbox #maskTxt [mask]="'00时00分00秒'" [value]="txtValueSubmit" [disabled]="showMask"></kendo-maskedtextbox>
+  <kendo-maskedtextbox #maskTxt [mask]="'00时00分00秒'" [value]="txtValueSubmit" [disabled]="showMask" (valueChange)="maskChange($event)" ></kendo-maskedtextbox>
+  {{txtValueSubmit}}
   <span #anchor (click)="onToggle()" class="k-select" style="position: absolute;right: 0px;top: 0px;text-align: center;height: 30px;line-height: 30px;width: 30px;cursor:pointer;">
     <span class="k-icon k-i-clock"  >
 

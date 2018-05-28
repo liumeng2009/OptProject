@@ -39,7 +39,7 @@ export class LmTimePicker implements OnChanges{
     if(changes['timeNow']){
       let vm=changes['timeNow'].currentValue;
       //this.txtValueSubmit=this.txtValue=vm.hour+'时'+vm.minute+'分'+vm.second+'秒';
-      if(vm){
+      if(vm&&vm.hour&&vm.minute&&vm.second){
         this.timeNow.hour=vm.hour;
         this.timeNow.minute=vm.minute;
         this.timeNow.second=vm.second;
@@ -50,6 +50,24 @@ export class LmTimePicker implements OnChanges{
     if(changes['disabled'])
       this.showMask=!changes['disabled'].currentValue;
 
+  }
+
+  maskChange(event){
+    console.log(event);
+    let str=event.toString();
+    let strHour=parseInt(str.substring(0,2).trim()==''?'0':str.substring(0,2)) ;
+    let strMinute=parseInt(str.substring(2,4).trim()==''?'0':str.substring(2,4)) ;
+    let strSecond=parseInt(str.substring(4,6).trim()==''?'0':str.substring(4,6)) ;
+    console.log(strHour);
+    console.log(strMinute);
+    console.log(strSecond);
+
+    this.timeNow.hour=strHour;
+    this.timeNow.minute=strMinute;
+    this.timeNow.second=strSecond;
+
+    this.makeTextValue(true);
+    this.initWheel();
   }
 
   private initWheel(){
