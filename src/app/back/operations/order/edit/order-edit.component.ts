@@ -36,7 +36,7 @@ export class OrderEditComponent implements OnInit{
   order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
   groups:Group[]=[];
   private today=new Date(0,0,0);
-  private time=new LmTime(0,0,0);
+  private time;
 
   constructor(
     private router:Router,
@@ -323,6 +323,12 @@ export class OrderEditComponent implements OnInit{
   }
 
   private onSubmit(){
+    let date=this.today;
+    date.setHours(this.time.hours);
+    date.setMinutes(this.time.minute);
+    date.setSeconds(this.time.second);
+    this.order.incoming_time=date.getTime();
+
     console.log(this.order);
     this.orderService.create(this.order).then(
       data=>{

@@ -37,10 +37,13 @@ export class LmTimePicker implements OnChanges{
     console.log(changes);
     console.log(this.txtValueSubmit);
 
-    if(this.txtValueSubmit!=''){
+    if(this.txtValueSubmit!=''&&this.txtValueSubmit!='00时00分00秒'){
       this.timeNow.hour=this.selectedHour;
       this.timeNow.minute=this.selectedMinute;
       this.timeNow.second=this.selectedSecond;
+
+      console.log(this.maskTxt.nativeElement.children[0].value);
+
       this.makeTextValue(true);
       this.initWheel();
     }
@@ -48,12 +51,13 @@ export class LmTimePicker implements OnChanges{
       if(changes['timeNow']){
         let vm=changes['timeNow'].currentValue;
         //this.txtValueSubmit=this.txtValue=vm.hour+'时'+vm.minute+'分'+vm.second+'秒';
-        if(vm&&vm.hour&&vm.minute&&vm.second){
+        if(vm&&vm.hour!=undefined&&vm.minute!=undefined&&vm.second!=undefined){
           this.timeNow.hour=vm.hour;
           this.timeNow.minute=vm.minute;
           this.timeNow.second=vm.second;
           this.makeTextValue(true);
           this.initWheel();
+
         }
       }
     }
@@ -76,7 +80,7 @@ export class LmTimePicker implements OnChanges{
     this.timeNow.minute=strMinute;
     this.timeNow.second=strSecond;
 
-    this.makeTextValue(true);
+    //this.makeTextValue(true);
     this.initWheel();
   }
 

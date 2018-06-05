@@ -319,14 +319,14 @@ export class OrderAddComponent implements OnInit{
 
 
       let restStart=new Date(this.qk.qk_start_date.getFullYear(),this.qk.qk_start_date.getMonth(),this.qk.qk_start_date.getDate());
-      restStart.setHours(this.rest_start_time.hour);
-      restStart.setMinutes(this.rest_start_time.minute);
-      restStart.setSeconds(this.rest_start_time.second);
+      restStart.setHours(this.qk.rest_start_time.hour);
+      restStart.setMinutes(this.qk.rest_start_time.minute);
+      restStart.setSeconds(this.qk.rest_start_time.second);
 
       let restEnd=new Date(this.qk.qk_start_date.getFullYear(),this.qk.qk_start_date.getMonth(),this.qk.qk_start_date.getDate());
-      restEnd.setHours(this.rest_end_time.hour);
-      restEnd.setMinutes(this.rest_end_time.minute);
-      restEnd.setSeconds(this.rest_end_time.second);
+      restEnd.setHours(this.qk.rest_end_time.hour);
+      restEnd.setMinutes(this.qk.rest_end_time.minute);
+      restEnd.setSeconds(this.qk.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      rest_end_time.second);
 
       let qkCallStamp=qkCall.getTime();
       let qkStartStamp=qkStart.getTime();
@@ -903,11 +903,12 @@ export class OrderAddComponent implements OnInit{
     qk_start_date:new Date(),
     qk_start_time:new LmTime(0,0,0),
     qk_end_date:new Date(),
-    qk_end_time:new LmTime(0,0,0)
+    qk_end_time:new LmTime(0,0,0),
+    rest_start_time:new LmTime(12,0,0),
+    rest_end_time:new LmTime(13,30,0)
   }
 
-  private rest_start_time=new LmTime(12,0,0);
-  private rest_end_time=new LmTime(13,30,0);
+
 
 
 }
