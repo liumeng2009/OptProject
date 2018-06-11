@@ -324,7 +324,7 @@ export class OrderEditComponent implements OnInit{
 
   private onSubmit(){
     let date=this.today;
-    date.setHours(this.time.hours);
+    date.setHours(this.time.hour);
     date.setMinutes(this.time.minute);
     date.setSeconds(this.time.second);
     this.order.incoming_time=date.getTime();
