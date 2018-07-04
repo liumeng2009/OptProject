@@ -18,8 +18,7 @@ export class LoginService{
   login(username:string,password:string):Promise<ResponseData>{
 
     let headers=new Headers({'Content-Type':'application/json'});
-    let options=new RequestOptions(headers);
-    return this.http.post(this.loginurl,{username:username,password:password},options)
+    return this.http.post(this.loginurl,{username:username,password:password},{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)

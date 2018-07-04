@@ -33,16 +33,18 @@ export class BusinessContentService{
   private deletetypeurl=new OptConfig().serverPath+'/api/equipType/delete';
   private deleteopurl=new OptConfig().serverPath+'/api/equipOp/delete';
 
-  constructor(private http:Http,private cookieService:CookieService){}
+  constructor(private http:Http,private cookieService:CookieService){
+    let token=this.cookieService.get('optToken');
+    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+  }
 
   getBusinessContentList(pageid,type:string,equipment:string):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
-        url=this.listurl+'/page/'+pageid+'?token='+token
+        url=this.listurl+'/page/'+pageid
         }
     else{
-        url=this.listurl+'?token='+token
+        url=this.listurl
         }
     if(type&&type!=''){
       url=url+'&type='+type
@@ -50,7 +52,6 @@ export class BusinessContentService{
     if(equipment&&equipment!=''){
       url=url+'&equipment='+equipment
     }
-    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
@@ -58,26 +59,23 @@ export class BusinessContentService{
   }
 
   create(businessContent:BusinessContentPage): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveurl+'?token='+token, businessContent, {headers: this.headers})
+      .post(this.saveurl, businessContent, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
   edit(businessContent:BusinessContentPage): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.editurl+'?token='+token, businessContent, {headers: this.headers})
+      .post(this.editurl, businessContent, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getBusiness(id:string):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.geturl+id+'?token='+token)
+      .get(this.geturl+id,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -85,19 +83,17 @@ export class BusinessContentService{
 
 
   getEquipment(type:string):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    console.log(this.getequipment+'/'+type+'?token='+token);
     if(type&&type!=''){
-      console.log(this.getequipment+'/'+type+'?token='+token);
+      console.log(this.getequipment+'/'+type);
       return this.http
-        .get(this.getequipment+'/'+type+'?token='+token)
+        .get(this.getequipment+'/'+type)
         .toPromise()
         .then(this.extractData)
         .catch(this.handleError);
     }
     else{
       return this.http
-        .get(this.getequipment+'?token='+token)
+        .get(this.getequipment)
         .toPromise()
         .then(this.extractData)
         .catch(this.handleError);
@@ -105,60 +101,53 @@ export class BusinessContentService{
   }
 
   getType():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.gettypeurl+'?token='+token)
+      .get(this.gettypeurl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
   createType(equipType:EquipType): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.savetypeurl+'?token='+token, equipType, {headers: this.headers})
+      .post(this.savetypeurl, equipType, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
   getOp():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.getopurl+'?token='+token)
+      .get(this.getopurl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
   createOp(equipOp:EquipOp): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveopurl+'?token='+token, equipOp, {headers: this.headers})
+      .post(this.saveopurl, equipOp, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.deleteurl+'/'+id+'?token='+token)
+      .get(this.deleteurl+'/'+id,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   deletetype(id:string):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.deletetypeurl+'/'+id+'?token='+token)
+      .get(this.deletetypeurl+'/'+id,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   deleteop(id:string):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.deleteopurl+'/'+id+'?token='+token)
+      .get(this.deleteopurl+'/'+id,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

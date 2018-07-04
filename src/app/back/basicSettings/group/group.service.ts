@@ -15,23 +15,25 @@ import {Group} from '../../../bean/group';
 
 @Injectable()
 export class GroupService{
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers
 
   private listurl=new OptConfig().serverPath+'/api/groups/list';
   private saveurl=new OptConfig().serverPath+'/api/groups/save';
   private deleteurl=new OptConfig().serverPath+'/api/groups/delete';
   private geturl=new OptConfig().serverPath+'/api/groups/';
 
-  constructor(private http:Http,private cookieService:CookieService){}
+  constructor(private http:Http,private cookieService:CookieService){
+    let token=this.cookieService.get('optToken');
+    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+  }
 
   getGroupList(pageid):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
-      url=this.listurl+'/page/'+pageid+'?token='+token
+      url=this.listurl+'/page/'+pageid
     }
     else{
-      url=this.listurl+'?token='+token
+      url=this.listurl
     }
     return this.http.get(url)
       .toPromise()
@@ -40,27 +42,24 @@ export class GroupService{
   }
 
   create(group:Group): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveurl+'?token='+token, group, {headers: this.headers})
+      .post(this.saveurl, group, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-        .get(this.deleteurl+'/'+id+'?token='+token)
+        .get(this.deleteurl+'/'+id,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getGroup(id:string):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.geturl+id+'?token='+token;
-    return this.http.get(url)
+    let url=this.geturl+id
+    return this.http.get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)

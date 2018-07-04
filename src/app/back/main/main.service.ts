@@ -12,27 +12,20 @@ import {OptConfig} from '../../config/config'
 @Injectable()
 export class MainService{
   private loginurl=new OptConfig().serverPath+'/api/user/';
-  private urltree=new OptConfig().serverPath+'/api/user/get/urltree';
 
-  constructor(private http:Http,private cookieService:CookieService){}
+  private headers;
+  constructor(private http:Http,private cookieService:CookieService){
+    let token=this.cookieService.get('optToken');
+    this.headers=new Headers({'authorization':token,'Content-Type': 'application/json'})
+  }
 
   getUserInfo():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    return this.http.get(this.loginurl+'?token='+token)
+    return this.http.get(this.loginurl,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
-  getUrlTree():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.urltree+'?token='+token;
-    console.log(url);
-    return this.http.get(url)
-      .toPromise()
-      .then(this.extractData)
-      .catch(this.handleError)
-  }
 
   private extractData(res:Response){
     let body=res.json();

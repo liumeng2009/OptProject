@@ -117,7 +117,6 @@ export class MainComponent implements OnInit{
       $t.topNumber.top=topNum+'px';
     }
     this.checkLogin();
-    //this.getUrlTree();
 
 
     let url=this.location.path();
@@ -314,22 +313,6 @@ export class MainComponent implements OnInit{
       }
     }
     return false;
-  }
-
-  private getUrlTree(){
-    this.mainService.getUrlTree().then(
-      data=>{
-        let result=this.apiResultService.result(data);
-        console.log(data);
-        let routeArray=this.router.config;
-        console.log(this);
-        routeArray[3].children.push(result.data);
-        this.router.resetConfig(routeArray);
-      },
-      error=>{
-        this.ajaxExceptionService.simpleOp(error);
-      }
-    )
   }
 
   private createBreadCrumb(){

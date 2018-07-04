@@ -15,7 +15,7 @@ import {Order} from '../../../bean/order';
 
 @Injectable()
 export class OrderService{
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers ;
 
   private listurl=new OptConfig().serverPath+'/api/order/list';
   private saveurl=new OptConfig().serverPath+'/api/order/save';
@@ -24,46 +24,39 @@ export class OrderService{
   private getorderno=new OptConfig().serverPath+'/api/order/getorderno/get/';
   private deleteurl=new OptConfig().serverPath+'/api/order/delete'
 
-  constructor(private http:Http,private cookieService:CookieService){}
+  constructor(private http:Http,private cookieService:CookieService){
+    let token=this.cookieService.get('optToken');
+    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+  }
 
   getOrderList(pageid,time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
       if(time){
-        url=this.listurl+'/page/'+pageid+'/time/'+time+'?token='+token
+        url=this.listurl+'/page/'+pageid+'/time/'+time
       }else{
-        url=this.listurl+'/page/'+pageid+'?token='+token
+        url=this.listurl+'/page/'+pageid
       }
 
     }
     else{
       if(time){
-        url=this.listurl+'/time/'+time+'?token='+token
+        url=this.listurl+'/time/'+time
       }
       else{
-        url=this.listurl+'?token='+token
+        url=this.listurl
       }
     }
 
-    /*
-    if(type&&type!=''){
-      url=url+'&type='+type
-    }
-    if(equipment&&equipment!=''){
-      url=url+'&equipment='+equipment
-    }
-*/
-    return this.http.get(url)
+    return this.http.get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   create(order:Order): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveurl+'?token='+token, order, {headers: this.headers})
+      .post(this.saveurl, order, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -71,28 +64,24 @@ export class OrderService{
 
   //建立订单和工单
   createOperation(order:Order): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveorderurl+'?token='+token, order, {headers: this.headers})
+      .post(this.saveorderurl, order, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getOrder(id:string):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    console.log(this.geturl+id+'?token='+token);
     return this.http
-      .get(this.geturl+id+'?token='+token)
+      .get(this.geturl, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.deleteurl+'/'+id+'?token='+token)
+      .get(this.deleteurl+'/'+id, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

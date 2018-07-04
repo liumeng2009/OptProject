@@ -15,14 +15,17 @@ import {Building} from '../../../bean/building';
 
 @Injectable()
 export class AddressService{
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers ;
 
   private listurl=new OptConfig().serverPath+'/api/buildings/list';
   private saveurl=new OptConfig().serverPath+'/api/buildings/save';
   private deleteurl=new OptConfig().serverPath+'/api/buildings/delete';
   private geturl=new OptConfig().serverPath+'/api/buildings/';
 
-  constructor(private http:Http,private cookieService:CookieService){}
+  constructor(private http:Http,private cookieService:CookieService){
+    let token=this.cookieService.get('optToken');
+    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+  }
 
   getAddressList(pageid):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');

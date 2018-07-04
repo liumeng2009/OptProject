@@ -15,22 +15,24 @@ import {User} from '../../../bean/user';
 
 @Injectable()
 export class WorkerService{
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers
 
   private listurl=new OptConfig().serverPath+'/api/workers/list';
   private saveurl=new OptConfig().serverPath+'/api/workers/add';
   private deleteurl=new OptConfig().serverPath+'/api/workers/delete';
 
-  constructor(private http:Http,private cookieService:CookieService){}
+  constructor(private http:Http,private cookieService:CookieService){
+    let token=this.cookieService.get('optToken');
+    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+  }
 
   getWorkerList(pageid):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
-      url=this.listurl+'/page/'+pageid+'?token='+token
+      url=this.listurl+'/page/'+pageid
     }
     else{
-      url=this.listurl+'?token='+token
+      url=this.listurl
     }
     console.log(url);
     return this.http.get(url)
@@ -40,18 +42,16 @@ export class WorkerService{
   }
 
   create(userId:string): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveurl+'?token='+token, {userId:userId}, {headers: this.headers})
+      .post(this.saveurl, {userId:userId}, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(userId:string):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.deleteurl+'/'+userId+'?token='+token)
+      .get(this.deleteurl+'/'+userId,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

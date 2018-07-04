@@ -28,86 +28,78 @@ export class OperationService{
   private editactionurl=new OptConfig().serverPath+'/api/action/edit';
   private deleteactionurl=new OptConfig().serverPath+'/api/action/delete';
 
-  constructor(private http:Http,private cookieService:CookieService){}
+  constructor(private http:Http,private cookieService:CookieService){
+    let token=this.cookieService.get('optToken');
+    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+  }
 
   getOperationList(pageid,time,corp,no):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     let url='';
     let searchStr='/time/'+(time?time:'0')+'/corp/'+(corp?corp:'0')+'/no/'+(no?no:'0')
     if(pageid){
-      url=this.listurl+'/page/'+pageid+searchStr+'?token='+token
+      url=this.listurl+'/page/'+pageid+searchStr
     }
     else{
-      url=this.listurl+searchStr+'?token='+token
+      url=this.listurl+searchStr
     }
     console.log(url);
-    return this.http.get(url)
+    return this.http.get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   getOperation(id):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-
-    let url=this.geturl+'/'+id+'?token='+token
-
-    console.log(url);
-    return this.http.get(url)
+    let url=this.geturl+'/'+id
+    return this.http.get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   create(operation:WorkOrder): Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveurl+'?token='+token, operation, {headers: this.headers})
+      .post(this.saveurl, operation, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   edit(operation:WorkOrder):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.editurl+'?token='+token, operation, {headers: this.headers})
+      .post(this.editurl, operation, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.deleteurl+'/'+id+'?token='+token)
+      .get(this.deleteurl+'/'+id,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   createAction(workOrder:WorkOrder):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.saveactionurl+'?token='+token, workOrder, {headers: this.headers})
+      .post(this.saveactionurl, workOrder, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   editAction(actionDetail:any):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     return this.http
-      .post(this.editactionurl+'?token='+token, actionDetail, {headers: this.headers})
+      .post(this.editactionurl, actionDetail, {headers: this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   deleteAction(id:string):Promise<ResponseData> {
-    let token=this.cookieService.get('optToken');
     return this.http
-      .get(this.deleteactionurl+'/'+id+'?token='+token)
+      .get(this.deleteactionurl+'/'+id,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

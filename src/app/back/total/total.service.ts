@@ -12,7 +12,7 @@ import {CookieService} from "angular2-cookie/core";
 
 @Injectable()
 export class TotalService{
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers ;
 
   private listurl=new OptConfig().serverPath+'/api/operation/list';
   private workerdoinglisturl=new OptConfig().serverPath+'/api/workers/doinglist';
@@ -23,92 +23,86 @@ export class TotalService{
   private oplistmonthworkertimeurl=new OptConfig().serverPath+'/api/operation/list_month_worker_time';
   private oplistmonthcorporationcounturl=new OptConfig().serverPath+'/api/operation/list_month_corporation_count';
 
-  constructor(private http:Http,private cookieService:CookieService){}
+  constructor(private http:Http,private cookieService:CookieService){
+    let token=this.cookieService.get('optToken');
+    this.headers= new Headers({'Content-Type': 'application/json','authorization':token})
+  }
 
   getOperationList(time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     let url='';
     let searchStr='/time/'+time
-    url=this.listurl+searchStr+'?token='+token
-
+    url=this.listurl+searchStr
     console.log(url);
-    return this.http.get(url)
+    return this.http.get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   getDoingList(time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.workerdoinglisturl+'/time/'+time+'?token='+token;
+    let url=this.workerdoinglisturl+'/time/'+time;
     console.log(url);
     return this.http
-      .get(url)
+      .get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getActionList(time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.actionlisturl+'/time/'+time+'?token='+token;
+    let url=this.actionlisturl+'/time/'+time;
     console.log(url);
     return this.http
-      .get(url)
+      .get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getOperationListWeek(time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.oplistweekurl+'/time/'+time+'?token='+token;
+    let url=this.oplistweekurl+'/time/'+time;
     console.log(url);
     return this.http
-      .get(url)
+      .get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
   getOperationListMonth(time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.oplistmonthurl+'/time/'+time+'?token='+token;
+    let url=this.oplistmonthurl+'/time/'+time;
     console.log(url);
     return this.http
-      .get(url)
+      .get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getOperationListMonthWorker(time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.oplistmonthworkerurl+'/time/'+time+'?token='+token;
+    let url=this.oplistmonthworkerurl+'/time/'+time;
     console.log(url);
     return this.http
-      .get(url)
+      .get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getOperationListMonthWorkerTime(time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.oplistmonthworkertimeurl+'/time/'+time+'?token='+token;
+    let url=this.oplistmonthworkertimeurl+'/time/'+time;
     console.log(url);
     return this.http
-      .get(url)
+      .get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getOperationListMonthCoprationCount(time):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.oplistmonthcorporationcounturl+'/time/'+time+'?token='+token;
+    let url=this.oplistmonthcorporationcounturl+'/time/'+time;
     console.log(url);
     return this.http
-      .get(url)
+      .get(url,{headers:this.headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
