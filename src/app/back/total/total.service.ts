@@ -24,16 +24,14 @@ export class TotalService{
   private oplistmonthcorporationcounturl=new OptConfig().serverPath+'/api/operation/list_month_corporation_count';
 
   constructor(private http:Http,private cookieService:CookieService){
-    let token=this.cookieService.get('optToken');
-    this.headers= new Headers({'Content-Type': 'application/json','authorization':token})
+
   }
 
   getOperationList(time):Promise<ResponseData>{
     let url='';
     let searchStr='/time/'+time
     url=this.listurl+searchStr
-    console.log(url);
-    return this.http.get(url,{headers:this.headers})
+    return this.http.get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
@@ -41,9 +39,8 @@ export class TotalService{
 
   getDoingList(time):Promise<ResponseData>{
     let url=this.workerdoinglisturl+'/time/'+time;
-    console.log(url);
     return this.http
-      .get(url,{headers:this.headers})
+      .get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -51,9 +48,8 @@ export class TotalService{
 
   getActionList(time):Promise<ResponseData>{
     let url=this.actionlisturl+'/time/'+time;
-    console.log(url);
     return this.http
-      .get(url,{headers:this.headers})
+      .get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -61,18 +57,16 @@ export class TotalService{
 
   getOperationListWeek(time):Promise<ResponseData>{
     let url=this.oplistweekurl+'/time/'+time;
-    console.log(url);
     return this.http
-      .get(url,{headers:this.headers})
+      .get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
   getOperationListMonth(time):Promise<ResponseData>{
     let url=this.oplistmonthurl+'/time/'+time;
-    console.log(url);
     return this.http
-      .get(url,{headers:this.headers})
+      .get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -80,9 +74,8 @@ export class TotalService{
 
   getOperationListMonthWorker(time):Promise<ResponseData>{
     let url=this.oplistmonthworkerurl+'/time/'+time;
-    console.log(url);
     return this.http
-      .get(url,{headers:this.headers})
+      .get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -90,9 +83,8 @@ export class TotalService{
 
   getOperationListMonthWorkerTime(time):Promise<ResponseData>{
     let url=this.oplistmonthworkertimeurl+'/time/'+time;
-    console.log(url);
     return this.http
-      .get(url,{headers:this.headers})
+      .get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -100,9 +92,8 @@ export class TotalService{
 
   getOperationListMonthCoprationCount(time):Promise<ResponseData>{
     let url=this.oplistmonthcorporationcounturl+'/time/'+time;
-    console.log(url);
     return this.http
-      .get(url,{headers:this.headers})
+      .get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

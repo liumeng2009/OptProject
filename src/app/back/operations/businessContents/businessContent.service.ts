@@ -17,7 +17,6 @@ import {EquipOp} from "../../../bean/equipOp";
 
 @Injectable()
 export class BusinessContentService{
-  private headers = new Headers({'Content-Type': 'application/json'});
 
   private listurl=new OptConfig().serverPath+'/api/business/list';
   private saveurl=new OptConfig().serverPath+'/api/business/save';
@@ -34,8 +33,7 @@ export class BusinessContentService{
   private deleteopurl=new OptConfig().serverPath+'/api/equipOp/delete';
 
   constructor(private http:Http,private cookieService:CookieService){
-    let token=this.cookieService.get('optToken');
-    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+
   }
 
   getBusinessContentList(pageid,type:string,equipment:string):Promise<ResponseData>{
@@ -45,13 +43,17 @@ export class BusinessContentService{
         }
     else{
         url=this.listurl
-        }
+    }
+
+    url=url+'?param=none';
+
     if(type&&type!=''){
       url=url+'&type='+type
     }
     if(equipment&&equipment!=''){
       url=url+'&equipment='+equipment
     }
+    console.log(url);
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
@@ -59,23 +61,29 @@ export class BusinessContentService{
   }
 
   create(businessContent:BusinessContentPage): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveurl, businessContent, {headers: this.headers})
+      .post(this.saveurl, businessContent, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
   edit(businessContent:BusinessContentPage): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.editurl, businessContent, {headers: this.headers})
+      .post(this.editurl, businessContent, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getBusiness(id:string):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .get(this.geturl+id,{headers:this.headers})
+      .get(this.geturl+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -108,8 +116,10 @@ export class BusinessContentService{
       .catch(this.handleError);
   }
   createType(equipType:EquipType): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.savetypeurl, equipType, {headers: this.headers})
+      .post(this.savetypeurl, equipType, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -122,32 +132,40 @@ export class BusinessContentService{
       .catch(this.handleError);
   }
   createOp(equipOp:EquipOp): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveopurl, equipOp, {headers: this.headers})
+      .post(this.saveopurl, equipOp, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .get(this.deleteurl+'/'+id,{headers:this.headers})
+      .get(this.deleteurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   deletetype(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .get(this.deletetypeurl+'/'+id,{headers:this.headers})
+      .get(this.deletetypeurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   deleteop(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .get(this.deleteopurl+'/'+id,{headers:this.headers})
+      .get(this.deleteopurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

@@ -15,7 +15,6 @@ import {Corporation} from '../../../bean/corporation';
 
 @Injectable()
 export class CorporationService{
-  private headers ;
 
   private listurl=new OptConfig().serverPath+'/api/corporations/list';
   private saveurl=new OptConfig().serverPath+'/api/corporations/save';
@@ -23,8 +22,7 @@ export class CorporationService{
   private geturl=new OptConfig().serverPath+'/api/corporations/';
 
   constructor(private http:Http,private cookieService:CookieService){
-    let token=this.cookieService.get('optToken');
-    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+
   }
 
   getCorporationList(pageid,groupId:string):Promise<ResponseData>{
@@ -36,7 +34,7 @@ export class CorporationService{
       url=this.listurl
     }
     if(groupId!=null&&groupId!=undefined){
-      url+='&group='+groupId
+      url+='?group='+groupId
     }
     console.log(url);
     return this.http.get(url)
@@ -46,25 +44,31 @@ export class CorporationService{
   }
 
   create(group:Corporation): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveurl, group, {headers: this.headers})
+      .post(this.saveurl, group, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-        .get(this.deleteurl+'/'+id, {headers: this.headers})
+        .get(this.deleteurl+'/'+id, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getCorporation(id:string):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     let url=this.geturl+id
     console.log(url);
-    return this.http.get(url, {headers: this.headers})
+    return this.http.get(url, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)

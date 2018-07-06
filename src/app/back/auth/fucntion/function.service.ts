@@ -14,7 +14,6 @@ import {OptConfig} from '../../../config/config'
 
 @Injectable()
 export class FunctionService{
-  private headers = new Headers({'Content-Type': 'application/json'});
 
   private listurl=new OptConfig().serverPath+'/api/function/list';
   private parentlisturl=new OptConfig().serverPath+'/api/function/parent_list';
@@ -28,20 +27,14 @@ export class FunctionService{
   constructor(private http:Http,private cookieService:CookieService){}
 
   getList():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.listurl+'?token='+token;
-    console.log(url);
-    return this.http.get(url)
+    return this.http.get(this.listurl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   getOpList():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.oplisturl+'?token='+token;
-    console.log(url);
-    return this.http.get(url)
+    return this.http.get(this.oplisturl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
@@ -49,8 +42,9 @@ export class FunctionService{
 
   createAuth(auth:any): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.authCreateUrl+'?token='+token, auth, {headers: this.headers})
+      .post(this.authCreateUrl, auth, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -58,18 +52,16 @@ export class FunctionService{
 
   deleteAuth(auth:any): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.authDeleteUrl+'?token='+token, auth, {headers: this.headers})
+      .post(this.authDeleteUrl+'?token='+token, auth, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getParentList():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.parentlisturl+'?token='+token;
-    console.log(url);
-    return this.http.get(url)
+    return this.http.get(this.parentlisturl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
@@ -77,8 +69,9 @@ export class FunctionService{
 
   create(functionObj:any): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.addurl+'?token='+token, functionObj, {headers: this.headers})
+      .post(this.addurl, functionObj, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

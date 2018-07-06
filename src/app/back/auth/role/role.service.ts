@@ -15,8 +15,6 @@ import {User} from '../../../bean/user';
 
 @Injectable()
 export class RoleService{
-  private headers = new Headers({'Content-Type': 'application/json'});
-
   private listurl=new OptConfig().serverPath+'/api/role/list';
   private addurl=new OptConfig().serverPath+'/api/role/add';
   private editurl=new OptConfig().serverPath+'/api/role/edit';
@@ -31,17 +29,14 @@ export class RoleService{
   constructor(private http:Http,private cookieService:CookieService){}
 
   getRoleList():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.listurl+'?token='+token
-    return this.http.get(url)
+    return this.http.get(this.listurl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   getRole(id):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.geturl+'/'+id+'?token='+token;
+    let url=this.geturl+'/'+id
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
@@ -50,8 +45,9 @@ export class RoleService{
 
   create(role:any): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.addurl+'?token='+token, role, {headers: this.headers})
+      .post(this.addurl, role, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -59,8 +55,9 @@ export class RoleService{
 
   edit(role:any): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.editurl+'?token='+token, role, {headers: this.headers})
+      .post(this.editurl, role, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -68,8 +65,9 @@ export class RoleService{
 
   delete(id:string):Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-        .get(this.deleteurl+'/'+id+'?token='+token)
+        .get(this.deleteurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -77,8 +75,9 @@ export class RoleService{
 
   authInRoleCreate(authInRole:any): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.authInRoleAddUrl+'?token='+token, authInRole, {headers: this.headers})
+      .post(this.authInRoleAddUrl, authInRole, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -86,17 +85,16 @@ export class RoleService{
 
   authInRoleDelete(authInRole:any): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.authInRoleDeleteUrl+'?token='+token, authInRole, {headers: this.headers})
+      .post(this.authInRoleDeleteUrl, authInRole, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   authInRoleList(roleId:string):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.authInRoleListUrl+'/'+roleId+'?token='+token;
-    console.log(url);
+    let url=this.authInRoleListUrl+'/'+roleId;
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)

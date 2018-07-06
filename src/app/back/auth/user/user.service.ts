@@ -15,7 +15,6 @@ import {User} from '../../../bean/user';
 
 @Injectable()
 export class UserService{
-  private headers = new Headers({'Content-Type': 'application/json'});
 
   private listurl=new OptConfig().serverPath+'/api/user/list';
   private saveurl=new OptConfig().serverPath+'/api/user/reg';
@@ -32,10 +31,10 @@ export class UserService{
     let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
-        url=this.listurl+'/page/'+pageid+'?token='+token
+        url=this.listurl+'/page/'+pageid
         }
     else{
-        url=this.listurl+'?token='+token
+        url=this.listurl
         }
     return this.http.get(url)
       .toPromise()
@@ -45,8 +44,9 @@ export class UserService{
 
   create(user:User): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveurl+'?token='+token, user, {headers: this.headers})
+      .post(this.saveurl+'?token='+token, user, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -54,24 +54,23 @@ export class UserService{
 
   delete(id:string):Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-        .get(this.deleteurl+'/'+id+'?token='+token)
+        .get(this.deleteurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getUser(id:string):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.geturl+id+'?token='+token;
+    let url=this.geturl+id
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
   getUserSimple():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.geturl+'?simple=true&token='+token;
+    let url=this.geturl+'?simple=true'
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
@@ -79,26 +78,25 @@ export class UserService{
   }
   edit(user:User): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.editurl+'?token='+token, user, {headers: this.headers})
+      .post(this.editurl, user, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   sysAvatar():Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.sysavatarurl+'?token='+token;
-    console.log(url);
-    return this.http.get(url)
+    return this.http.get(this.sysavatarurl)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
   setSysAvatar(img):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.setsysavatarurl+'?token='+token, img, {headers: this.headers})
+      .post(this.setsysavatarurl, img, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

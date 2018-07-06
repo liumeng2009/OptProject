@@ -15,7 +15,6 @@ import {CorpBuilding} from '../../../bean/corpBuilding';
 
 @Injectable()
 export class CorpBuildingService{
-  private headers = new Headers({'Content-Type': 'application/json'});
 
   private listurl=new OptConfig().serverPath+'/api/corpBuildings/list';
   private saveurl=new OptConfig().serverPath+'/api/corpBuildings/save';
@@ -26,10 +25,11 @@ export class CorpBuildingService{
 
   getCorporationList(corpid):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     let url='';
-    url=this.listurl+'/'+corpid+'?token='+token
+    url=this.listurl+'/'+corpid
     console.log(url);
-    return this.http.get(url)
+    return this.http.get(url,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
@@ -37,8 +37,9 @@ export class CorpBuildingService{
 
   create(corpBuilding:CorpBuilding): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveurl+'?token='+token, corpBuilding, {headers: this.headers})
+      .post(this.saveurl, corpBuilding, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -46,8 +47,9 @@ export class CorpBuildingService{
 
   delete(id:string):Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .get(this.deleteurl+'/'+id+'?token='+token)
+      .get(this.deleteurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -55,8 +57,8 @@ export class CorpBuildingService{
 
   getCorporation(id:string):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-    let url=this.geturl+id+'?token='+token;
-    return this.http.get(url)
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
+    return this.http.get(this.geturl,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)

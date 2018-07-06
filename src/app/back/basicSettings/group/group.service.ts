@@ -15,16 +15,13 @@ import {Group} from '../../../bean/group';
 
 @Injectable()
 export class GroupService{
-  private headers
-
   private listurl=new OptConfig().serverPath+'/api/groups/list';
   private saveurl=new OptConfig().serverPath+'/api/groups/save';
   private deleteurl=new OptConfig().serverPath+'/api/groups/delete';
   private geturl=new OptConfig().serverPath+'/api/groups/';
 
   constructor(private http:Http,private cookieService:CookieService){
-    let token=this.cookieService.get('optToken');
-    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+
   }
 
   getGroupList(pageid):Promise<ResponseData>{
@@ -42,24 +39,29 @@ export class GroupService{
   }
 
   create(group:Group): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveurl, group, {headers: this.headers})
+      .post(this.saveurl, group, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-        .get(this.deleteurl+'/'+id,{headers:this.headers})
+        .get(this.deleteurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getGroup(id:string):Promise<ResponseData>{
+
     let url=this.geturl+id
-    return this.http.get(url,{headers:this.headers})
+    return this.http.get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)

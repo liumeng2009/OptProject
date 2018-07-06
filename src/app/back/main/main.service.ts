@@ -13,14 +13,14 @@ import {OptConfig} from '../../config/config'
 export class MainService{
   private loginurl=new OptConfig().serverPath+'/api/user/';
 
-  private headers;
   constructor(private http:Http,private cookieService:CookieService){
-    let token=this.cookieService.get('optToken');
-    this.headers=new Headers({'authorization':token,'Content-Type': 'application/json'})
+
   }
 
   getUserInfo():Promise<ResponseData>{
-    return this.http.get(this.loginurl,{headers:this.headers})
+    let token=this.cookieService.get('optToken');
+    let headers=new Headers({'authorization':token,'Content-Type': 'application/json'})
+    return this.http.get(this.loginurl,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)

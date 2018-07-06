@@ -15,18 +15,15 @@ import {Order} from '../../../bean/order';
 
 @Injectable()
 export class OrderService{
-  private headers ;
-
   private listurl=new OptConfig().serverPath+'/api/order/list';
   private saveurl=new OptConfig().serverPath+'/api/order/save';
   private saveorderurl=new OptConfig().serverPath+'/api/order/saveOrder';
   private geturl=new OptConfig().serverPath+'/api/order/';
-  private getorderno=new OptConfig().serverPath+'/api/order/getorderno/get/';
+  //private getorderno=new OptConfig().serverPath+'/api/order/getorderno/get/';
   private deleteurl=new OptConfig().serverPath+'/api/order/delete'
 
   constructor(private http:Http,private cookieService:CookieService){
-    let token=this.cookieService.get('optToken');
-    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+
   }
 
   getOrderList(pageid,time):Promise<ResponseData>{
@@ -48,15 +45,17 @@ export class OrderService{
       }
     }
 
-    return this.http.get(url,{headers:this.headers})
+    return this.http.get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   create(order:Order): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveurl, order, {headers: this.headers})
+      .post(this.saveurl, order, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -64,8 +63,10 @@ export class OrderService{
 
   //建立订单和工单
   createOperation(order:Order): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveorderurl, order, {headers: this.headers})
+      .post(this.saveorderurl, order, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -73,15 +74,17 @@ export class OrderService{
 
   getOrder(id:string):Promise<ResponseData>{
     return this.http
-      .get(this.geturl, {headers: this.headers})
+      .get(this.geturl+id)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .get(this.deleteurl+'/'+id, {headers: this.headers})
+      .get(this.deleteurl+'/'+id, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

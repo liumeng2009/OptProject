@@ -16,10 +16,8 @@ import {WorkOrder} from "../../bean/workOrder";
 
 @Injectable()
 export class OperationService{
-  private headers = new Headers({'Content-Type': 'application/json'});
-
   private listurl=new OptConfig().serverPath+'/api/operation/list';
-  private geturl=new OptConfig().serverPath+'/api/operation';
+  private geturl=new OptConfig().serverPath+'/api/operation/';
   private saveurl=new OptConfig().serverPath+'/api/operation/save';
   private editurl=new OptConfig().serverPath+'/api/operation/edit';
   private deleteurl=new OptConfig().serverPath+'/api/operation/delete';
@@ -29,8 +27,7 @@ export class OperationService{
   private deleteactionurl=new OptConfig().serverPath+'/api/action/delete';
 
   constructor(private http:Http,private cookieService:CookieService){
-    let token=this.cookieService.get('optToken');
-    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+
   }
 
   getOperationList(pageid,time,corp,no):Promise<ResponseData>{
@@ -42,64 +39,75 @@ export class OperationService{
     else{
       url=this.listurl+searchStr
     }
-    console.log(url);
-    return this.http.get(url,{headers:this.headers})
+    return this.http.get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   getOperation(id):Promise<ResponseData>{
-    let url=this.geturl+'/'+id
-    return this.http.get(url,{headers:this.headers})
+    let url=this.geturl+id
+    return this.http.get(url)
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
   create(operation:WorkOrder): Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveurl, operation, {headers: this.headers})
+      .post(this.saveurl, operation, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   edit(operation:WorkOrder):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.editurl, operation, {headers: this.headers})
+      .post(this.editurl, operation, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   delete(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .get(this.deleteurl+'/'+id,{headers:this.headers})
+      .get(this.deleteurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   createAction(workOrder:WorkOrder):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveactionurl, workOrder, {headers: this.headers})
+      .post(this.saveactionurl, workOrder, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   editAction(actionDetail:any):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.editactionurl, actionDetail, {headers: this.headers})
+      .post(this.editactionurl, actionDetail, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   deleteAction(id:string):Promise<ResponseData> {
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .get(this.deleteactionurl+'/'+id,{headers:this.headers})
+      .get(this.deleteactionurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);

@@ -19,7 +19,6 @@ export class RegService{
 
     let headers=new Headers({'Content-Type':'application/json'});
     let options=new RequestOptions(headers);
-    console.log('请求的url是：'+this.loginurl);
     return this.http.post(this.loginurl,{username:username,password:password},options)
       .toPromise()
       .then(this.extractData)

@@ -11,28 +11,28 @@ import {OptConfig} from '../../config/config'
 
 @Injectable()
 export class AuthService{
-  private headers = new Headers({'Content-Type': 'application/json'});
-
   private checkauthurl=new OptConfig().serverPath+'/api/authinrole/check';
-  private checktokenurl=new OptConfig().serverPath+'/api/user/checktoken';
+  //private checktokenurl=new OptConfig().serverPath+'/api/user/checktoken';
 
   constructor(private http:Http,private cookieService:CookieService){}
 
   checkAuth(routeConfig:any):Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-    return this.http.post(this.checkauthurl+'?token='+token,routeConfig,{headers:this.headers})
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
+    return this.http.post(this.checkauthurl,routeConfig,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
 
-  checkToken():Promise<ResponseData>{
+/*  checkToken():Promise<ResponseData>{
     let token=this.cookieService.get('optToken');
-    return this.http.get(this.checktokenurl+'?token='+token)
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
+    return this.http.get(this.checktokenurl,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
-  }
+  }*/
 
 
   private extractData(res:Response){

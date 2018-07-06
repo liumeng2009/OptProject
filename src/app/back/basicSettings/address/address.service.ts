@@ -15,26 +15,22 @@ import {Building} from '../../../bean/building';
 
 @Injectable()
 export class AddressService{
-  private headers ;
-
   private listurl=new OptConfig().serverPath+'/api/buildings/list';
   private saveurl=new OptConfig().serverPath+'/api/buildings/save';
   private deleteurl=new OptConfig().serverPath+'/api/buildings/delete';
   private geturl=new OptConfig().serverPath+'/api/buildings/';
 
   constructor(private http:Http,private cookieService:CookieService){
-    let token=this.cookieService.get('optToken');
-    this.headers== new Headers({'Content-Type': 'application/json','authorization':token});
+
   }
 
   getAddressList(pageid):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
     let url='';
     if(pageid){
-        url=this.listurl+'/page/'+pageid+'?token='+token
+        url=this.listurl+'/page/'+pageid
         }
     else{
-        url=this.listurl+'?token='+token
+        url=this.listurl
         }
     return this.http.get(url)
       .toPromise()
@@ -44,8 +40,9 @@ export class AddressService{
 
   create(building:Building): Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-      .post(this.saveurl+'?token='+token, building, {headers: this.headers})
+      .post(this.saveurl, building, {headers: headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
@@ -53,16 +50,16 @@ export class AddressService{
 
   delete(id:string):Promise<ResponseData> {
     let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     return this.http
-        .get(this.deleteurl+'/'+id+'?token='+token)
+        .get(this.deleteurl+'/'+id,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError);
   }
 
   getAddress(id:string):Promise<ResponseData>{
-    let token=this.cookieService.get('optToken');
-    let url=this.geturl+id+'?token='+token;
+    let url=this.geturl+id;
     return this.http.get(url)
       .toPromise()
       .then(this.extractData)
