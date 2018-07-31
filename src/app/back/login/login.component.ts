@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit{
               this.isDisabled=false;
               this.iconClass='k-icon k-i-lock fz-18';
               let date=new Date();
-              date.setDate(date.getDate()+999);
+              date.setDate(date.getDate()+7);
               this.cookieService.put('optToken',data.data.token,{expires:date});
               if(rememberUrl&&rememberUrl!=''){
                 this.router.navigate([rememberUrl]);
