@@ -63,15 +63,19 @@ export class UserService{
   }
 
   getUser(id:string):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     let url=this.geturl+id
-    return this.http.get(url)
+    return this.http.get(url,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
   }
   getUserSimple():Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
     let url=this.geturl+'?simple=true'
-    return this.http.get(url)
+    return this.http.get(url,{headers:headers})
       .toPromise()
       .then(this.extractData)
       .catch(this.handleError)
