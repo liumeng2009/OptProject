@@ -46,12 +46,12 @@
 
     <kendo-grid-column field="equipment" title="地点" [width]="190">
       <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.corporation.name}} {{dataItem.corpBuilding.building.name}} {{dataItem.corpBuilding.floor}}层
-        <span *ngIf="dataItem.corpBuilding.position=='E'">东</span>
-        <span *ngIf="dataItem.corpBuilding.position=='W'">西</span>
-        <span *ngIf="dataItem.corpBuilding.position=='S'" >南</span>
-        <span *ngIf="dataItem.corpBuilding.position=='N'" >北</span>
-        <span *ngIf="dataItem.corpBuilding.position=='A'" >全部区域</span>
+        {{dataItem.corporation.name}} {{dataItem?.corpBuilding?.building?.name}} {{dataItem?.corpBuilding?.floor}} <span *ngIf="dataItem?.corpBuilding?.building">层</span>
+        <span *ngIf="dataItem?.corpBuilding?.position=='E'">东</span>
+        <span *ngIf="dataItem?.corpBuilding?.position=='W'">西</span>
+        <span *ngIf="dataItem?.corpBuilding?.position=='S'" >南</span>
+        <span *ngIf="dataItem?.corpBuilding?.position=='N'" >北</span>
+        <span *ngIf="dataItem?.corpBuilding?.position=='A'" >全部区域</span>
       </ng-template>
       <ng-template kendoGridFilterCellTemplate>
 
