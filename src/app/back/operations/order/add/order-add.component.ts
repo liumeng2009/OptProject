@@ -39,6 +39,7 @@ import {LmTimePicker} from "../../../components/lmtimepicker/lm-timepicker.compo
 import {User} from "../../../../bean/user";
 import {WorkerService} from "../../../basicSettings/worker/worker.service";
 import {SwitchService} from "../../../main/switchService";
+import {BusinessContent} from "../../../../bean/businessContent";
 
 const formGroup = dataItem => new FormGroup({
   'type':new FormControl(dataItem.type),
@@ -535,6 +536,7 @@ export class OrderAddComponent implements OnInit{
       let _finish=workerOrder.finish_date;
       _finish.setHours(workerOrder.finish_date_time.hour,workerOrder.finish_date_time.minute,workerOrder.finish_date_time.second);
       workerOrder.finish_date_timestamp=Date.parse(_finish.toString());
+
     }
 
     this.order.workerOrders=this.workerOrders;

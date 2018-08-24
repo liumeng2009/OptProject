@@ -5,6 +5,7 @@ import {Equipment} from "./equipment";
 import {LmTime} from "../back/components/lmtimepicker/lmtime";
 import {Order} from "./order";
 import {BusinessContent} from "./businessContent";
+import {EquipOp} from "./equipOp";
 
 //工单模型
 export class WorkOrder {
@@ -50,7 +51,7 @@ export class WorkOrder {
 
     public equipment:Equipment,
 
-    public op:EquipType,
+    public op:EquipOp,
 
     public checked:boolean,
 
