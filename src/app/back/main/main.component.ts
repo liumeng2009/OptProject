@@ -252,7 +252,6 @@ export class MainComponent implements OnInit{
     this.mainService.getUserInfo()
       .then(
         data=>{
-          console.log(data);
           let result=this.apiResultService.result(data);
           if(result&&result.status==0){
             this.user =result.data;
