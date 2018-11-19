@@ -230,5 +230,83 @@
         </kendo-panelbar-item>
       </kendo-panelbar>
     </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">
+      <kendo-panelbar>
+        <kendo-panelbar-item [title]="'本年各运维工程师工单数'" expanded="true" [selected]="true">
+          <ng-template kendoPanelBarContent>
+            <p style="margin: 0px;background-color: #fff;line-height: 30px;padding: 0px 8px;">
+              总工单数：{{allOpCountSimple}}个
+            </p>
+            <kendo-chart #pieChart4>
+              <kendo-chart-legend position="bottom"></kendo-chart-legend>
+              <kendo-chart-series-defaults type="donut">
+                <kendo-chart-series-defaults-labels format="0">
+                </kendo-chart-series-defaults-labels>
+              </kendo-chart-series-defaults>
+              <kendo-chart-series>
+                <kendo-chart-series-item type="donut"
+                                         [data]="pieData4"
+                                         field="value"
+                                         categoryField="name">
+                </kendo-chart-series-item>
+              </kendo-chart-series>
+            </kendo-chart>
+          </ng-template>
+        </kendo-panelbar-item>
+      </kendo-panelbar>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">
+      <kendo-panelbar>
+        <kendo-panelbar-item [title]="'本年各运维工程师工时数（单位：小时）'" expanded="true" [selected]="true" >
+          <ng-template kendoPanelBarContent>
+            <p style="margin: 0px;background-color: #fff;line-height: 30px;padding: 0px 8px;">
+              总工时数：{{allOpStampSimple}}分钟
+            </p>
+            <kendo-chart #pieChart5>
+              <kendo-chart-legend position="bottom"></kendo-chart-legend>
+              <kendo-chart-series-defaults type="donut">
+                <kendo-chart-series-defaults-labels format="0.00">
+                </kendo-chart-series-defaults-labels>
+              </kendo-chart-series-defaults>
+              <kendo-chart-series>
+                <kendo-chart-series-item type="donut"
+                                         [data]="pieData5"
+                                         field="value"
+                                         categoryField="name">
+                </kendo-chart-series-item>
+              </kendo-chart-series>
+            </kendo-chart>
+          </ng-template>
+        </kendo-panelbar-item>
+      </kendo-panelbar>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-top:15px;">
+      <kendo-panelbar>
+        <kendo-panelbar-item [title]="'本年各运维业务工单数'" expanded="true" [selected]="true">
+          <ng-template kendoPanelBarContent>
+            <p style="margin: 0px;background-color: #fff;line-height: 30px;padding: 0px 8px;">
+              总工单数：{{allOpCountSimple}}个
+            </p>
+            <kendo-chart #pieChart6>
+              <kendo-chart-legend position="bottom" orientation="horizontal" ></kendo-chart-legend>
+              <kendo-chart-series-defaults type="donut">
+                <kendo-chart-series-defaults-labels format="0">
+                </kendo-chart-series-defaults-labels>
+              </kendo-chart-series-defaults>
+              <kendo-chart-series>
+                <kendo-chart-series-item type="donut"
+                                         [data]="pieData6"
+                                         field="value"
+                                         categoryField="name">
+                </kendo-chart-series-item>
+              </kendo-chart-series>
+            </kendo-chart>
+          </ng-template>
+        </kendo-panelbar-item>
+      </kendo-panelbar>
+    </div>
   </div>
 </div>

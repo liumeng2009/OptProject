@@ -3,10 +3,9 @@ import {Router,ActivatedRoute} from '@angular/router';
 import {TotalService} from "./total.service";
 import {ApiResultService} from "../main/apiResult.service";
 import {AjaxExceptionService} from "../main/ajaxExceptionService";
-
 import { PlotBand, ChartComponent } from '@progress/kendo-angular-charts';
-
 import {OperationUtil} from '../../util/logic/operation';
+import * as moment from 'moment';
 
 @Component({
   selector:'total-area',
@@ -35,6 +34,11 @@ export class TotalComponent implements OnInit{
     this.getMonthWorkerList();
     this.getMonthWorkerTimeList();
     this.getMonthCorporationCountList();
+    this.getYearOpNum();
+    this.getYearOpNumSimple();
+    this.getYearOpStamp();
+    this.getYearOpStampSimple();
+    this.getYearBusinessType();
     this.initMonths();
 
   }
@@ -373,7 +377,104 @@ export class TotalComponent implements OnInit{
     );
 
   }
+  public pieData4: any = [
+    { category: 'Eaten', value:120 }
+  ]
+  @ViewChild('pieChart4') pieChart4: ChartComponent;
+  private getYearOpNum(){
+    this.pieData4.splice(0,this.pieData4.length);
+    const startStamp = moment().startOf('year').toDate().getTime();
+    const endStamp = moment().endOf('year').toDate().getTime();
+    this.totalService.getOpCount(startStamp, endStamp).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.pieData4=result.data;
+          this.pieChart4.resize();
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
+  allOpCountSimple = 0;
+  private getYearOpNumSimple(){
+    const startStamp = moment().startOf('year').toDate().getTime();
+    const endStamp = moment().endOf('year').toDate().getTime();
+    this.totalService.getOpCountSimple(startStamp, endStamp).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.allOpCountSimple = result.data[0].value;
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
+  allOpStampSimple = 0;
+  private getYearOpStampSimple(){
+    const startStamp = moment().startOf('year').toDate().getTime();
+    const endStamp = moment().endOf('year').toDate().getTime();
+    this.totalService.getOpStampSimple(startStamp, endStamp).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        if(result&&result.status==0){
+          this.allOpStampSimple = result.data[0].value;
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
 
+  public pieData5: any = [
+    { category: 'Eaten', value:120 }
+  ]
+  @ViewChild('pieChart5') pieChart5: ChartComponent;
+  private getYearOpStamp(){
+    this.pieData5.splice(0,this.pieData5.length);
+    const startStamp = moment().startOf('year').toDate().getTime();
+    const endStamp = moment().endOf('year').toDate().getTime();
+    this.totalService.getOpStamp(startStamp, endStamp).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        console.log(result);
+        if(result&&result.status==0){
+          this.pieData5=result.data;
+          this.pieChart5.resize();
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
+  public pieData6: any = [
+    { category: 'Eaten', value:120 }
+  ]
+  @ViewChild('pieChart6') pieChart6: ChartComponent;
+  private getYearBusinessType(){
+    this.pieData6.splice(0,this.pieData6.length);
+    const startStamp = moment().startOf('year').toDate().getTime();
+    const endStamp = moment().endOf('year').toDate().getTime();
+    this.totalService.getYearBusinessType(startStamp, endStamp).then(
+      data=>{
+        let result=this.apiResultService.result(data);
+        console.log(result);
+        if(result&&result.status==0){
+          this.pieData6=result.data;
+          this.pieChart6.resize();
+        }
+      },
+      error=>{
+        this.ajaxExceptionService.simpleOp(error);
+      }
+    );
+  }
   private tabChange($event){
     if($event.index==0){
       this.getOperationWeekList();

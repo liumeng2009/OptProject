@@ -9,6 +9,7 @@ import {User} from '../../bean/user';
 import {OptConfig} from '../../config/config'
 import {ResponseData} from "../../bean/responseData";
 import {CookieService} from "angular2-cookie/core";
+import {HttpParams} from "@angular/common/http";
 
 @Injectable()
 export class TotalService{
@@ -22,6 +23,12 @@ export class TotalService{
   private oplistmonthworkerurl=new OptConfig().serverPath+'/api/operation/list_month_worker';
   private oplistmonthworkertimeurl=new OptConfig().serverPath+'/api/operation/list_month_worker_time';
   private oplistmonthcorporationcounturl=new OptConfig().serverPath+'/api/operation/list_month_corporation_count';
+  private opcounturl = new OptConfig().serverPath+ '/api/operation/allOpCount';
+  private opcountsimpleurl = new OptConfig().serverPath+ '/api/operation/allOpCountSimple';
+  private opstampurl = new OptConfig().serverPath+ '/api/operation/allOpStamp';
+  private opstampsimpleurl = new OptConfig().serverPath+ '/api/operation/allOpStampSimple';
+  private businesstypeurl = new OptConfig().serverPath+ '/api/operation/allBusinessType';
+
 
   constructor(private http:Http,private cookieService:CookieService){
 
@@ -98,6 +105,57 @@ export class TotalService{
       .then(this.extractData)
       .catch(this.handleError);
   }
+  getOpCount(startStamp:number, endStamp:number):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
+    let url=this.opcounturl+'?start='+startStamp+'&end='+endStamp;
+    return this.http
+      .get(url, {headers: headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  getOpCountSimple(startStamp:number, endStamp:number):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
+    let url=this.opcountsimpleurl+'?start='+startStamp+'&end='+endStamp;
+    return this.http
+      .get(url, {headers: headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  getOpStamp(startStamp:number, endStamp:number):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
+    let url=this.opstampurl+'?start='+startStamp+'&end='+endStamp;;
+    return this.http
+      .get(url, {headers: headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  getOpStampSimple(startStamp:number, endStamp:number):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
+    let url=this.opstampsimpleurl+'?start='+startStamp+'&end='+endStamp;;
+    return this.http
+      .get(url, {headers: headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+  getYearBusinessType(startStamp:number, endStamp:number):Promise<ResponseData>{
+    let token=this.cookieService.get('optToken');
+    let headers= new Headers({'Content-Type': 'application/json','authorization':token});
+    let url=this.businesstypeurl+'?start='+startStamp+'&end='+endStamp;;
+    return this.http
+      .get(url, {headers: headers})
+      .toPromise()
+      .then(this.extractData)
+      .catch(this.handleError);
+  }
+
 
 
   private extractData(res:Response){
