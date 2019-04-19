@@ -68,6 +68,7 @@ import {AuthGuard} from './main/authGuard.service'
 import {TokenGuard} from './main/tokenGuard.service'
 import {SettingComponent} from "./auth/setting/setting.component";
 import {FunctionAddComponent} from "./auth/fucntion/add/function-add.component";
+import { ToolsComponent } from './tools/tools.component';
 
 
 export const PanelbarRoutes:Routes=[
@@ -112,6 +113,7 @@ export const PanelbarRoutes:Routes=[
         {path:':id',component:BusinessContentEditComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'编辑'}}
       ] }
     ]},
+    {path:'tools',component:ToolsComponent,canActivate:[TokenGuard],data:{name:'小工具'},},
     {path:'auth',component:AuthComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'用户权限管理'},children:[
       { path: 'user', component: UserComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'用户管理'},children:[
         {path:'list',component:UserListComponent,canActivate:[TokenGuard,AuthGuard],data:{name:'列表'}},

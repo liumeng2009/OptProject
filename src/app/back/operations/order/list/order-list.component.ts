@@ -244,8 +244,8 @@ export class OrderListComponent implements OnInit {
     });
   }
 
-  private print(id){
-    window.open('http://127.0.0.1:3000/page/order/'+id);
+  private print(id) {
+    window.open(new OptConfig().serverPath + '/page/order/' + id);
   }
 
 

@@ -1,0 +1,30 @@
+<div class="container-fluid" [ngStyle]="height">
+  <kendo-tabstrip>
+    <kendo-tabstrip-tab [title]="'工单数据导出为EXCEL'" [selected]='true'>
+      <ng-template kendoTabContent>
+        <kendo-datepicker #incoming_date [value]="start" name="start_date" [format]="'yyyy年MM月dd日'"
+          (valueChange)="dateStartChange($event)"
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+        <kendo-datepicker #incoming_date [value]="end" name="end_date" [format]="'yyyy年MM月dd日'"
+          (valueChange)="dateEndChange($event)"
+        >
+          <kendo-datepicker-messages
+            today="今天"
+            toggle="选择日期"
+          ></kendo-datepicker-messages>
+        </kendo-datepicker>
+        <button kendoButton type="button" class="k-primary" (click)="print()" >导出报表</button>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab [title]="'还有什么需要的工具呢'">
+      <ng-template kendoTabContent>
+        <p>有什么建议请联系开发者</p>
+      </ng-template>
+    </kendo-tabstrip-tab>
+  </kendo-tabstrip>
+</div>

@@ -274,8 +274,11 @@ export class MainComponent implements OnInit{
     //auths与route作比较，auths中没有的，从route中删除
     //第一层
     let cfg=this.router.config[3].children;
-    console.log(cfg);
     for(let i=1;i<cfg.length;i++){
+      // 为了简便，让小工具页面可以显示在页面上，而不需要权限的验证
+      if(i === 3) {
+        continue;
+      }
       if(this.isExistInRouteConfig(cfg[i],auths)){
 
       }
@@ -433,6 +436,8 @@ export class MainComponent implements OnInit{
       else{
         return this.avatarImagePath;
       }
+    } else {
+      return '';
     }
 
   }

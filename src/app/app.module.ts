@@ -108,6 +108,8 @@ import {AddComponent} from './back/main/add.component'
 import {TotalComponent} from './back/total/total.component';
 import {TotalService} from './back/total/total.service';
 
+import {ToolsComponent} from './back/tools/tools.component';
+
 import {OtherComponent} from './back/components/noFound/other.component';
 import {NoAuthComponent} from './back/components/noAuth/noAuth.component';
 
@@ -205,6 +207,7 @@ import {TokenGuard} from './back/main/tokenGuard.service';
     RoleEditComponent,
 
     TotalComponent,
+    ToolsComponent,
 
     OtherComponent,
     NoAuthComponent,
