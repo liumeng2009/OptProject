@@ -351,6 +351,6 @@ export class OperationListComponent  implements OnInit {
   }
   private print(id){
     //this.operationService.printOperation(id);
-    window.open('http://127.0.0.1:3000/page/operation/'+id);
+    window.open(new OptConfig().serverPath + '/page/operation/' + id);
   }
 }
