@@ -36,7 +36,7 @@ export class AddressAddComponent implements OnInit{
   ngOnInit(){
   }
 
-  private onSubmit(){
+  onSubmit(){
     //alert(this.building);
     this.addressService.create(this.building).then(
       data=>{

@@ -39,7 +39,7 @@ export class FunctionAddComponent implements OnInit{
     this.initClassArray();
     this.initParentClass();
   }
-  private initClassArray(){
+   initClassArray(){
     let class1=new Floor('0',0);
     let class2=new Floor('1',1);
     this.classArray.push(class1);
@@ -47,9 +47,9 @@ export class FunctionAddComponent implements OnInit{
     this.functionObj.classs=class1.value;
   }
 
-  private parentFunction:Function[]=[];
-  private isLoadingParentFunction:boolean=false;
-  private initParentClass(){
+   parentFunction:Function[]=[];
+   isLoadingParentFunction:boolean=false;
+   initParentClass(){
     this.parentFunction.splice(0,this.parentFunction.length);
     this.functionService.getParentList().then(
       data=>{
@@ -73,7 +73,7 @@ export class FunctionAddComponent implements OnInit{
     )
   }
 
-  private onSubmit(){
+   onSubmit(){
     console.log(this.functionObj);
     this.functionService.create(this.functionObj).then(
       data=>{

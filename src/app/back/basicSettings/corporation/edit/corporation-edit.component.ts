@@ -54,10 +54,10 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
   isCorpBuildingLoading:boolean=false;
   isBuildingLoading:boolean=false;
 
-  private formGroup: FormGroup;
-  private editedRowIndex: number;
+   formGroup: FormGroup;
+   editedRowIndex: number;
 
-  private result;
+   result;
 
 
   @ViewChild(GridComponent) grid: GridComponent;
@@ -85,7 +85,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     }
   }
 
-  private myAddRow(grid){
+   myAddRow(grid){
     this.formGroup =formGroup({
       'buildingId':null,
       'floor': new Floor('全部',0),
@@ -120,14 +120,14 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
 
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showEditBtn:boolean=false;
+   subscription;
+   pageAuths=[];
+   showEditBtn:boolean=false;
   //表单内部的grid
-  private showListAddBtn:boolean=false;
-  private showListEditBtn:boolean=false;
-  private showListDeleteBtn:boolean=false;
-  private auth(){
+   showListAddBtn:boolean=false;
+   showListEditBtn:boolean=false;
+   showListDeleteBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -142,7 +142,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -161,7 +161,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
         this.showEditBtn=true;
@@ -176,7 +176,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
 
 
 
-  private setGroupData(){
+   setGroupData(){
     this.isLoading=true;
     this.groupService.getGroupList(null)
       .then(
@@ -195,7 +195,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
       );
   }
 
-  private setBuildingData(){
+   setBuildingData(){
     this.isBuildingLoading=true;
     this.addressService.getAddressList(null)
       .then(
@@ -233,7 +233,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
       );
   }
 
-  private buildingChange(event,rowIndex){
+   buildingChange(event,rowIndex){
     this.floors.splice(0,this.floors.length);
     let minfloor=event.minfloor;
     let maxfloor=event.maxfloor;
@@ -248,7 +248,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
 
   }
 
-  private setCorpBuildingData(){
+   setCorpBuildingData(){
     this.isCorpBuildingLoading=true;
     this.route.params.subscribe((params: Params) =>{
       let corpid=params.id;
@@ -297,11 +297,11 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     })
   }
 
-  private refreshCorpBuilding(){
+   refreshCorpBuilding(){
     this.setCorpBuildingData();
   }
 
-  private getData(id){
+   getData(id){
     this.corporationService.getCorporation(id).then(
       data=>{
         console.log(data);
@@ -322,7 +322,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
       }
     );
   }
-  private onSubmit(){
+   onSubmit(){
     this.corporationService.create(this.corporation).then(
       data=>{
         this.apiResultService.result(data);
@@ -336,7 +336,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     )
   }
 
-  protected addHandler({sender}) {
+  addHandler({sender}) {
     if(this.buildings.length>0){
       let floor=new Floor('全部',0);
       this.floors.push(floor);
@@ -357,7 +357,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     sender.addRow(this.formGroup);
   }
 
-  protected editHandler({sender, rowIndex, dataItem}) {
+  editHandler({sender, rowIndex, dataItem}) {
     if(this.buildings.length>0){
       let floor=new Floor('全部',0);
       this.floors.push(floor);
@@ -419,17 +419,17 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     sender.editRow(rowIndex,this.formGroup);
   }
 
-  protected cancelHandler({sender, rowIndex}) {
+  cancelHandler({sender, rowIndex}) {
     this.closeEditor(sender, rowIndex);
   }
 
-  private closeEditor(grid, rowIndex = this.editedRowIndex) {
+   closeEditor(grid, rowIndex = this.editedRowIndex) {
     grid.closeRow(rowIndex);
     this.editedRowIndex = undefined;
     this.formGroup = undefined;
   }
 
-  protected saveHandler({sender, rowIndex, formGroup, isNew}) {
+  saveHandler({sender, rowIndex, formGroup, isNew}) {
     this.route.params.subscribe((params: Params) =>{
       let corpid=params.id;
 
@@ -454,7 +454,7 @@ export class CorporationEditComponent implements OnInit,AfterViewInit{
     });
   }
 
-  protected removeHandler({dataItem}) {
+  removeHandler({dataItem}) {
 
     const dialog: DialogRef = this.dialogService.open({
       title: "确认删除？",

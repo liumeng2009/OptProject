@@ -54,10 +54,10 @@ export class UserEditComponent implements OnInit{
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showSaveBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showSaveBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -72,7 +72,7 @@ export class UserEditComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -91,7 +91,7 @@ export class UserEditComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
         this.showSaveBtn=true;
@@ -99,7 +99,7 @@ export class UserEditComponent implements OnInit{
     }
   }
 
-  private getData(id:string){
+   getData(id:string){
     this.userService.getUser(id).then(
       data=>{
         let userObj=this.apiResultService.result(data);
@@ -117,7 +117,7 @@ export class UserEditComponent implements OnInit{
     );
   }
 
-  private onSubmit(){
+   onSubmit(){
     this.userService.create(this.user).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -130,18 +130,18 @@ export class UserEditComponent implements OnInit{
     }
     )
   }
-  private femaleChange($event){
+   femaleChange($event){
     console.log($event);
     this.user.gender=false;
   }
-  private maleChange($event){
+   maleChange($event){
     console.log($event);
     this.user.gender=true;
   }
 
-  private roles:Role[]=[];
-  private isRoleLoading:boolean=false;
-  private initRoles(){
+   roles:Role[]=[];
+   isRoleLoading:boolean=false;
+   initRoles(){
     this.roles.splice(0,this.roles.length);
     this.isRoleLoading=true;
     this.roleService.getRoleList().then(

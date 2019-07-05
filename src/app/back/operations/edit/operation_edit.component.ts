@@ -47,8 +47,8 @@ import {SwitchService} from "../../main/switchService";
 })
 
 export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
-  private operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-    new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true);
+   operation:WorkOrder=new WorkOrder(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+    new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true, null);
   constructor(
     private operationService:OperationService,
     private router:Router,
@@ -72,13 +72,13 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showSaveBtn:boolean=false;
-  private showAddProcessBtn:boolean=false;
-  private showProcessSaveBtn:boolean=false;
-  private showProcessDeleteBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showSaveBtn:boolean=false;
+   showAddProcessBtn:boolean=false;
+   showProcessSaveBtn:boolean=false;
+   showProcessDeleteBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -93,7 +93,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -112,7 +112,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
         this.showSaveBtn=true;
@@ -125,9 +125,9 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
 
 
-  private equipTypeLoading:boolean=false;
-  private equiptypes:EquipType[]=[];
-  private initEquipType(){
+   equipTypeLoading:boolean=false;
+   equiptypes:EquipType[]=[];
+   initEquipType(){
     this.equiptypes.splice(0,this.equiptypes.length);
     this.equipTypeLoading=true;
     this.businessContentService.getType().then(
@@ -147,9 +147,9 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     )
   }
 
-  private equipmentLoading:boolean=false;
-  private equipments:Position[]=[];
-  private initEquipment(_type){
+   equipmentLoading:boolean=false;
+   equipments:Position[]=[];
+   initEquipment(_type){
     this.equipments.splice(0,this.equipments.length);
     this.equipmentLoading=true;
     this.businessContentService.getEquipment(_type?_type:this.operation.businessContent.equipType.code).then(
@@ -176,19 +176,19 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     )
   }
 
-  private equipTypeChange($event){
+   equipTypeChange($event){
     console.log($event);
     this.initEquipment($event.code);
   }
 
-  private equipChange($event){
+   equipChange($event){
     console.log($event);
     this.initEquipOp(this.operation.businessContent.equipType.code,$event,true);
   }
 
-  private equipOpLoading:boolean=false;
-  private equipOps:EquipOp[]=[];
-  private initEquipOp(type:string,equipment:string,_change:boolean){
+   equipOpLoading:boolean=false;
+   equipOps:EquipOp[]=[];
+   initEquipOp(type:string,equipment:string,_change:boolean){
     this.equipOpLoading=true;
     this.equipOps.splice(0,this.equipOps.length);
     let typeSelect=type?type:(this.equiptypes[0]?this.equiptypes[0].code:'');
@@ -214,20 +214,20 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
       }
     );
   }
-  private submitWorkOrder:WorkOrder=new WorkOrder('','',null,null,null,null,null,
+   submitWorkOrder:WorkOrder=new WorkOrder('','',null,null,null,null,null,
     null,null,false,0,null,null,
     0,null,null,null,null,null,null,true,false,false,true,'',0,null,null,
-    null,null,false
+    null,null,false, null
   );
 
 
-  private isHiddenType:boolean=false;
-  private isHiddenEquipment:boolean=false;
-  private isHiddenOp:boolean=false;
+   isHiddenType:boolean=false;
+   isHiddenEquipment:boolean=false;
+   isHiddenOp:boolean=false;
 
-  private isHiddenRemark:boolean=false;
-  private isHiddenImportant:boolean=false;
-  private getData(){
+   isHiddenRemark:boolean=false;
+   isHiddenImportant:boolean=false;
+   getData(){
     this.route.params.subscribe((params: Params) =>{
       this.operationService.getOperation(params.id).then(
         data=>{
@@ -324,8 +324,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
   //将actions  排序一下
 
-  private actionId:string;
-  private actionDetail={
+   actionId:string;
+   actionDetail={
     operationId:'',
     id:'',
     workerId:'',
@@ -348,11 +348,11 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
   @ViewChild('actionEditDeleteTemplate')actionEditDeleteRef: TemplateRef<any>;
   @ViewChild('actionDetailTemplate')actionDetailRef:TemplateRef<any>;
-  private deleteActionIcon;
-  private isHiddenDeleteAction:boolean=false;
-  private editDeleteActionDialog;
+   deleteActionIcon;
+   isHiddenDeleteAction:boolean=false;
+   editDeleteActionDialog;
   //对某个进程进行操作
-  private test(id){
+   test(id){
     this.route.params.subscribe((params: Params) =>{
       this.actionId=id;
       this.actionDetail.operationId=params.id;
@@ -413,24 +413,24 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
   }
 
-  private editCallDateChange($event){
+   editCallDateChange($event){
     this.actionDetail.call_date=new Date($event);
   }
-  private editArriveDateChange($event){
+   editArriveDateChange($event){
     this.actionDetail.start_date=new Date($event);
   }
-  private editFinishDateChange($event){
+   editFinishDateChange($event){
     this.actionDetail.end_date=new Date($event);
   }
-  private onEditArriveTimeChange($event){
+   onEditArriveTimeChange($event){
     console.log($event);
     this.actionDetail.start_time=$event;
   }
-  private onEditFinishTimeChange($event){
+   onEditFinishTimeChange($event){
     console.log($event);
     this.actionDetail.end_time=$event;
   }
-  private editFinishOperationCheckChanged($event,dataItem){
+   editFinishOperationCheckChanged($event,dataItem){
     if($event.target.checked){
       this.actionDetail.isCompleteOperation=true;
       this.actionDetail.showArriveDate=true;
@@ -441,7 +441,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     }
   }
 
-  private editStartCheckedChange($event){
+   editStartCheckedChange($event){
     if($event.target.checked){
       this.actionDetail.showArriveDate=true;
     }
@@ -450,7 +450,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
       this.actionDetail.showFinishDate=false;
     }
   }
-  private editFinishCheckedChange($event){
+   editFinishCheckedChange($event){
     if($event.target.checked){
       this.actionDetail.showArriveDate=true;
       this.actionDetail.showFinishDate=true;
@@ -464,12 +464,12 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
 
 
-  private cancelAction(){
+   cancelAction(){
     this.editDeleteActionDialog.close();
   }
-  private saveActionIcon;
-  private isHiddenSaveAction:boolean=false;
-  private editAction(){
+   saveActionIcon;
+   isHiddenSaveAction:boolean=false;
+   editAction(){
     this.saveActionIcon='k-icon k-i-loading';
     this.isHiddenSaveAction=true;
     //处理actionDetail对象
@@ -517,8 +517,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
       }
     )
   }
-  private confirmDialogResult;
-  private deleteAction(){
+   confirmDialogResult;
+   deleteAction(){
 
     let confirmDialog=this.dialogService.open({
       title:'确认',
@@ -556,7 +556,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
   }
 
-  private processData={
+   processData={
     createTime:new Date(2017,11,16,23,50,50,0),
     process:[
       /*      {
@@ -581,7 +581,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     ]
   }
 
-  private onSubmit(){
+   onSubmit(){
     console.log(this.operation);
     this.operationService.edit(this.operation).then(
       data=>{
@@ -593,42 +593,42 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     )
   }
 
-  private dateChartNone=[
+   dateChartNone=[
 
   ]
 
-  private dateChartCreate=[
+   dateChartCreate=[
 
   ]
 
-  private dateChartZhipai=[
+   dateChartZhipai=[
 
   ]
-  private dateChartWork=[
+   dateChartWork=[
 
   ]
-  private dateChartFinish=[
+   dateChartFinish=[
 
   ]
 
   public from: number = 0;
   public to: number =0;
 
-  private createTime=new Date(2017,11,16,9,5,0,0);
-  private zpTime=new Date(2017,11,16,9,6,0,0);
-  private arriveTime=new Date(2017,11,16,9,12,0,0);
-  private finishTime=new Date(2017,11,16,10,50,0,0);
+   createTime=new Date(2017,11,16,9,5,0,0);
+   zpTime=new Date(2017,11,16,9,6,0,0);
+   arriveTime=new Date(2017,11,16,9,12,0,0);
+   finishTime=new Date(2017,11,16,10,50,0,0);
 
-  private createTimeL=new Date(2017,11,16,9,5,0,0);
-  private zpTimeL=new Date(2017,11,16,10,5,0,0);
-  private arriveTimeL=null;
-  private finishTimeL=null;
+   createTimeL=new Date(2017,11,16,9,5,0,0);
+   zpTimeL=new Date(2017,11,16,10,5,0,0);
+   arriveTimeL=null;
+   finishTimeL=null;
 
 
 
   @ViewChild('surface')
-  private surfaceElement: ElementRef;
-  private surface: Surface;
+   surfaceElement: ElementRef;
+   surface: Surface;
 
 
   public ngOnDestroy() {
@@ -636,9 +636,9 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
       this.surface.destroy();
   }
 
-  private surfaceHeight={height:'400px'};
+   surfaceHeight={height:'400px'};
 
-  private createSurface(): Surface {
+   createSurface(): Surface {
     // Obtain a reference to the native DOM element of the wrapper
     const element = this.surfaceElement.nativeElement;
 
@@ -652,7 +652,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     return this.surface;
   }
 
-  private updateProcess(){
+   updateProcess(){
     this.surface.destroy();
     this.processData.process.splice(0,this.processData.process.length);
     this.route.params.subscribe((params: Params) =>{
@@ -724,8 +724,8 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
 
   @ViewChild('itemListRef')tpl: TemplateRef<any>;
   @ViewChild('actionTemplate')actionTemplate: TemplateRef<any>;
-  private dialog;
-  private addProcess(){
+   dialog;
+   addProcess(){
     this.dialog=this.dialogService.open({
       title: "添加进度？",
       content: this.tpl,
@@ -745,9 +745,9 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     }
   }
 
-  private isSavingProcess:boolean=false;
-  private savingProcessIcon='';
-  private saveProcess(){
+   isSavingProcess:boolean=false;
+   savingProcessIcon='';
+   saveProcess(){
     //处理一下submit
     //处理calltime
 
@@ -792,15 +792,15 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     )
   }
 
-  private cancelProcess(){
+   cancelProcess(){
     this.dialog.close();
   }
 
 
 
-  private workers:User[]=[];
-  private isWorkerLoading:boolean=false;
-  private initWorkers(){
+   workers:User[]=[];
+   isWorkerLoading:boolean=false;
+   initWorkers(){
     this.isWorkerLoading=true;
     this.workers.splice(0,this.workers.length);
     this.workerService.getWorkerList(null).then(
@@ -827,38 +827,38 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     )
   }
 
-  private workerChange($event){
+   workerChange($event){
     this.submitWorkOrder.worker=$event.id;
   }
 
-  private callDateChange($event){
+   callDateChange($event){
     console.log($event);
     this.submitWorkOrder.call_date=$event;
   }
 
-  private arriveDateChange($event){
+   arriveDateChange($event){
     console.log($event);
     this.submitWorkOrder.arrive_date=$event;
   }
 
-  private finishDateChange($event){
+   finishDateChange($event){
     console.log($event);
     this.submitWorkOrder.finish_date=$event;
   }
-  private onCallTimeChange($event){
+   onCallTimeChange($event){
     console.log($event);
     this.submitWorkOrder.call_date_time=$event;
   }
-  private onArriveTimeChange($event){
+   onArriveTimeChange($event){
     console.log($event);
     this.submitWorkOrder.arrive_date_time=$event;
     console.log(this.submitWorkOrder);
   }
-  private onFinishTimeChange($event){
+   onFinishTimeChange($event){
     console.log($event);
     this.submitWorkOrder.finish_date_time=$event;
   }
-  private finishCheckedChange($event){
+   finishCheckedChange($event){
     console.log($event);
     if($event.target.checked){
       this.submitWorkOrder.showArriveDate=true;
@@ -869,7 +869,7 @@ export class OperationEditComponent  implements OnInit,AfterViewInit,OnDestroy {
     }
   }
 
-  private finishCheckChanged($event){
+   finishCheckChanged($event){
     if($event.target.checked){
       this.submitWorkOrder.showArriveDate=true;
       this.submitWorkOrder.showFinishDate=true;

@@ -20,10 +20,10 @@ import {environment} from "../../../environments/environment";
 
 export class RegComponent implements OnInit{
 
-  private iconClass:string='k-icon k-i-track-changes-enable';
-  private isDisabled:boolean=false;
-  private showPasswordIcon='glyphicon glyphicon-eye-open';
-  private showPassword;boolean=false;
+   iconClass:string='k-icon k-i-track-changes-enable';
+   isDisabled:boolean=false;
+   showPasswordIcon='glyphicon glyphicon-eye-open';
+   showPassword;boolean=false;
 
   constructor(
     private regService:RegService,

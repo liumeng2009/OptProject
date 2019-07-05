@@ -37,7 +37,7 @@ export class RoleAddComponent implements OnInit{
 
   }
 
-  private onSubmit(){
+  onSubmit(){
     console.log(this.role);
     this.roleService.create(this.role).then(
       data=>{

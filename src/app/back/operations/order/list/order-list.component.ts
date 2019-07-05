@@ -38,31 +38,31 @@ import {MissionService} from "../../../main/mission.service";
 
 export class OrderListComponent implements OnInit {
 
-  private gridData:GridDataResult = {
+   gridData:GridDataResult = {
     data: [],
     total: 0
   };
 
-  private height:number = 0;
-  private pageSize:number = new OptConfig().pageSize;
-  private skip:number = 0;
-  private total:number = 0;
-  private firstRecord:number = 0;
-  private lastRecord:number = 0;
-  private result;
-  private isLoading:boolean = true;
+   height:number = 0;
+   pageSize:number = new OptConfig().pageSize;
+   skip:number = 0;
+   total:number = 0;
+   firstRecord:number = 0;
+   lastRecord:number = 0;
+   result;
+   isLoading:boolean = true;
   public filter: CompositeFilterDescriptor;
-  private todayFilter:Date=new Date();
-  private showTodayFilter:boolean=true;
+   todayFilter:Date=new Date();
+   showTodayFilter:boolean=true;
 
   constructor(private orderService:OrderService,
-              private router:Router,
-              private route:ActivatedRoute,
-              private apiResultService:ApiResultService,
-              private ajaxExceptionService:AjaxExceptionService,
-              private dialogService:DialogService,
-              private switchService:SwitchService,
-              private missionService:MissionService
+    private router:Router,
+    private route:ActivatedRoute,
+    private apiResultService:ApiResultService,
+    private ajaxExceptionService:AjaxExceptionService,
+    private dialogService:DialogService,
+    private switchService:SwitchService,
+    private missionService:MissionService
   ) {
 
   };
@@ -75,12 +75,12 @@ export class OrderListComponent implements OnInit {
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showAddBtn:boolean=false;
-  private showListEditBtn:boolean=false;
-  private showListDeleteBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showAddBtn:boolean=false;
+   showListEditBtn:boolean=false;
+   showListDeleteBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -95,7 +95,7 @@ export class OrderListComponent implements OnInit {
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -114,7 +114,7 @@ export class OrderListComponent implements OnInit {
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='add'){
         this.showAddBtn=true;
@@ -128,7 +128,7 @@ export class OrderListComponent implements OnInit {
     }
   }
 
-  private initFilter(){
+   initFilter(){
     let filter=this.switchService.getOrderListFilter('create_time');
     if(filter&&filter!=''){
       this.todayFilter=new Date(filter.toString());
@@ -143,7 +143,7 @@ export class OrderListComponent implements OnInit {
     }
   }
 
-  private getData(pageid,time) {
+   getData(pageid,time) {
     let d;
     if(time){
       let dateSubmit=new Date(time.toString());
@@ -167,13 +167,13 @@ export class OrderListComponent implements OnInit {
       );
   }
 
-  private dateFilterChange($event){
+   dateFilterChange($event){
     this.switchService.setOrderListFilter('create_time',$event);
     this.todayFilter=new Date($event);
     this.getData(1,this.todayFilter);
   }
 
-  private searchDateChange($event){
+   searchDateChange($event){
     let bol=$event.target.checked;
     this.switchService.setOrderListFilter('show_create_time',bol);
     if(bol){
@@ -189,28 +189,28 @@ export class OrderListComponent implements OnInit {
   }
 
 
-  private refresh() {
+   refresh() {
     this.gridData.data = [];
     this.gridData.total = 0;
     this.isLoading = true;
     this.getData(this.skip / this.pageSize + 1,this.todayFilter);
   }
 
-  private add() {
+   add() {
     this.router.navigate(['add'], {relativeTo: this.route.parent});
   }
 
-  private pageChange(event, PageChangeEvent) {
+   pageChange(event) {
     this.skip = event.skip;
     this.isLoading = true;
     this.getData(this.skip / this.pageSize + 1,this.todayFilter);
   }
 
-  private editRow(id) {
+   editRow(id) {
     this.router.navigate([id], {relativeTo: this.route.parent});
   }
 
-  private deleteRow(id) {
+   deleteRow(id) {
     const dialog:DialogRef = this.dialogService.open({
       title: "确认删除？",
       content: "确定删除吗？",
@@ -244,7 +244,7 @@ export class OrderListComponent implements OnInit {
     });
   }
 
-  private print(id) {
+   print(id) {
     window.open(new OptConfig().serverPath + '/page/order/' + id);
   }
 

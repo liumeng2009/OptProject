@@ -2,7 +2,7 @@
   <div class="col-xs-12 col-sm-12 offset-sm-12">
     <div class="card">
       <div class="card-block">
-        <form class="k-form"  (ngSubmit)="onSubmit()" #orderForm="ngForm">
+        <form class="k-form" #orderForm="ngForm">
           <div class="k-form-field">
             <div class="row">
               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -44,7 +44,7 @@
                 [valueField]="'id'"
                 [(ngModel)]="order.group"
                 [valuePrimitive]="true"
-                (valueChange)="initCorporation($event)"
+                (valueChange)="initCorporation()"
               >
               </kendo-dropdownlist>
               <span class="k-icon k-i-loading loading loading-position" *ngIf="groupLoading"></span>
@@ -57,7 +57,7 @@
                 [textField]="'name'"
                 [valueField]="'id'"
                 [(ngModel)]="order.corporation"
-                (valueChange)="initCorpBuilding($event)"
+                (valueChange)="initCorpBuilding()"
               >
               </kendo-dropdownlist>
               <span class="k-icon k-i-loading loading loading-position" *ngIf="corporationLoading"></span>
@@ -202,7 +202,7 @@
             </kendo-grid>
           </div>
           <div class="text-left">
-            <button class="k-button k-primary" type="button" [disabled]="!orderForm.form.valid" (click)="onOrderSubmit(actionTemplate)">提交</button>
+            <button class="k-button k-primary" type="button" [disabled]="!orderForm.form.valid" (click)="onOrderSubmit()">提交</button>
             <button class="k-button">重置</button>
           </div>
         </form>

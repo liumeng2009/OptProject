@@ -15,7 +15,7 @@ import * as moment from 'moment';
 
 export class TotalComponent implements OnInit{
 
-  private height={height:'0px'};
+   height={height:'0px'};
 
   constructor(
     private totalService:TotalService,
@@ -43,10 +43,10 @@ export class TotalComponent implements OnInit{
 
   }
 
-  private nostart:number=0;
-  private start:number=0;
-  private end:number=0;
-  private getOperationList(){
+   nostart:number=0;
+   start:number=0;
+   end:number=0;
+   getOperationList(){
     this.nostart=0;
     this.start=0;
     this.end=0;
@@ -80,8 +80,8 @@ export class TotalComponent implements OnInit{
     );
   }
 
-  private doingList=[];
-  private getDoingList(){
+   doingList=[];
+   getDoingList(){
     let date=new Date();
     let time=date.getTime();
     this.totalService.getDoingList(time).then(
@@ -97,10 +97,10 @@ export class TotalComponent implements OnInit{
     )
   }
 
-  private actionList=[];
-  private actionListHeight:number=120;
-  private isLoading:boolean=false;
-  private getActionList(){
+   actionList=[];
+   actionListHeight:number=120;
+   isLoading:boolean=false;
+   getActionList(){
     this.actionList.splice(0,this.actionList.length);
     this.isLoading=true;
     let date=new Date();
@@ -216,10 +216,10 @@ export class TotalComponent implements OnInit{
     )
   }
 
-  private weeks:string[]=[];
-  private operationCounts:number[]=[];
+   weeks:string[]=[];
+   operationCounts:number[]=[];
   @ViewChild('chart')chart: ChartComponent;
-  private getOperationWeekList(){
+   getOperationWeekList(){
     this.weeks.splice(0,this.weeks.length);
     this.operationCounts.splice(0,this.operationCounts.length);
     let date=new Date();
@@ -242,10 +242,10 @@ export class TotalComponent implements OnInit{
       }
     );
   }
-  private months:string[]=[];
-  private monthOperationCounts:number[]=[];
+   months:string[]=[];
+   monthOperationCounts:number[]=[];
   @ViewChild('monthChart') monthChart: ChartComponent;
-  private getOperationMonthList(month){
+   getOperationMonthList(month){
     this.months.splice(0,this.months.length);
     this.monthOperationCounts.splice(0,this.monthOperationCounts.length);
     let date=new Date();
@@ -274,7 +274,7 @@ export class TotalComponent implements OnInit{
     { category: 'Eaten', value:120 }
   ]
   @ViewChild('pieChart1') pieChart1: ChartComponent;
-  private getMonthWorkerList(){
+   getMonthWorkerList(){
     this.pieData.splice(0,this.pieData.length);
     let date=new Date();
     let time=date.getTime();
@@ -328,7 +328,7 @@ export class TotalComponent implements OnInit{
     { category: 'Eaten', value:120 }
   ]
   @ViewChild('pieChart2') pieChart2: ChartComponent;
-  private getMonthWorkerTimeList(){
+   getMonthWorkerTimeList(){
     this.pieData2.splice(0,this.pieData2.length);
     let date=new Date();
     let time=date.getTime();
@@ -359,7 +359,7 @@ export class TotalComponent implements OnInit{
     { category: 'Eaten', value:120 }
   ]
   @ViewChild('pieChart3') pieChart3: ChartComponent;
-  private getMonthCorporationCountList(){
+   getMonthCorporationCountList(){
     this.pieData3.splice(0,this.pieData3.length);
     let date=new Date();
     let time=date.getTime();
@@ -381,7 +381,7 @@ export class TotalComponent implements OnInit{
     { category: 'Eaten', value:120 }
   ]
   @ViewChild('pieChart4') pieChart4: ChartComponent;
-  private getYearOpNum(){
+   getYearOpNum(){
     this.pieData4.splice(0,this.pieData4.length);
     const startStamp = moment().startOf('year').toDate().getTime();
     const endStamp = moment().endOf('year').toDate().getTime();
@@ -399,7 +399,7 @@ export class TotalComponent implements OnInit{
     );
   }
   allOpCountSimple = 0;
-  private getYearOpNumSimple(){
+   getYearOpNumSimple(){
     const startStamp = moment().startOf('year').toDate().getTime();
     const endStamp = moment().endOf('year').toDate().getTime();
     this.totalService.getOpCountSimple(startStamp, endStamp).then(
@@ -415,7 +415,7 @@ export class TotalComponent implements OnInit{
     );
   }
   allOpStampSimple = 0;
-  private getYearOpStampSimple(){
+   getYearOpStampSimple(){
     const startStamp = moment().startOf('year').toDate().getTime();
     const endStamp = moment().endOf('year').toDate().getTime();
     this.totalService.getOpStampSimple(startStamp, endStamp).then(
@@ -435,7 +435,7 @@ export class TotalComponent implements OnInit{
     { category: 'Eaten', value:120 }
   ]
   @ViewChild('pieChart5') pieChart5: ChartComponent;
-  private getYearOpStamp(){
+   getYearOpStamp(){
     this.pieData5.splice(0,this.pieData5.length);
     const startStamp = moment().startOf('year').toDate().getTime();
     const endStamp = moment().endOf('year').toDate().getTime();
@@ -457,7 +457,7 @@ export class TotalComponent implements OnInit{
     { category: 'Eaten', value:120 }
   ]
   @ViewChild('pieChart6') pieChart6: ChartComponent;
-  private getYearBusinessType(){
+   getYearBusinessType(){
     this.pieData6.splice(0,this.pieData6.length);
     const startStamp = moment().startOf('year').toDate().getTime();
     const endStamp = moment().endOf('year').toDate().getTime();
@@ -475,7 +475,7 @@ export class TotalComponent implements OnInit{
       }
     );
   }
-  private tabChange($event){
+   tabChange($event){
     if($event.index==0){
       this.getOperationWeekList();
     }
@@ -484,7 +484,7 @@ export class TotalComponent implements OnInit{
     }
   }
 
-  private addStatus(obj){
+   addStatus(obj){
     if(obj.type=='完成'){
       obj.status='end'
     }
@@ -496,20 +496,20 @@ export class TotalComponent implements OnInit{
     }
   }
 
-  private refreshOperationList(){
+   refreshOperationList(){
     this.getOperationList();
   }
-  private refreshActionList(){
+   refreshActionList(){
     this.getActionList();
   }
-  private refreshOperationWeekList(){
+   refreshOperationWeekList(){
     this.getOperationWeekList();
   }
 
-  private searchMonths=[];
-  private selectMonth=1;
+   searchMonths=[];
+   selectMonth=1;
 
-  private initMonths(){
+   initMonths(){
     let date=new Date();
 
     this.selectMonth=date.getMonth()+1;
@@ -565,7 +565,7 @@ export class TotalComponent implements OnInit{
     console.log(this.searchMonths);
   }
 
-  private monthChange($event){
+   monthChange($event){
     this.selectMonth=$event;
     this.getOperationMonthList(this.selectMonth);
   }

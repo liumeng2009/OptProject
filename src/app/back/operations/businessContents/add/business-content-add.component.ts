@@ -22,10 +22,10 @@ import {EquipType} from "../../../../bean/equipType";
 })
 
 export class BusinessContentAddComponent implements OnInit{
-  private types:EquipType[]=[];
-  private operationsDesk:Operation[]=[];
-  private operationsSys:Operation[]=[];
-  private oneChecked:boolean=this.operationsDesk[0]&&this.operationsDesk[0].checked
+   types:EquipType[]=[];
+   operationsDesk:Operation[]=[];
+   operationsSys:Operation[]=[];
+   oneChecked:boolean=this.operationsDesk[0]&&this.operationsDesk[0].checked
     ||this.operationsDesk[1]&&this.operationsDesk[1].checked
     ||this.operationsDesk[2]&&this.operationsDesk[2].checked
     ||this.operationsDesk[3]&&this.operationsDesk[3].checked
@@ -53,7 +53,7 @@ export class BusinessContentAddComponent implements OnInit{
     this.initOperations();
   }
 
-  private initTypes(){
+   initTypes(){
     this.businessContentService.getType().then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -71,7 +71,7 @@ export class BusinessContentAddComponent implements OnInit{
     );
   }
 
-  private initOperations(){
+   initOperations(){
     this.businessContentService.getOp().then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -90,7 +90,7 @@ export class BusinessContentAddComponent implements OnInit{
     );
   }
 
-  private onSubmit(){
+   onSubmit(){
     console.log(this.business);
     this.businessContentService.create(this.business).then(
       data=>{

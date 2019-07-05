@@ -23,10 +23,10 @@ import {SwitchService} from "../../../main/switchService";
 })
 
 export class BusinessContentEditComponent implements OnInit{
-  private types:EquipType[]=[];
-  private operationsDesk:Operation[]=[];
-  private operationsSys:Operation[]=[];
-  private oneChecked:boolean=this.operationsDesk[0]&&this.operationsDesk[0].checked
+   types:EquipType[]=[];
+   operationsDesk:Operation[]=[];
+   operationsSys:Operation[]=[];
+   oneChecked:boolean=this.operationsDesk[0]&&this.operationsDesk[0].checked
     ||this.operationsDesk[1]&&this.operationsDesk[1].checked
     ||this.operationsDesk[2]&&this.operationsDesk[2].checked
     ||this.operationsDesk[3]&&this.operationsDesk[3].checked
@@ -61,10 +61,10 @@ export class BusinessContentEditComponent implements OnInit{
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showSaveBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showSaveBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -79,7 +79,7 @@ export class BusinessContentEditComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -98,7 +98,7 @@ export class BusinessContentEditComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
         this.showSaveBtn=true;
@@ -106,7 +106,7 @@ export class BusinessContentEditComponent implements OnInit{
     }
   }
 
-  private initTypes(){
+   initTypes(){
     this.businessContentService.getType().then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -124,7 +124,7 @@ export class BusinessContentEditComponent implements OnInit{
     );
   }
 
-  private initOperations(){
+   initOperations(){
     this.businessContentService.getOp().then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -143,7 +143,7 @@ export class BusinessContentEditComponent implements OnInit{
     );
   }
 
-  private getData(id){
+   getData(id){
     this.businessContentService.getBusiness(id).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -180,7 +180,7 @@ export class BusinessContentEditComponent implements OnInit{
     );
   }
 
-  private onSubmit(){
+   onSubmit(){
     console.log(this.business);
     this.businessContentService.edit(this.business).then(
       data=>{

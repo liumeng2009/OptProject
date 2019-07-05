@@ -4,18 +4,18 @@ import {Router,ActivatedRoute} from '@angular/router'
 @Component({
   template: `
     <h1 *ngIf="showInfo">用户权限管理</h1>
-        <router-outlet (activate)='onActivate($event)'
-  (deactivate)='onDeactivate($event)'></router-outlet>
+        <router-outlet (activate)='onActivate()'
+  (deactivate)='onDeactivate()'></router-outlet>
     `
 })
 
 export class AuthComponent {
-  private showInfo=true;
+  showInfo=true;
 
-  private onActivate(){
+  onActivate(){
     this.showInfo=false;
   }
-  private onDeactivate(){
+  onDeactivate(){
     this.showInfo=true;
   }
 }

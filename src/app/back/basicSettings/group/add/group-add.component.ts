@@ -37,7 +37,7 @@ export class GroupAddComponent implements OnInit{
   ngOnInit(){
   }
 
-  private onSubmit(){
+   onSubmit(){
     //alert(this.building);
     this.groupService.create(this.group).then(
       data=>{

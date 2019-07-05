@@ -15,15 +15,16 @@ import {MissionService} from '../main/mission.service';
 import {SwitchService} from '../main/switchService';
 
 @Component({
-  selector: 'login-area',
+  selector: 'app-login-area',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
 
-  private iconClass= 'k-icon k-i-lock fz-18';
-  private isDisabled= false;
+   iconClass= 'k-icon k-i-lock fz-18';
+   isDisabled= false;
+  user = new User(null, null, null, null, null, null, null, null, null, null);
 
   constructor(
     private loginService: LoginService,
@@ -34,12 +35,12 @@ export class LoginComponent implements OnInit{
     private vcr: ViewContainerRef,
     private missionService: MissionService,
     private switchService: SwitchService
-  ){
+  ) {
     this.toastr.setRootViewContainerRef(vcr);
   };
-  user= new User(null, null, null, null, null, null, null, null, null, null);
 
-  ngOnInit(){
+
+  ngOnInit() {
     // 告诉main组件，不要显示toast了
     this.missionService.remove.emit('remove');
     this.switchService.setIsIntoMain(false);
@@ -47,7 +48,7 @@ export class LoginComponent implements OnInit{
   }
 
 
-  onSubmit(): void{
+  onSubmit(): void {
     this.isDisabled = true;
     this.iconClass = 'k-icon k-i-loading fz-18';
     const urlTree = this.router.parseUrl(this.router.url);
@@ -56,7 +57,7 @@ export class LoginComponent implements OnInit{
     this.loginService.login(this.user.name, this.user.password)
       .then(
         data => {
-          if (data.status === 0){
+          if (data.status === 0) {
             this.toastr.success('欢迎您,' + data.data.name, '登录成功');
             setTimeout(() => {
               this.isDisabled = false;
@@ -64,15 +65,13 @@ export class LoginComponent implements OnInit{
               const date = new Date();
               date.setDate(date.getDate() + 7);
               this.cookieService.put('optToken', data.data.token, {expires: date});
-              if (rememberUrl && rememberUrl !== ''){
+              if (rememberUrl && rememberUrl !== '') {
                 this.router.navigate([rememberUrl]);
-              }
-              else{
+              }else {
                 this.router.navigate(['/admin']);
               }
             }, 2000);
-          }
-          else{
+          }else {
             this.isDisabled = false;
             this.iconClass = 'k-icon k-i-lock fz-18';
             this.toastr.error(data.message, '登录失败');
@@ -82,10 +81,9 @@ export class LoginComponent implements OnInit{
         error => {
           this.isDisabled = false;
           this.iconClass = 'k-icon k-i-lock fz-18';
-          if (environment.production){
+          if (environment.production) {
             this.toastr.error(new OptConfig().ajaxError, '登录失败');
-          }
-          else {
+          }else {
             this.toastr.error(error, '登录失败');
             // this.errorMessage = error;
           }

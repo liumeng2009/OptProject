@@ -42,10 +42,10 @@ export class AddressEditComponent implements OnInit{
 
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showEditBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showEditBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -60,7 +60,7 @@ export class AddressEditComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -79,7 +79,7 @@ export class AddressEditComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
         this.showEditBtn=true;
@@ -89,7 +89,7 @@ export class AddressEditComponent implements OnInit{
   }
 
 
-  private getData(id){
+   getData(id){
     this.addressService.getAddress(id).then(
       data=>{
         let buildobj=this.apiResultService.result(data);
@@ -110,7 +110,7 @@ export class AddressEditComponent implements OnInit{
       }
     );
   }
-  private onSubmit(){
+   onSubmit(){
     //alert(this.building);
     this.addressService.create(this.building).then(
       data=>{

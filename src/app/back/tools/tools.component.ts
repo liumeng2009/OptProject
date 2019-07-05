@@ -13,9 +13,9 @@ import { OptConfig } from 'app/config/config';
 
 export class ToolsComponent implements OnInit {
 
-  private height = {height: '0px'};
-  private start: any = null;
-  private end: any = null;
+   height = {height: '0px'};
+   start: any = null;
+   end: any = null;
   constructor(
     private toastr: ToastsManager,
     private apiResultService: ApiResultService,
@@ -41,7 +41,7 @@ export class ToolsComponent implements OnInit {
     this.end = e;
   }
 
-  private print() {
+   print() {
     window.open(new OptConfig().serverPath + '/page/yearsheet?start=' + moment(this.start).valueOf()
     + '&end=' + moment(this.end).valueOf());
   }

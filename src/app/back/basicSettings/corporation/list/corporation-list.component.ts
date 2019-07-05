@@ -42,19 +42,19 @@ import {SwitchService} from "../../../main/switchService";
 
 export class CorporationListComponent implements OnInit{
 
-  private gridData:GridDataResult={
+   gridData:GridDataResult={
     data:[],
     total:0
   };
 
-  private height:number=0;
-  private pageSize:number=new OptConfig().pageSize;
-  private skip:number=0;
-  private total:number=0;
-  private firstRecord:number=0;
-  private lastRecord:number=0;
-  private result;
-  private isLoading:boolean=true;
+   height:number=0;
+   pageSize:number=new OptConfig().pageSize;
+   skip:number=0;
+   total:number=0;
+   firstRecord:number=0;
+   lastRecord:number=0;
+   result;
+   isLoading:boolean=true;
 
   constructor(
     private corporationService:CorporationService,
@@ -74,12 +74,12 @@ export class CorporationListComponent implements OnInit{
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showAddBtn:boolean=false;
-  private showListEditBtn:boolean=false;
-  private showListDeleteBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showAddBtn:boolean=false;
+   showListEditBtn:boolean=false;
+   showListDeleteBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -94,7 +94,7 @@ export class CorporationListComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -113,7 +113,7 @@ export class CorporationListComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='add'){
         this.showAddBtn=true;
@@ -127,7 +127,7 @@ export class CorporationListComponent implements OnInit{
     }
   }
 
-  private getData(pageid){
+   getData(pageid){
     this.corporationService.getCorporationList(pageid,null)
       .then(
         data=>{
@@ -146,28 +146,28 @@ export class CorporationListComponent implements OnInit{
       );
   }
 
-  private refresh(){
+   refresh(){
     this.gridData.data=[];
     this.gridData.total=0;
     this.isLoading=true;
     this.getData(this.skip/this.pageSize);
   }
 
-  private add(){
+   add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
   }
 
-  private pageChange(event,PageChangeEvent){
+   pageChange(event){
     this.skip=event.skip;
     this.isLoading=true;
     this.getData(this.skip/this.pageSize+1);
   }
 
-  private editRow(id){
+   editRow(id){
     this.router.navigate([id],{relativeTo:this.route.parent});
   }
 
-  private deleteRow(id){
+   deleteRow(id){
     const dialog: DialogRef = this.dialogService.open({
       title: "确认删除？",
       content: "确定删除吗？",

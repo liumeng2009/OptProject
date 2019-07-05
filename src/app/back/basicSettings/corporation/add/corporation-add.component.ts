@@ -46,7 +46,7 @@ export class CorporationAddComponent implements OnInit{
     this.setGroupData();
   }
 
-  private setGroupData(){
+   setGroupData(){
     this.isLoading=true;
     this.groupService.getGroupList(null)
       .then(
@@ -66,7 +66,7 @@ export class CorporationAddComponent implements OnInit{
       );
   }
 
-  private groupSelectChanged($event){
+   groupSelectChanged($event){
     for(let g of this.groups){
       if(g.id==$event){
         this.corporation.group=g;
@@ -74,7 +74,7 @@ export class CorporationAddComponent implements OnInit{
     }
   }
 
-  private onSubmit(){
+   onSubmit(){
     //alert(this.building);
     console.log(this.corporation);
     this.corporationService.create(this.corporation).then(
@@ -98,7 +98,7 @@ export class CorporationAddComponent implements OnInit{
     )
   }
 
-  private addBuilding(){
+   addBuilding(){
     if(this.corporation.name!=''&&this.corporation.description!=''&&this.corporation.group){
       //自动新增，然后跳转到edit页面
       this.corporationService.create(this.corporation).then(
@@ -122,7 +122,7 @@ export class CorporationAddComponent implements OnInit{
     return false;
   }
 
-  private refreshBuilding(){
+   refreshBuilding(){
 
   }
 }

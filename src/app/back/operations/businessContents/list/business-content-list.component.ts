@@ -44,22 +44,22 @@ import {MissionService} from "../../../main/mission.service";
 
 export class BusinessContentListComponent implements OnInit{
 
-  private gridData:GridDataResult={
+   gridData:GridDataResult={
     data:[],
     total:0
   };
-  private height:number=0;
-  private pageSize:number=new OptConfig().pageSize;
-  private skip:number=0;
-  private total:number=0;
-  private firstRecord:number=0;
-  private lastRecord:number=0;
-  private result;
-  private isLoading:boolean=false;
+   height:number=0;
+   pageSize:number=new OptConfig().pageSize;
+   skip:number=0;
+   total:number=0;
+   firstRecord:number=0;
+   lastRecord:number=0;
+   result;
+   isLoading:boolean=false;
 
-  private searchEquipment:Position[]=[];
+   searchEquipment:Position[]=[];
 
-  private searchObj={
+   searchObj={
     type:'',
     equipment:null,
     page:1
@@ -92,12 +92,12 @@ export class BusinessContentListComponent implements OnInit{
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showAddBtn:boolean=false;
-  private showListEditBtn:boolean=false;
-  private showListDeleteBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showAddBtn:boolean=false;
+   showListEditBtn:boolean=false;
+   showListDeleteBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -112,7 +112,7 @@ export class BusinessContentListComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -131,7 +131,7 @@ export class BusinessContentListComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='add'){
         this.showAddBtn=true;
@@ -146,7 +146,7 @@ export class BusinessContentListComponent implements OnInit{
   }
 
 
-  private initFilter(){
+   initFilter(){
     let typeFilter=this.switchService.getBusinessListFilter('type');
     if(typeFilter&&typeFilter!=''){
       this.searchObj.type=typeFilter;
@@ -164,7 +164,7 @@ export class BusinessContentListComponent implements OnInit{
 
   }
 
-  private getData(pageid,type,equipment){
+   getData(pageid,type,equipment){
     this.isLoading=true;
     this.businessContentService.getBusinessContentList(pageid,type,equipment)
       .then(
@@ -189,17 +189,17 @@ export class BusinessContentListComponent implements OnInit{
         }
       );
   }
-  private refresh(){
+   refresh(){
     this.gridData.data=[];
     this.gridData.total=0;
     this.isLoading=true;
     this.getData(this.skip/this.pageSize+1,this.searchObj.type,this.searchObj.equipment.value);
   }
-  private add(){
+   add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
   }
 
-  private pageChange(event,PageChangeEvent){
+   pageChange(event){
     this.skip=event.skip;
     this.isLoading=true;
     this.switchService.setBusinessListFilter('page',this.skip/this.pageSize+1);
@@ -208,11 +208,11 @@ export class BusinessContentListComponent implements OnInit{
 
 
 
-  private editRow(id){
+   editRow(id){
     this.router.navigate([id],{relativeTo:this.route.parent});
   }
 
-  private deleteRow(id){
+   deleteRow(id){
     const dialog: DialogRef = this.dialogService.open({
       title: "确认删除？",
       content: "确定删除吗？",
@@ -249,7 +249,7 @@ export class BusinessContentListComponent implements OnInit{
   }
 
 
-  private handleTypeChange(e){
+   handleTypeChange(e){
     this.switchService.setBusinessListFilter('type',e);
     this.switchService.setBusinessListFilter('page',1);
     this.getSearchEquipment(e,()=>{
@@ -278,7 +278,7 @@ export class BusinessContentListComponent implements OnInit{
     );*/
   }
 
-  private handleEquipmentChange(e){
+   handleEquipmentChange(e){
     this.switchService.setBusinessListFilter('equipment',e.value);
     this.switchService.setBusinessListFilter('page',1);
     //this.router.navigate(['list'],{queryParams:queryParams,relativeTo:this.route.parent});
@@ -301,7 +301,7 @@ export class BusinessContentListComponent implements OnInit{
     );*/
   }
 
-  private getSearchEquipment(type:string,callback,isInitPage:boolean){
+   getSearchEquipment(type:string,callback,isInitPage:boolean){
     this.searchEquipment.splice(0,this.searchEquipment.length);
     this.searchEquipment.push(new Position('全部设备',''));
     this.businessContentService.getEquipment(type).then(
@@ -347,8 +347,8 @@ export class BusinessContentListComponent implements OnInit{
     )
   }
 
-  private show:boolean=false;
-  private configTypeToggle(show){
+   show:boolean=false;
+   configTypeToggle(show){
     if(show==undefined){
       if(this.show){
         this.show=false;
@@ -362,8 +362,8 @@ export class BusinessContentListComponent implements OnInit{
     }
   }
 
-  private showOp:boolean=false;
-  private configOpToggle(show){
+   showOp:boolean=false;
+   configOpToggle(show){
     if(show==undefined){
       if(this.showOp){
         this.showOp=false;
@@ -377,17 +377,17 @@ export class BusinessContentListComponent implements OnInit{
     }
   }
 
-  private dialogShow:boolean=false;
+   dialogShow:boolean=false;
   @ViewChild('anchor') public anchor: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popup: ElementRef;
-  private contains(target: any): boolean {
+   contains(target: any): boolean {
     return this.anchor.nativeElement.contains(target) ||
       (this.popup ? this.popup.nativeElement.contains(target): false)||this.dialogShow;
   }
 
   @ViewChild('anchorOp') public anchorOp: ElementRef;
   @ViewChild('popupOp', { read: ElementRef }) public popupOp: ElementRef;
-  private containsOp(target: any): boolean {
+   containsOp(target: any): boolean {
     return this.anchorOp.nativeElement.contains(target) ||
       (this.popupOp ? this.popupOp.nativeElement.contains(target): false)||this.dialogShow;
   }
@@ -402,11 +402,11 @@ export class BusinessContentListComponent implements OnInit{
     }
   }
 
-  private equiptype=new EquipType(null,null,null);
-  private equiptypes:EquipType[]=[];
-  private equiptypesFilter:EquipType[]=[];
+   equiptype=new EquipType(null,null,null);
+   equiptypes:EquipType[]=[];
+   equiptypesFilter:EquipType[]=[];
 
-  private savetype(){
+   savetype(){
     let urlTree=this.router.parseUrl(this.router.url);
     let queryParams=urlTree.queryParams;
     this.businessContentService.createType(this.equiptype).then(
@@ -425,8 +425,8 @@ export class BusinessContentListComponent implements OnInit{
     );
   }
 
-  private equipop=new EquipOp(null,null,null);
-  private saveop(){
+   equipop=new EquipOp(null,null,null);
+   saveop(){
     console.log(this.equipop);
     this.businessContentService.createOp(this.equipop).then(
       data=>{
@@ -442,7 +442,7 @@ export class BusinessContentListComponent implements OnInit{
       }
     );
   }
-  private getEquipTypeList(){
+   getEquipTypeList(){
     this.equiptypes.splice(0,this.equiptypes.length);
     this.businessContentService.getType().then(
       data=>{
@@ -462,8 +462,8 @@ export class BusinessContentListComponent implements OnInit{
       }
     );
   }
-  private equipops:EquipOp[]=[];
-  private getEquipOpList(){
+   equipops:EquipOp[]=[];
+   getEquipOpList(){
     this.equipops.splice(0,this.equipops.length);
     this.businessContentService.getOp().then(
       data=>{
@@ -481,7 +481,7 @@ export class BusinessContentListComponent implements OnInit{
     );
   }
 
-  private deletetype(id){
+   deletetype(id){
     const dialog: DialogRef = this.dialogService.open({
       title: "确认删除？",
       content: "确定删除吗？",
@@ -517,7 +517,7 @@ export class BusinessContentListComponent implements OnInit{
       }
     });
   }
-  private deleteop(id){
+   deleteop(id){
     const dialog: DialogRef = this.dialogService.open({
       title: "确认删除？",
       content: "确定删除吗？",
@@ -552,11 +552,11 @@ export class BusinessContentListComponent implements OnInit{
       }
     });
   }
-  private cleartypeform(){
+   cleartypeform(){
     this.equiptype.name=null;
     this.equiptype.code=null;
   }
-  private clearopform(){
+   clearopform(){
     this.equipop.name=null;
     this.equipop.code=null;
   }

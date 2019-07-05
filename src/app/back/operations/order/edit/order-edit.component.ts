@@ -33,10 +33,10 @@ import {SwitchService} from "../../../main/switchService";
 
 export class OrderEditComponent implements OnInit{
 
-  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+  order=new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
   groups:Group[]=[];
-  private today=new Date(0,0,0);
-  private time;
+   today=new Date(0,0,0);
+   time;
 
   constructor(
     private router:Router,
@@ -63,14 +63,14 @@ export class OrderEditComponent implements OnInit{
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private pageChildrenAuths=[];
-  private showSaveBtn:boolean=false;
-  private showChildrenAddBtn:boolean=false;
-  private showChildrenListEditBtn:boolean=false;
-  private showChildrenListDeleteBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   pageChildrenAuths=[];
+   showSaveBtn:boolean=false;
+   showChildrenAddBtn:boolean=false;
+   showChildrenListEditBtn:boolean=false;
+   showChildrenListDeleteBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -87,7 +87,7 @@ export class OrderEditComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -106,7 +106,7 @@ export class OrderEditComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
         this.showSaveBtn=true;
@@ -125,8 +125,8 @@ export class OrderEditComponent implements OnInit{
     }
   }
 
-  private groupLoading:boolean=false;
-  private initGroup(callback){
+   groupLoading:boolean=false;
+   initGroup(callback){
     this.groupLoading=true;
     this.groupService.getGroupList(null).then(
       data=>{
@@ -147,9 +147,9 @@ export class OrderEditComponent implements OnInit{
       }
     );
   }
-  private corporations:Corporation[]=[];
-  private corporationLoading:boolean=false;
-  private initCorporation(callback){
+   corporations:Corporation[]=[];
+   corporationLoading:boolean=false;
+   initCorporation(callback){
     this.corporationLoading=true;
     this.corporations.splice(0,this.corporations.length);
     this.corporationService.getCorporationList(null,this.order.group).then(
@@ -177,9 +177,9 @@ export class OrderEditComponent implements OnInit{
     )
   }
 
-  private corpBuildings:CorpBuilding[]=[];
-  private corpBuildingLoading:boolean=false;
-  private initCorpBuilding(callback){
+   corpBuildings:CorpBuilding[]=[];
+   corpBuildingLoading:boolean=false;
+   initCorpBuilding(callback){
     this.corpBuildingLoading=true;
     this.corpBuildings.splice(0,this.corpBuildings.length);
     this.corpBuildingService.getCorporationList(this.order.corporation.id).then(
@@ -222,9 +222,9 @@ export class OrderEditComponent implements OnInit{
     );
   }
 
-  private isLoading=false;
-  private operations;
-  private getData(id){
+   isLoading=false;
+   operations;
+   getData(id){
     this.orderService.getOrder(id).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -316,13 +316,13 @@ export class OrderEditComponent implements OnInit{
     );
   }
 
-  private refresh(){
+   refresh(){
     this.route.params.subscribe((params: Params) =>{
       this.getData(params.id);
     })
   }
 
-  private onSubmit(){
+   onSubmit(){
     let date=this.today;
     date.setHours(this.time.hour);
     date.setMinutes(this.time.minute);
@@ -343,19 +343,19 @@ export class OrderEditComponent implements OnInit{
     )
   }
 
-  private dateChange($event){
+   dateChange($event){
     let dateInfo=$event;
     let timeInfo=this.time;
     dateInfo.setHours(timeInfo.hour,timeInfo.minute,timeInfo.second,0);
     this.order.incoming_time=dateInfo.getTime();
   }
 
-  private onTimeChange($event){
+   onTimeChange($event){
     let dateInfo=this.today;
     dateInfo.setHours($event.hour,$event.minute,$event.second,0);
     this.order.incoming_time=dateInfo.getTime();
   }
-  private onGroupChange($event){
+   onGroupChange($event){
     this.corporationLoading=true;
     this.corporations.splice(0,this.corporations.length);
     this.corporationService.getCorporationList(null,this.order.group).then(
@@ -378,7 +378,7 @@ export class OrderEditComponent implements OnInit{
       }
     )
   }
-  private onCorporationChange($event){
+   onCorporationChange($event){
     this.corpBuildingLoading=true;
     this.corpBuildings.splice(0,this.corpBuildings.length);
     this.corpBuildingService.getCorporationList(this.order.corporation.id).then(
@@ -421,16 +421,16 @@ export class OrderEditComponent implements OnInit{
     );
   }
 
-  private add(){
+   add(){
     this.route.params.subscribe((params: Params) => {
       this.router.navigate(['op/add/'+params.id], {relativeTo: this.route.parent.parent});
     });
   }
-  private result;
-  private editRow(id){
+   result;
+   editRow(id){
     this.router.navigate(['op/'+id],{relativeTo:this.route.parent.parent});
   }
-  private deleteRow(id){
+   deleteRow(id){
     let dialog=this.dialogService.open({
       title:'确认？',
       content:'确认要删除吗？',

@@ -1,26 +1,26 @@
-import {Component,OnInit,ViewContainerRef} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 
 @Component({
-  selector:'nofound',
-  templateUrl:'./other.component.html',
-  styleUrls:['./other.component.scss']
+  selector: 'app-nofound',
+  templateUrl: './other.component.html',
+  styleUrls: ['./other.component.scss']
 })
 
-export class OtherComponent implements OnInit{
+export class OtherComponent implements OnInit {
 
   constructor(
-    private title:Title,
-    private lo:Location
-  ){
+    private title: Title,
+    private lo: Location
+  ) {
 
   };
-  ngOnInit(){
+  ngOnInit() {
     this.title.setTitle('页面未找到');
   }
-  private goBack(){
+  goBack() {
     this.lo.back();
   }
 }

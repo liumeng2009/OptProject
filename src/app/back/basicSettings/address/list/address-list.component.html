@@ -1,5 +1,5 @@
 <div [@pageChanged]="'in'">
-  <kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+  <kendo-grid [data]="gridData" [scrollable]="'virtual'" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
     <ng-template kendoGridToolbarTemplate>
       <button kendoButton  (click)="add()" [icon]="'add'" *ngIf="showAddBtn" ></button>
       <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">

@@ -9,5 +9,5 @@ import {Component} from '@angular/core'
 
 export class AddComponent{
   title:'add page'
-  private name='add page'
+  name='add page'
 }

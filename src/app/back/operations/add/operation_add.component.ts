@@ -48,9 +48,9 @@ import {SwitchService} from "../../main/switchService";
 })
 
 export class OperationAddComponent  implements OnInit,OnDestroy {
-  private now:Date=new Date();
-  private operation:WorkOrder=new WorkOrder(null,null,null,null,null,this.now,new LmTime(this.now.getHours(),this.now.getMinutes(),this.now.getSeconds()),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-    new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true);
+   now:Date=new Date();
+   operation:WorkOrder=new WorkOrder(null,null,null,null,null,this.now,new LmTime(this.now.getHours(),this.now.getMinutes(),this.now.getSeconds()),null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+    new Order(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null),new BusinessContent(null,'WORD',[],new EquipType(null,null,null),new EquipOp(null,null,null)),true, null);
   constructor(
     private operationService:OperationService,
     private router:Router,
@@ -64,11 +64,11 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
   ){
 
   };
-  private surfaceHeight={height:'400px'};
+   surfaceHeight={height:'400px'};
   @ViewChild('surface')
-  private surfaceElement: ElementRef;
-  private surface: Surface;
-  private processData={
+   surfaceElement: ElementRef;
+   surface: Surface;
+   processData={
     createTime:new Date(2017,11,16,23,50,50,0),
     process:[
 
@@ -79,7 +79,7 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
       this.surface.destroy();
   }
 
-  private createSurface(): Surface {
+   createSurface(): Surface {
     // Obtain a reference to the native DOM element of the wrapper
     const element = this.surfaceElement.nativeElement;
 
@@ -107,17 +107,17 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
     })
   }
 
-  private orderSelectDate:Date=new Date();
-  private orders:Order[]=[];
-  private orderObj={
+   orderSelectDate:Date=new Date();
+   orders:Order[]=[];
+   orderObj={
     orderId:'1'
   };
-  private initOrder(){
+   initOrder(){
     let param=Date.parse(this.orderSelectDate.toDateString());
     this.getData(0,param);
   }
 
-  private getOrder(orderid,callback){
+   getOrder(orderid,callback){
     this.orderService.getOrder(orderid).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -138,7 +138,7 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
     )
   }
 
-  private getData(page,time){
+   getData(page,time){
     this.orders.splice(0,this.orders.length);
     this.orderService.getOrderList(page,time).then(
       data=>{
@@ -147,7 +147,7 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
           this.orders=result.data;
           if(result.data.length==0){
             //说明没有
-            let o=new Order('1','今日暂无订单','',null,null,null,null,null,null,null,null,null,null,null,null,null);
+            let o=new Order('1','今日暂无订单','',null,null,null,null,null,null,null,null,null,null,null,null,null, null);
             this.orders.push(o);
             this.isSubmitDisabled=true;
             this.processData.createTime=new Date();
@@ -215,13 +215,13 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
     )
   }
 
-  private isSubmitDisabled:boolean=true;
-  private OrderIncomingDateChange($event){
+   isSubmitDisabled:boolean=true;
+   OrderIncomingDateChange($event){
     let dateStamp=Date.parse($event);
     this.getData(0,dateStamp);
   }
 
-  private orderSelect($event){
+   orderSelect($event){
     console.log($event);
     this.operation.order=$event;
     //将incomingDate赋值给工单的建立时间
@@ -238,13 +238,13 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
 
   }
 
-  private onOperationCreateTimeChange($event){
+   onOperationCreateTimeChange($event){
     this.operation.incoming_date_time=$event;
   }
 
-  private equipTypeLoading:boolean=false;
-  private equiptypes:EquipType[]=[];
-  private initEquipType(){
+   equipTypeLoading:boolean=false;
+   equiptypes:EquipType[]=[];
+   initEquipType(){
     this.equiptypes.splice(0,this.equiptypes.length);
     this.equipTypeLoading=true;
     this.businessContentService.getType().then(
@@ -268,9 +268,9 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
     )
   }
 
-  private equipmentLoading:boolean=false;
-  private equipments:Position[]=[];
-  private initEquipment(_type){
+   equipmentLoading:boolean=false;
+   equipments:Position[]=[];
+   initEquipment(_type){
     this.equipments.splice(0,this.equipments.length);
     this.equipmentLoading=true;
     this.businessContentService.getEquipment(_type?_type:this.operation.businessContent.equipType.code).then(
@@ -297,19 +297,19 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
     )
   }
 
-  private equipTypeChange($event){
+   equipTypeChange($event){
     console.log($event);
     this.initEquipment($event.code);
   }
 
-  private equipChange($event){
+   equipChange($event){
     console.log($event);
     this.initEquipOp(this.operation.businessContent.equipType.code,$event,true);
   }
 
-  private equipOpLoading:boolean=false;
-  private equipOps:EquipOp[]=[];
-  private initEquipOp(type:string,equipment:string,_change:boolean){
+   equipOpLoading:boolean=false;
+   equipOps:EquipOp[]=[];
+   initEquipOp(type:string,equipment:string,_change:boolean){
     this.equipOpLoading=true;
     this.equipOps.splice(0,this.equipOps.length);
     let typeSelect=type?type:(this.equiptypes[0]?this.equiptypes[0].code:'');
@@ -336,7 +336,7 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
     );
   }
 
-  private onSubmit(){
+   onSubmit(){
     console.log(this.operation);
     let date=new Date(this.operation.incoming_date.toString());
     date.setHours(this.operation.incoming_date_time.hour,this.operation.incoming_date_time.minute,this.operation.incoming_date_time.second,0);
@@ -353,7 +353,7 @@ export class OperationAddComponent  implements OnInit,OnDestroy {
     )
   }
 
-  private addProcess(){
+   addProcess(){
     //保存后，跳转到edit页面
     console.log(this.operation);
     let date=new Date(this.operation.incoming_date.toString());

@@ -74,7 +74,9 @@ export class WorkOrder {
 
     public businessContent:BusinessContent,
 
-    public isCompleteOperation:boolean
+    public isCompleteOperation:boolean,
+
+    public complete: string,
 
   ) {  }
 }

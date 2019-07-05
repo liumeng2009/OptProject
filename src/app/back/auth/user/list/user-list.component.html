@@ -1,4 +1,4 @@
-<kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+<kendo-grid [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" >
   <ng-template kendoGridToolbarTemplate>
     <button kendoButton  (click)="add()" [icon]="'plus'" *ngIf="showAddBtn"></button>
     <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">

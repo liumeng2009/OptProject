@@ -31,12 +31,12 @@ import {MissionService} from "../../main/mission.service";
 
 export class WorkerComponent implements OnInit{
 
-  private height=0;
-  private workers;
+   height=0;
+   workers;
 
-  private isLoading:boolean=true;
+   isLoading:boolean=true;
 
-  private gridData=[
+   gridData=[
     {
       "ProductID": 1,
       "ProductName": "Chai",
@@ -71,10 +71,10 @@ export class WorkerComponent implements OnInit{
     this.getData();
   }
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showAddChk:boolean=true;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showAddChk:boolean=true;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -89,7 +89,7 @@ export class WorkerComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -108,7 +108,7 @@ export class WorkerComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     let canAdd=false;
     let canDelete=false;
     for(let auth of this.pageAuths){

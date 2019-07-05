@@ -42,15 +42,15 @@ import {Avatar} from "../../bean/avatar";
 })
 
 export class MainComponent implements OnInit{
-  private user:User;
-  private selectedId:string='';
-  private routerCopy:Router;
-  private breadcrumb:Bread[]=[]
+   user:User;
+   selectedId:string='';
+   routerCopy:Router;
+   breadcrumb:Bread[]=[]
 
-  private mySubscription;
-  private avatarSubscription;
+   mySubscription;
+   avatarSubscription;
 
-  private showPage='hidden';
+   showPage='hidden';
 
   constructor(
     private router:Router,
@@ -106,7 +106,7 @@ export class MainComponent implements OnInit{
 
   }
 
-  private topNumber={
+   topNumber={
     position:'relative',
     top:'0px'
   };
@@ -248,7 +248,7 @@ export class MainComponent implements OnInit{
       });
   }
 
-  private checkLogin(){
+   checkLogin(){
     this.mainService.getUserInfo()
       .then(
         data=>{
@@ -270,7 +270,7 @@ export class MainComponent implements OnInit{
   }
 
   //根据角色，来改变angular的路由配置
-  private fixRouteConfig(auths){
+   fixRouteConfig(auths){
     //auths与route作比较，auths中没有的，从route中删除
     //第一层
     let cfg=this.router.config[3].children;
@@ -308,7 +308,7 @@ export class MainComponent implements OnInit{
     }
   }
 
-  private isExistInRouteConfig(pathObj,auths){
+   isExistInRouteConfig(pathObj,auths){
     for(let auth of auths){
       if(pathObj.path==auth.opInFunc.function.code&&auth.opInFunc.operate.code=='menu'){
         return true;
@@ -317,7 +317,7 @@ export class MainComponent implements OnInit{
     return false;
   }
 
-  private createBreadCrumb(){
+   createBreadCrumb(){
 
     this.breadcrumb.splice(0,this.breadcrumb.length);
 
@@ -409,7 +409,7 @@ export class MainComponent implements OnInit{
     return false;
   }
 
-  private searchAndDeleteNodePropertySelected(routes:any[]){
+   searchAndDeleteNodePropertySelected(routes:any[]){
     for(let i=0;i<routes.length;i++){
       if(routes[i].data.selected){
         delete routes[i].data.selected;
@@ -420,9 +420,9 @@ export class MainComponent implements OnInit{
     }
   }
 
-  private baseImageUrl: string = new OptConfig().serverPath;
-  private avatarImagePath=this.baseImageUrl+'/uploads/avatar/dongman/6.jpg';
-  private getAvatarImageUrl(user){
+   baseImageUrl: string = new OptConfig().serverPath;
+   avatarImagePath=this.baseImageUrl+'/uploads/avatar/动漫/6.jpg';
+   getAvatarImageUrl(user){
     if(user){
       if(user.avatar){
         if(user.avatarUseImg==1){
@@ -443,11 +443,11 @@ export class MainComponent implements OnInit{
   }
 
 
-  private imageUrl(imageName: string) :string {
+   imageUrl(imageName: string) :string {
     return this.baseImageUrl + imageName + ".jpg";
   }
 
-  private logout(){
+   logout(){
     this.cookieService.remove('optToken');
     let toastrOption={
       showCloseButton:true
@@ -458,7 +458,7 @@ export class MainComponent implements OnInit{
     },2000);
   }
 
-  private back(){
+   back(){
     let historyGo=-1;
     let url=this.location.path();
     url=url.substring(1,url.length);
@@ -484,12 +484,12 @@ export class MainComponent implements OnInit{
     window.history.go(historyGo);
   }
 
-  private gotoUserPage(){
+   gotoUserPage(){
     this.router.navigate(["/admin/auth/setting"])
   }
 
-  private showUserMenu:boolean=false;
-  private onToggleUserMenu(){
+   showUserMenu:boolean=false;
+   onToggleUserMenu(){
     if(this.showUserMenu){
       this.showUserMenu=false;
     }
@@ -498,8 +498,8 @@ export class MainComponent implements OnInit{
     }
   }
 
-  private showMessageArea:boolean=false;
-  private onToggleMessageArea(){
+   showMessageArea:boolean=false;
+   onToggleMessageArea(){
     if(this.showMessageArea){
       this.showMessageArea=false;
     }
@@ -510,14 +510,14 @@ export class MainComponent implements OnInit{
 
   @ViewChild('anchor') public anchorOp: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popupOp: ElementRef;
-  private contains(target: any): boolean {
+   contains(target: any): boolean {
     return this.anchorOp.nativeElement.contains(target) ||
       (this.popupOp ? this.popupOp.nativeElement.contains(target): false);
   }
 
   @ViewChild('messageArea') public messagearea: ElementRef;
   @ViewChild('popupMessage', { read: ElementRef }) public popupmessage: ElementRef;
-  private containsMessage(target: any): boolean {
+   containsMessage(target: any): boolean {
     return this.messagearea.nativeElement.contains(target) ||
       (this.popupmessage ? this.popupmessage.nativeElement.contains(target): false);
   }

@@ -48,10 +48,10 @@ export class RoleEditComponent implements OnInit{
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showSaveBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showSaveBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -66,7 +66,7 @@ export class RoleEditComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -85,7 +85,7 @@ export class RoleEditComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='edit'){
         this.showSaveBtn=true;
@@ -93,7 +93,7 @@ export class RoleEditComponent implements OnInit{
     }
   }
 
-  private getData(id:string){
+   getData(id:string){
     this.roleService.getRole(id).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -108,13 +108,13 @@ export class RoleEditComponent implements OnInit{
     )
   }
 
-  private gridData:GridDataResult={
+   gridData:GridDataResult={
     data:[],
     total:0
   };
 
   @ViewChild('funcGrid') funcGrid: GridComponent;
-  private initAllAuth(roleId){
+   initAllAuth(roleId){
     this.functionSerivce.getList().then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -154,7 +154,7 @@ export class RoleEditComponent implements OnInit{
     )
   }
 
-  private initOwnAuth(roleId){
+   initOwnAuth(roleId){
     let t=this.gridData;
     console.log(t);
     this.roleService.authInRoleList(roleId).then(
@@ -201,7 +201,7 @@ export class RoleEditComponent implements OnInit{
   }
 
 
-  private onSubmit(){
+   onSubmit(){
     this.roleService.edit(this.role).then(
       data=>{
         let result=this.apiResultService.result(data);
@@ -215,7 +215,7 @@ export class RoleEditComponent implements OnInit{
     )
   }
 
-  private authChange($event,authId){
+   authChange($event,authId){
     let chk=$event.target.checked
 
     this.route.params.subscribe((params: Params) =>{

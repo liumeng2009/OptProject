@@ -19,14 +19,14 @@ import {MissionService} from "../../../main/mission.service";
 
 export class RoleListComponent implements OnInit{
 
-  private gridData:GridDataResult={
+   gridData:GridDataResult={
     data:[],
     total:0
   };
 
-  private height:number=0;
-  private result;
-  private isLoading:boolean=true;
+   height:number=0;
+   result;
+   isLoading:boolean=true;
 
   constructor(
     private roleService:RoleService,
@@ -47,12 +47,12 @@ export class RoleListComponent implements OnInit{
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showAddBtn:boolean=false;
-  private showListEditBtn:boolean=false;
-  private showListDeleteBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showAddBtn:boolean=false;
+   showListEditBtn:boolean=false;
+   showListDeleteBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -67,7 +67,7 @@ export class RoleListComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -86,7 +86,7 @@ export class RoleListComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='add'){
         this.showAddBtn=true;
@@ -100,7 +100,7 @@ export class RoleListComponent implements OnInit{
     }
   }
 
-  private getData(){
+   getData(){
     this.roleService.getRoleList()
       .then(
         data=>{
@@ -117,21 +117,21 @@ export class RoleListComponent implements OnInit{
         }
       );
   }
-  private refresh(){
+   refresh(){
     this.gridData.data=[];
     this.gridData.total=0;
     this.isLoading=true;
     this.getData();
   }
-  private add(){
+   add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
   }
 
-  private editRow(id){
+   editRow(id){
     this.router.navigate([id],{relativeTo:this.route.parent});
   }
 
-  private deleteRow(id){
+   deleteRow(id){
     const dialog: DialogRef = this.dialogService.open({
       title: "确认删除？",
       content: "确定删除吗？",

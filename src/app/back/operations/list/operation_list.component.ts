@@ -38,30 +38,30 @@ import {MissionService} from "../../main/mission.service";
 
 export class OperationListComponent  implements OnInit {
 
-  private gridData:GridDataResult = {
+   gridData:GridDataResult = {
     data: [],
     total: 0
   };
 
-  private height:number = 0;
-  private pageSize:number = new OptConfig().pageSize;
-  private skip:number = 0;
-  private total:number = 0;
-  private firstRecord:number = 0;
-  private lastRecord:number = 0;
-  private result;
-  private isLoading:boolean = true;
+   height:number = 0;
+   pageSize:number = new OptConfig().pageSize;
+   skip:number = 0;
+   total:number = 0;
+   firstRecord:number = 0;
+   lastRecord:number = 0;
+   result;
+   isLoading:boolean = true;
 
   public filter: CompositeFilterDescriptor;
-  private corps=[];
-  private searchFilter={
+   corps=[];
+   searchFilter={
     showTodayFilter:true,
     todayFilter:new Date(),
     corpFilter:'0',
     page:0,
     noFilter:''
   }
-  private subscription;
+   subscription;
 
   constructor(
     private operationService:OperationService,
@@ -77,10 +77,10 @@ export class OperationListComponent  implements OnInit {
 
   };
 
-  private pageAuths=[];
-  private showAddBtn:boolean=false;
-  private showListEditBtn:boolean=false;
-  private showListDeleteBtn:boolean=false;
+   pageAuths=[];
+   showAddBtn:boolean=false;
+   showListEditBtn:boolean=false;
+   showListDeleteBtn:boolean=false;
   ngOnInit(){
     this.height = (window.document.body.clientHeight - 70 - 56 - 50 - 20-27);
     this.auth();
@@ -91,7 +91,7 @@ export class OperationListComponent  implements OnInit {
     this.getData(this.searchFilter.page+1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
   //从user对象中，找出对应该页面的auths数组
-  private auth(){
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -106,7 +106,7 @@ export class OperationListComponent  implements OnInit {
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -125,7 +125,7 @@ export class OperationListComponent  implements OnInit {
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='add'){
         this.showAddBtn=true;
@@ -139,7 +139,7 @@ export class OperationListComponent  implements OnInit {
     }
   }
 
-  private initFilter(){
+   initFilter(){
     let create_time=this.switchService.getOperationListFilter('create_time');
     if(create_time&&create_time!=''){
       this.searchFilter.todayFilter=new Date(create_time.toString());
@@ -169,7 +169,7 @@ export class OperationListComponent  implements OnInit {
 
 
   }
-  private getData(pageid,time,corp,no){
+   getData(pageid,time,corp,no){
     let d;
     if(time){
       let dateSubmit=new Date(time.toString());
@@ -253,28 +253,28 @@ export class OperationListComponent  implements OnInit {
         }
       );
   }
-  private dateFilterChange($event){
+   dateFilterChange($event){
     this.switchService.setOperationListFilter('create_time',$event);
     this.searchFilter.todayFilter=new Date($event);
     this.getData( 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
-  private handleCorpChange($event){
+   handleCorpChange($event){
     this.searchFilter.corpFilter=$event.id;
     this.switchService.setOperationListFilter('corp',$event.id);
     this.getData( 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
-  private noFilterChange($event){
+   noFilterChange($event){
     let noSelect=$event.target.value;
     console.log(this.searchFilter);
     this.getData( 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
-  private refresh() {
+   refresh() {
     this.gridData.data = [];
     this.gridData.total = 0;
     this.isLoading = true;
     this.getData(this.skip / this.pageSize + 1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
-  private getFilterCorpoationData(){
+   getFilterCorpoationData(){
     this.corps.slice(0,this.corps.length);
     this.corporationService.getCorporationList(null,null).then(
       data=>{
@@ -289,7 +289,7 @@ export class OperationListComponent  implements OnInit {
       }
     )
   }
-  private searchDateChange($event){
+   searchDateChange($event){
     let bol=$event.target.checked;
     if(bol){
       this.searchFilter.showTodayFilter=true;
@@ -303,10 +303,10 @@ export class OperationListComponent  implements OnInit {
     }
 
   }
-  private editRow(id){
+   editRow(id){
       this.router.navigate([id],{relativeTo:this.route.parent});
   }
-  private deleteRow(id){
+   deleteRow(id){
     let dialog=this.dialogService.open({
       title:'确认？',
       content:'确认要删除吗？',
@@ -340,16 +340,16 @@ export class OperationListComponent  implements OnInit {
       }
     })
   }
-  private add(){
+  add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
   }
-  private pageChange(event,PageChangeEvent){
+   pageChange(event){
     this.skip=event.skip;
     this.isLoading=true;
     this.switchService.setOperationListFilter('page',this.skip/this.pageSize);
     this.getData(this.skip/this.pageSize+1,this.searchFilter.showTodayFilter?this.searchFilter.todayFilter:null,this.searchFilter.corpFilter,this.searchFilter.noFilter);
   }
-  private print(id){
+   print(id){
     //this.operationService.printOperation(id);
     window.open(new OptConfig().serverPath + '/page/operation/' + id);
   }

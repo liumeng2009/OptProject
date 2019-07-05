@@ -20,14 +20,14 @@ import {MissionService} from "../../../main/mission.service";
 
 export class FunctionListComponent implements OnInit{
 
-  private gridData:GridDataResult={
+   gridData:GridDataResult={
     data:[],
     total:0
   };
 
-  private height:number=0;
-  private result;
-  private isLoading:boolean=true;
+   height:number=0;
+   result;
+   isLoading:boolean=true;
 
   constructor(
     private functionService:FunctionService,
@@ -48,12 +48,12 @@ export class FunctionListComponent implements OnInit{
   }
 
   //从user对象中，找出对应该页面的auths数组
-  private subscription;
-  private pageAuths=[];
-  private showAddBtn:boolean=false;
-  private showListEditBtn:boolean=false;
-  private showListDeleteBtn:boolean=false;
-  private auth(){
+   subscription;
+   pageAuths=[];
+   showAddBtn:boolean=false;
+   showListEditBtn:boolean=false;
+   showListDeleteBtn:boolean=false;
+   auth(){
     let user=this.switchService.getUser();
     if(user){
       //main组件早已经加载完毕的情况
@@ -68,7 +68,7 @@ export class FunctionListComponent implements OnInit{
       });
     }
   }
-  private initAuth(functioncode){
+   initAuth(functioncode){
     let resultArray=[];
     let user=this.switchService.getUser();
     if(user&&user.role&&user.role.auths){
@@ -87,7 +87,7 @@ export class FunctionListComponent implements OnInit{
     return resultArray;
   }
   //根据auth数组，判断页面一些可操作组件的可用/不可用状态
-  private initComponentAuth(){
+   initComponentAuth(){
     for(let auth of this.pageAuths){
       if(auth.opInFunc&&auth.opInFunc.operate&&auth.opInFunc.operate.code&&auth.opInFunc.operate.code=='add'){
         this.showAddBtn=true;
@@ -102,7 +102,7 @@ export class FunctionListComponent implements OnInit{
   }
 
   @ViewChild('funcGrid') funcGrid: GridComponent;
-  private getData(){
+   getData(){
     this.isLoading=true;
     this.functionService.getList()
       .then(
@@ -178,11 +178,11 @@ export class FunctionListComponent implements OnInit{
       );
   }
 
-  private add(){
+   add(){
     this.router.navigate(['add'],{relativeTo:this.route.parent});
   }
 
-  private isExistInArray(id,array){
+   isExistInArray(id,array){
     let i=0;
     for(let a of array){
       if(id==a.opId){
@@ -198,7 +198,7 @@ export class FunctionListComponent implements OnInit{
     return false;
   }
 
-  private opChange($event,opId,funcId,dataObj){
+   opChange($event,opId,funcId,dataObj){
     let chk=$event.target.checked;
     if(chk){
       this.functionService.createAuth({funcId:funcId,opId:opId}).then(
@@ -237,7 +237,7 @@ export class FunctionListComponent implements OnInit{
 
   }
 
-  private refresh(){
+   refresh(){
     this.gridData.data=[];
     this.gridData.total=0;
     this.isLoading=true;

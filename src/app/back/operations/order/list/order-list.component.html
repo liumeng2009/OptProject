@@ -2,7 +2,7 @@
   <kendo-grid
     [filter]="filter"
     [filterable]="true"
-    [data]="gridData" [scrollable]="virtual" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
+    [data]="gridData" [scrollable]="'virtual'" [height]="height" [pageable]="true" [skip]="skip" [pageSize]="pageSize" (pageChange)="pageChange($event)" >
 
     <ng-template kendoGridToolbarTemplate>
       <button kendoButton  (click)="add()" [icon]="'plus'" *ngIf="showAddBtn" ></button>

@@ -13,7 +13,7 @@
           </label>
           <div class="k-form-field">
             <span style="font-weight:bolder">拥有权限：</span>
-            <kendo-grid [data]="gridData.data" [scrollable]="virtual" [height]="height" #funcGrid >
+            <kendo-grid [data]="gridData.data" [scrollable]="'virtual'" #funcGrid >
               <ng-template kendoGridToolbarTemplate>
                 <button kendoButton style="float:right" class="k-button"  (click)="refresh()" title="刷新数据">
                   <span style="color:green" class="k-icon k-i-refresh"></span>
@@ -36,7 +36,7 @@
               </kendo-grid-column>
 
               <ng-template kendoGridDetailTemplate let-dataItem let-rowIndex="rowIndex">
-                <kendo-grid [data]="dataItem.children" [scrollable]="virtual">
+                <kendo-grid [data]="dataItem.children" [scrollable]="'virtual'">
                   <kendo-grid-column field="name" title="功能名称" [width]="200">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       {{dataItem.name}}({{dataItem.code}})
